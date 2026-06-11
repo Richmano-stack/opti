@@ -1,0 +1,34 @@
+Senior Full-Stack Software Engineer — Stripe
+
+Location: San Francisco, CA (Hybrid)
+Employment Type: Full-time
+
+About the Role
+Stripe is seeking a Senior Full-Stack Software Engineer to design and deliver scalable payment infrastructure used by millions of businesses worldwide. You will partner with product, design, and platform teams to ship reliable, secure, and performant features across our merchant dashboard and internal tooling.
+
+Required Qualifications
+- 5+ years of professional software engineering experience
+- Strong proficiency in TypeScript, JavaScript, React, and Node.js
+- Experience designing and consuming RESTful and GraphQL APIs
+- Solid understanding of PostgreSQL or other relational databases
+- Track record of improving system performance, reliability, and observability
+- Experience with CI/CD pipelines, automated testing, and code review best practices
+- Ability to mentor junior engineers and lead technical initiatives
+- Excellent communication skills in cross-functional agile environments
+
+Preferred Qualifications
+- Experience with payment systems, fintech, or high-availability distributed services
+- Familiarity with AWS, Docker, and Kubernetes
+- Experience with Next.js or modern SSR/SSG frameworks
+- Contributions to internal developer tooling or design systems
+
+Key Responsibilities
+- Architect and implement full-stack features for merchant-facing dashboards
+- Optimize application performance and reduce latency in critical user flows
+- Write comprehensive unit and integration tests; maintain high code quality standards
+- Collaborate with product managers to translate requirements into technical specifications
+- Participate in on-call rotation and incident response for production systems
+- Drive migrations from legacy codebases to modern component architectures
+
+Benefits
+Competitive salary, equity, health coverage, 401(k) matching, and professional development budget.

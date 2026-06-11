@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: opti-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: opti
+      POSTGRES_PASSWORD: opti
+      POSTGRES_DB: opti
+    volumes:
+      - opti_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U opti -d opti"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  opti_pg_data:
