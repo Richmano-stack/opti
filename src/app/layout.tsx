@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${plusJakartaSans.variable} ${plusJakartaSans.className} h-full antialiased`}
+      className={`${plusJakartaSans.variable} ${plusJakartaSans.className} dark h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <TRPCReactProvider>{children}</TRPCReactProvider>
