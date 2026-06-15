@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 
 import { auth } from "@/server/auth/auth";
-import type { AuthUser } from "@/server/auth/types";
+import type { AuthSession, AuthUser } from "@/server/auth/types";
 
 export function toAuthUser(user: {
   id: string;
@@ -17,7 +17,7 @@ export function toAuthUser(user: {
 
 export async function getSessionFromHeaders(
   requestHeaders: Headers
-): Promise<{ user: AuthUser } | null> {
+): Promise<AuthSession | null> {
   const session = await auth.api.getSession({
     headers: requestHeaders,
   });
@@ -26,9 +26,12 @@ export async function getSessionFromHeaders(
     return null;
   }
 
-  return { user: toAuthUser(session.user) };
+  return {
+    user: toAuthUser(session.user),
+    activeOrganizationId: session.session.activeOrganizationId ?? null,
+  };
 }
 
-export async function getServerSession(): Promise<{ user: AuthUser } | null> {
+export async function getServerSession(): Promise<AuthSession | null> {
   return getSessionFromHeaders(await headers());
 }

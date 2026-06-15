@@ -6,3 +6,8 @@ export type AuthUser = {
 };
 
 export type AuthContextUser = AuthUser | null;
+
+export type AuthSession = {
+  user: AuthUser;
+  activeOrganizationId: string | null;
+};

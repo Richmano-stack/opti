@@ -5,4 +5,4 @@ export {
   getSessionFromHeaders,
   toAuthUser,
 } from "@/server/auth/session";
-export type { AuthContextUser, AuthUser } from "@/server/auth/types";
+export type { AuthContextUser, AuthSession, AuthUser } from "@/server/auth/types";

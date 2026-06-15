@@ -43,7 +43,7 @@ This document tracks the strict sequential building phases of the application. T
 
 ### [Task 3.A] Better Auth Implementation & Route Guarding
 - **Scope:** Connect Better Auth to the existing Drizzle schemas. Build the user registration/login API handlers, shadcn/ui login panels, and middleware blocks to secure the dashboard.
-- **Assigned Directory Domain:** `/src/server/auth/**/*`, `/src/app/api/auth/**/*`, `/src/app/login/**/*`, `/src/middleware.ts`, and `/src/db/schema.ts` (Permitted schema additions)
+- **Assigned Directory Domain:** `/src/server/auth/**/*`, `/src/app/api/auth/**/*`, `/src/app/login/**/*`, `/src/proxy.ts`, and `/src/db/schema.ts` (Permitted schema additions)
 
 ### [Task 3.B] tRPC Business Logic Routers
 - **Scope:** Construct the server-side tRPC procedures to handle saving user history, fetching saved resumes, and executing the Phase 1 Gemini AI processing engine.
