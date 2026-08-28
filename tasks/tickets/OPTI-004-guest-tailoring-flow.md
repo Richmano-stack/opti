@@ -24,9 +24,9 @@
 
 ## Verification
 
-- [ ] Component/action integration tests cover the primary states.
+- [x] Component/action integration tests cover the primary states.
 - [ ] Manual guest journey succeeds in a signed-out browser session.
-- [ ] Lint, typecheck, and build pass.
+- [x] Lint, typecheck, and build pass.
 
 **Dependencies:** OPTI-003
 **Estimated scope:** Medium

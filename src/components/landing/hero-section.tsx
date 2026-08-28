@@ -21,11 +21,11 @@ export function HeroSection() {
         </p>
 
         <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row">
-          <Link href="/signup" className="btn-brand h-12 min-w-[180px] px-8 text-sm">
-            Save your resume
+          <Link href="/try" className="btn-brand h-12 min-w-[180px] px-8 text-sm">
+            Try it free
           </Link>
-          <Link href="/login" className="btn-brand-outline h-12 min-w-[180px] px-8 text-sm">
-            Log in
+          <Link href="/signup" className="btn-brand-outline h-12 min-w-[180px] px-8 text-sm">
+            Save your résumé
           </Link>
         </div>
       </div>

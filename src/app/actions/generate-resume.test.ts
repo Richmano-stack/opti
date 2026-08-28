@@ -6,7 +6,7 @@ const { optimizeResume } = vi.hoisted(() => ({ optimizeResume: vi.fn() }));
 
 vi.mock("../../services/ai/optimizeResume", () => ({ optimizeResume }));
 
-import { generateResume } from "./generate-resume";
+import { generateResume, submitGuestResume } from "./generate-resume";
 
 const validInput = {
   resume: "Product designer with five years of experience.",
@@ -69,5 +69,35 @@ describe("generateResume", () => {
         message: "The résumé service is busy. Please try again shortly.",
       },
     });
+  });
+});
+
+describe("submitGuestResume", () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  it("returns a preview-ready resume from form data", async () => {
+    optimizeResume.mockResolvedValue(generatedResume);
+    const formData = new FormData();
+    formData.set("resume", validInput.resume);
+    formData.set("jobDescription", validInput.jobDescription);
+
+    await expect(
+      submitGuestResume({ status: "idle" }, formData),
+    ).resolves.toEqual({ status: "success", data: generatedResume });
+  });
+
+  it("returns a retryable validation error without calling the provider", async () => {
+    const formData = new FormData();
+
+    await expect(
+      submitGuestResume({ status: "idle" }, formData),
+    ).resolves.toEqual({
+      status: "error",
+      error: {
+        code: "INVALID_INPUT",
+        message: "Add your résumé and the job description to continue.",
+      },
+    });
+    expect(optimizeResume).not.toHaveBeenCalled();
   });
 });
