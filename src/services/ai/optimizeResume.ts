@@ -1,101 +1,43 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
-import {
-  GeminiServiceError,
-  InvalidInputError,
-  ResumeValidationError,
-} from "./errors";
+import { z } from "zod";
+import { OpenRouterServiceError, InvalidInputError, ResumeValidationError } from "./errors";
+import { openRouterResumeJsonSchema } from "./openrouter-schema";
 import { buildSystemPrompt, buildUserPrompt } from "./prompts";
-import { optimizedResumeGeminiSchema } from "./schema";
-import {
-  generationInputSchema,
-  optimizedResumeSchema,
-  type OptimizeResumeInput,
-  type OptimizedResume,
-} from "./types";
+import { generationInputSchema, optimizedResumeSchema, type OptimizeResumeInput, type OptimizedResume } from "./types";
 
-const DEFAULT_MODEL = "gemini-2.0-flash";
+const ENDPOINT = "https://openrouter.ai/api/v1/chat/completions";
+const responseSchema = z.object({ choices: z.array(z.object({ message: z.object({ content: z.string() }) })).min(1) });
 
-function resolveApiKey(): string {
-  const apiKey =
-    process.env.GEMINI_API_KEY ?? process.env.GOOGLE_GENERATIVE_AI_API_KEY;
-
-  if (!apiKey?.trim()) {
-    throw new GeminiServiceError(
-      "Missing Gemini API key. Set GEMINI_API_KEY or GOOGLE_GENERATIVE_AI_API_KEY in the server environment.",
-    );
-  }
-
-  return apiKey.trim();
+function config() {
+  const apiKey = process.env.OPENROUTER_API_KEY?.trim();
+  const model = process.env.OPENROUTER_MODEL?.trim();
+  if (!apiKey || !model) throw new OpenRouterServiceError("OPENROUTER_CONFIGURATION_ERROR", "OpenRouter is not configured.");
+  return { apiKey, model };
 }
 
-function parseInput(input: OptimizeResumeInput): OptimizeResumeInput {
-  const validation = generationInputSchema.safeParse(input);
-
-  if (!validation.success) {
-    throw new InvalidInputError(
-      validation.error.issues[0]?.message ?? "Resume generation input is invalid.",
-    );
-  }
-
-  return validation.data;
-}
-
-function parseJsonResponse(rawText: string): unknown {
+export async function optimizeResume(input: OptimizeResumeInput): Promise<OptimizedResume> {
+  const parsedInput = generationInputSchema.safeParse(input);
+  if (!parsedInput.success) throw new InvalidInputError(parsedInput.error.issues[0]?.message ?? "Invalid generation input.");
+  const { apiKey, model } = config();
+  const headers: Record<string, string> = { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" };
+  if (process.env.OPENROUTER_APP_URL) headers["HTTP-Referer"] = process.env.OPENROUTER_APP_URL;
+  if (process.env.OPENROUTER_APP_NAME) headers["X-OpenRouter-Title"] = process.env.OPENROUTER_APP_NAME;
+  let response: Response;
   try {
-    return JSON.parse(rawText) as unknown;
-  } catch {
-    throw new ResumeValidationError(
-      "Gemini returned malformed JSON that could not be parsed.",
-      undefined,
-      rawText,
-    );
-  }
-}
-
-/**
- * Accepts raw resume + job description strings and returns a validated,
- * ATS-optimized structured resume payload via Gemini structured JSON output.
- */
-export async function optimizeResume(
-  input: OptimizeResumeInput,
-): Promise<OptimizedResume> {
-  const validatedInput = parseInput(input);
-
-  const genAI = new GoogleGenerativeAI(resolveApiKey());
-  const model = genAI.getGenerativeModel({
-    model: DEFAULT_MODEL,
-    systemInstruction: buildSystemPrompt(),
-    generationConfig: {
-      responseMimeType: "application/json",
-      responseSchema: optimizedResumeGeminiSchema,
-      temperature: 0.3,
-    },
-  });
-
-  let rawText: string;
-
-  try {
-    const result = await model.generateContent(buildUserPrompt(validatedInput));
-    rawText = result.response.text();
+    response = await fetch(ENDPOINT, { method: "POST", headers, signal: AbortSignal.timeout(60_000), body: JSON.stringify({ model, messages: [{ role: "system", content: buildSystemPrompt() }, { role: "user", content: buildUserPrompt(parsedInput.data) }], temperature: 0.3, max_completion_tokens: 4_000, response_format: { type: "json_schema", json_schema: { name: "tailored_resume", strict: true, schema: openRouterResumeJsonSchema } } }) });
   } catch (error) {
-    throw new GeminiServiceError("Gemini API request failed.", error);
+    if (error instanceof DOMException && error.name === "TimeoutError") throw new OpenRouterServiceError("OPENROUTER_TIMEOUT", "OpenRouter timed out.", error);
+    throw new OpenRouterServiceError("OPENROUTER_UNAVAILABLE", "OpenRouter is unavailable.", error);
   }
-
-  if (!rawText.trim()) {
-    throw new ResumeValidationError("Gemini returned an empty response.");
+  if (!response.ok) {
+    if (response.status === 401 || response.status === 403) throw new OpenRouterServiceError("OPENROUTER_UNAUTHORIZED", "OpenRouter rejected the credentials.");
+    if (response.status === 429) throw new OpenRouterServiceError("OPENROUTER_RATE_LIMITED", "OpenRouter rate limit reached.");
+    throw new OpenRouterServiceError("OPENROUTER_UNAVAILABLE", "OpenRouter request failed.");
   }
-
-  const parsed = parseJsonResponse(rawText);
-  const validation = optimizedResumeSchema.safeParse(parsed);
-
-  if (!validation.success) {
-    throw new ResumeValidationError(
-      "Gemini response failed schema validation.",
-      validation.error,
-      parsed,
-    );
-  }
-
-  return validation.data;
+  const envelope = responseSchema.safeParse(await response.json().catch(() => null));
+  if (!envelope.success) throw new ResumeValidationError("OpenRouter returned an invalid response.");
+  let content: unknown;
+  try { content = JSON.parse(envelope.data.choices[0]!.message.content); } catch { throw new ResumeValidationError("OpenRouter returned malformed JSON."); }
+  const result = optimizedResumeSchema.safeParse(content);
+  if (!result.success) throw new ResumeValidationError("OpenRouter output failed validation.", result.error);
+  return result.data;
 }

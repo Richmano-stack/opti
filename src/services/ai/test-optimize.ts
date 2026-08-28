@@ -1,22 +1,22 @@
 /**
- * End-to-end test for the Gemini resume optimization pipeline.
+ * End-to-end test for the OpenRouter resume optimization pipeline.
  *
  * Prerequisites:
- *   npm install @google/generative-ai zod tsx
- *   Set GEMINI_API_KEY (or GOOGLE_GENERATIVE_AI_API_KEY) in your environment
+ *   pnpm install
+ *   Set OPENROUTER_API_KEY and OPENROUTER_MODEL in your environment
  *
  * Run from project root:
  *   npx tsx src/services/ai/test-optimize.ts
  *
  * Windows PowerShell:
- *   $env:GEMINI_API_KEY="your_key_here"; npx tsx src/services/ai/test-optimize.ts
+ *   $env:OPENROUTER_API_KEY="your_key_here"; $env:OPENROUTER_MODEL="your/model"; npx tsx src/services/ai/test-optimize.ts
  */
 
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import {
-  GeminiServiceError,
+  OpenRouterServiceError,
   InvalidInputError,
   ResumeValidationError,
   optimizeResume,
@@ -64,8 +64,8 @@ main().catch((error: unknown) => {
     process.exit(1);
   }
 
-  if (error instanceof GeminiServiceError) {
-    console.error(`Gemini service error: ${error.message}`);
+  if (error instanceof OpenRouterServiceError) {
+    console.error(`OpenRouter service error: ${error.message}`);
     process.exit(1);
   }
 
