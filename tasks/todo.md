@@ -18,7 +18,7 @@ Only one primary implementation task should be active at a time.
 
 ## Core workflows
 
-- [ ] [OPTI-004 — Deliver the guest tailoring flow](./tickets/OPTI-004-guest-tailoring-flow.md)
+- [~] [OPTI-004 — Deliver the guest tailoring flow](./tickets/OPTI-004-guest-tailoring-flow.md)
 - [ ] [OPTI-005 — Persist one master resume per account](./tickets/OPTI-005-master-resume-persistence.md)
 - [ ] [OPTI-006 — Build the account master-resume experience](./tickets/OPTI-006-master-resume-experience.md)
 - [ ] [OPTI-007 — Unify account generation with the saved master resume](./tickets/OPTI-007-account-generation.md)

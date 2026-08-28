@@ -25,8 +25,8 @@ export function LandingNavbar() {
           <Link href="/login" className="hidden text-sm font-medium text-muted-foreground transition-colors hover:text-foreground sm:inline">
             Log in
           </Link>
-          <Link href="/signup" className="btn-brand h-9 px-5 text-sm">
-            Get started
+          <Link href="/try" className="btn-brand h-9 px-5 text-sm">
+            Try it free
           </Link>
         </div>
       </nav>

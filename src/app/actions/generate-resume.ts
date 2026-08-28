@@ -14,9 +14,22 @@ type GenerateResumeErrorCode =
   | "RATE_LIMITED"
   | "SERVICE_UNAVAILABLE";
 
+export type GenerateResumeError = {
+  code: GenerateResumeErrorCode;
+  message: string;
+};
+
 export type GenerateResumeResult =
   | { ok: true; data: OptimizedResume }
-  | { ok: false; error: { code: GenerateResumeErrorCode; message: string } };
+  | { ok: false; error: GenerateResumeError };
+
+export type GuestGenerationState =
+  | { status: "idle" }
+  | { status: "success"; data: OptimizedResume }
+  | {
+      status: "error";
+      error: GenerateResumeError;
+    };
 
 const providerErrors: Record<
   OpenRouterServiceError["code"],
@@ -89,4 +102,19 @@ export async function generateResume(
       },
     };
   }
+}
+export async function submitGuestResume(
+  _previousState: GuestGenerationState,
+  formData: FormData,
+): Promise<GuestGenerationState> {
+  const result = await generateResume({
+    resume: String(formData.get("resume") ?? ""),
+    jobDescription: String(formData.get("jobDescription") ?? ""),
+  });
+
+  if (result.ok) {
+    return { status: "success", data: result.data };
+  }
+
+  return { status: "error", error: result.error };
 }
