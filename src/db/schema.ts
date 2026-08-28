@@ -4,7 +4,6 @@ import {
   boolean,
   index,
   jsonb,
-  numeric,
   pgTable,
   text,
   timestamp,
@@ -13,9 +12,6 @@ import {
 
 import type { OptimizedResume } from "@/services/ai/types";
 
-/**
- * Better Auth user table. Property names use camelCase; PostgreSQL columns use snake_case.
- */
 export const users = pgTable("users", {
   id: text("id").primaryKey(),
   email: text("email").notNull().unique(),
@@ -46,7 +42,6 @@ export const session = pgTable(
       .$onUpdate(() => new Date()),
     ipAddress: text("ip_address"),
     userAgent: text("user_agent"),
-    activeOrganizationId: text("active_organization_id"),
     userId: text("user_id")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
@@ -105,133 +100,7 @@ export const verification = pgTable(
   (table) => [index("verification_identifier_idx").on(table.identifier)]
 );
 
-/**
- * Better Auth organization plugin tables.
- */
-export const organization = pgTable(
-  "organization",
-  {
-    id: text("id").primaryKey(),
-    name: text("name").notNull(),
-    slug: text("slug").notNull().unique(),
-    logo: text("logo"),
-    metadata: jsonb("metadata"),
-    createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })
-      .notNull()
-      .defaultNow(),
-    updatedAt: timestamp("updated_at", { withTimezone: true, mode: "date" })
-      .notNull()
-      .defaultNow()
-      .$onUpdate(() => new Date()),
-  },
-  (table) => [index("organization_slug_idx").on(table.slug)]
-);
-
-export const member = pgTable(
-  "member",
-  {
-    id: text("id").primaryKey(),
-    organizationId: text("organization_id")
-      .notNull()
-      .references(() => organization.id, { onDelete: "cascade" }),
-    userId: text("user_id")
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-    role: text("role").default("member").notNull(),
-    createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })
-      .notNull()
-      .defaultNow(),
-  },
-  (table) => [
-    index("member_organization_id_idx").on(table.organizationId),
-    index("member_user_id_idx").on(table.userId),
-  ]
-);
-
-export const invitation = pgTable(
-  "invitation",
-  {
-    id: text("id").primaryKey(),
-    organizationId: text("organization_id")
-      .notNull()
-      .references(() => organization.id, { onDelete: "cascade" }),
-    email: text("email").notNull(),
-    role: text("role").notNull(),
-    status: text("status").default("pending").notNull(),
-    expiresAt: timestamp("expires_at", { withTimezone: true, mode: "date" }),
-    inviterId: text("inviter_id")
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-    createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })
-      .notNull()
-      .defaultNow(),
-  },
-  (table) => [
-    index("invitation_organization_id_idx").on(table.organizationId),
-    index("invitation_email_idx").on(table.email),
-  ]
-);
-
-/**
- * Organization-scoped expense categories.
- */
-export const categories = pgTable(
-  "categories",
-  {
-    id: uuid("id").primaryKey().defaultRandom(),
-    organizationId: text("organization_id")
-      .notNull()
-      .references(() => organization.id, { onDelete: "cascade" }),
-    name: text("name").notNull(),
-    createdByUserId: text("created_by_user_id")
-      .notNull()
-      .references(() => users.id, { onDelete: "restrict" }),
-    createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })
-      .notNull()
-      .defaultNow(),
-    updatedAt: timestamp("updated_at", { withTimezone: true, mode: "date" })
-      .notNull()
-      .defaultNow()
-      .$onUpdate(() => new Date()),
-  },
-  (table) => [index("categories_organization_id_idx").on(table.organizationId)]
-);
-
-/**
- * Organization-scoped transaction log with audit trail.
- */
-export const transactions = pgTable(
-  "transactions",
-  {
-    id: uuid("id").primaryKey().defaultRandom(),
-    organizationId: text("organization_id")
-      .notNull()
-      .references(() => organization.id, { onDelete: "cascade" }),
-    categoryId: uuid("category_id").references(() => categories.id, {
-      onDelete: "set null",
-    }),
-    amount: numeric("amount", { precision: 14, scale: 2 }).notNull(),
-    description: text("description"),
-    createdByUserId: text("created_by_user_id")
-      .notNull()
-      .references(() => users.id, { onDelete: "restrict" }),
-    createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })
-      .notNull()
-      .defaultNow(),
-    updatedAt: timestamp("updated_at", { withTimezone: true, mode: "date" })
-      .notNull()
-      .defaultNow()
-      .$onUpdate(() => new Date()),
-  },
-  (table) => [
-    index("transactions_organization_id_idx").on(table.organizationId),
-    index("transactions_created_by_user_id_idx").on(table.createdByUserId),
-  ]
-);
-
-/**
- * Flat resume storage — entire OptimizedResume JSON lives in `data` (no relational bloat).
- */
+/** Application-specific resume output. Master-resume storage is introduced in Phase 1. */
 export const resumes = pgTable("resumes", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: text("user_id")
@@ -252,65 +121,6 @@ export const usersRelations = relations(users, ({ many }) => ({
   resumes: many(resumes),
   sessions: many(session),
   accounts: many(account),
-  memberships: many(member),
-  createdCategories: many(categories),
-  createdTransactions: many(transactions),
-}));
-
-export const organizationRelations = relations(organization, ({ many }) => ({
-  members: many(member),
-  invitations: many(invitation),
-  categories: many(categories),
-  transactions: many(transactions),
-}));
-
-export const memberRelations = relations(member, ({ one }) => ({
-  organization: one(organization, {
-    fields: [member.organizationId],
-    references: [organization.id],
-  }),
-  user: one(users, {
-    fields: [member.userId],
-    references: [users.id],
-  }),
-}));
-
-export const invitationRelations = relations(invitation, ({ one }) => ({
-  organization: one(organization, {
-    fields: [invitation.organizationId],
-    references: [organization.id],
-  }),
-  inviter: one(users, {
-    fields: [invitation.inviterId],
-    references: [users.id],
-  }),
-}));
-
-export const categoriesRelations = relations(categories, ({ one, many }) => ({
-  organization: one(organization, {
-    fields: [categories.organizationId],
-    references: [organization.id],
-  }),
-  createdBy: one(users, {
-    fields: [categories.createdByUserId],
-    references: [users.id],
-  }),
-  transactions: many(transactions),
-}));
-
-export const transactionsRelations = relations(transactions, ({ one }) => ({
-  organization: one(organization, {
-    fields: [transactions.organizationId],
-    references: [organization.id],
-  }),
-  category: one(categories, {
-    fields: [transactions.categoryId],
-    references: [categories.id],
-  }),
-  createdBy: one(users, {
-    fields: [transactions.createdByUserId],
-    references: [users.id],
-  }),
 }));
 
 export const sessionRelations = relations(session, ({ one }) => ({
@@ -339,12 +149,5 @@ export type NewUser = InferInsertModel<typeof users>;
 export type Session = InferSelectModel<typeof session>;
 export type Account = InferSelectModel<typeof account>;
 export type Verification = InferSelectModel<typeof verification>;
-export type Organization = InferSelectModel<typeof organization>;
-export type Member = InferSelectModel<typeof member>;
-export type Invitation = InferSelectModel<typeof invitation>;
-export type Category = InferSelectModel<typeof categories>;
-export type NewCategory = InferInsertModel<typeof categories>;
-export type Transaction = InferSelectModel<typeof transactions>;
-export type NewTransaction = InferInsertModel<typeof transactions>;
 export type Resume = InferSelectModel<typeof resumes>;
 export type NewResume = InferInsertModel<typeof resumes>;

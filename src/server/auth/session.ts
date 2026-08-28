@@ -26,10 +26,7 @@ export async function getSessionFromHeaders(
     return null;
   }
 
-  return {
-    user: toAuthUser(session.user),
-    activeOrganizationId: session.session.activeOrganizationId ?? null,
-  };
+  return { user: toAuthUser(session.user) };
 }
 
 export async function getServerSession(): Promise<AuthSession | null> {
