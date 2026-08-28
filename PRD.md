@@ -1,57 +1,87 @@
-# Product Requirements Document (PRD): AI ATS Resume Optimizer
+# Product Requirements Document: Opti
 
-## 1. The Core Problem & Value Proposition
-* **The Problem:** Job seekers apply to hundreds of roles but get rejected automatically by Applicant Tracking Systems (ATS) because their resumes lack the exact keywords, semantic phrasing, and formatting required by corporate parsing algorithms.
-* **The Solution:** This application allows a user to paste their existing resume along with a target job description. Using advanced AI (Gemini), the system instantly re-writes, tailors, and restructures the resume to mirror the job's core competencies, guaranteeing a passing score through ATS filtration while outputting a cleanly styled, single-column PDF.
+## Product definition
 
----
+Opti turns a reusable master resume into a tailored PDF resume for a specific job application.
 
-## 2. Target User Experience (The 3-Step Journey)
-1.  **The Intake:** An authenticated user lands on a clean, minimal dashboard containing two side-by-side text areas: one for their current raw resume and one for the target job description.
-2.  **The Processing:** The user clicks "Optimize Resume". The screen displays a loading skeleton while a server-side AI pipeline processes the match, extracts keywords, and rebuilds the resume nodes.
-3.  **The Deliverable:** The user is presented with a side-by-side preview screen showing the newly optimized text layout and a prominent button to download the print-ready, single-column ATS-compliant PDF.
+The user saves their complete, truthful career history once. For each application, they paste a job description. Opti selects and rewrites the most relevant material, presents it for review, and exports a clean PDF.
 
----
+## Core workflow
 
-## 3. Core Functional Requirements & Logic
+### First-time setup
 
-### AI Optimization Logic (The Prompting Strategy)
-When the backend executes the Gemini AI script, the internal prompt instructions must force the model to act as a world-class executive recruiter. It must:
-* Identify missing hard skills, software tools, and certifications from the job description and weave them contextually into the user's work experience bullet points.
-* Convert passive language into high-impact, results-driven bullet points using the **XYZ Formula** (e.g., *Accomplished [X] as measured by [Y], by doing [Z]*).
-* **Strict Preservation:** The AI must *never* hallucinate fake jobs, fake companies, or fake degrees. It must strictly rephrase and adapt the *existing* experience data to match the target job description.
+1. Create an account.
+2. Paste or upload a standard resume.
+3. Review and save the reusable master resume.
 
-### ATS Parsing Technical Requirements
-To guarantee a 100% parsing success rate, the output file must follow strict engineering rules:
-* **Selectable Text:** The output PDF cannot be compressed or rendered as flat vector shapes. A computer algorithm must be able to highlight and copy the text inside the file.
-* **Layout Structure:** Standard ATS parsers read left-to-right, top-to-bottom. Columns confuse the parsing flow. The output document layout must be strictly single-column.
-* **No Text Boxes or Tables for Content:** Do not wrap work experience nodes in complex invisible grids or graphic dividers, as this fragments the reading order of automated scanners.
+### Every job application
 
----
+1. Paste a target job description.
+2. Opti loads the saved master resume.
+3. AI selects and rewrites the most relevant source material without inventing facts.
+4. Review the tailored resume.
+5. Download a single-column PDF.
+6. Find the generated resume later in application history.
 
-## 4. Phase 1 MVP Scope Constraints
+## Product principles
 
-### In-Scope (What MUST be built):
-* Email/Password and Magic Link registration via Better Auth.
-* A history dashboard where users can view and re-download previously generated resumes.
-* A simple usage metric tracker (e.g., count how many optimizations a user has left).
+- **Save once, reuse often.** Users should not re-enter the same resume for every application.
+- **Truth before keyword coverage.** Opti may rephrase and prioritize existing facts but must not invent employers, roles, dates, education, skills, certifications, or metrics.
+- **Job-specific output.** Each generated resume emphasizes the experience relevant to one job description.
+- **Review before export.** AI output remains visible before PDF generation.
+- **Simple documents.** The default output uses selectable text and a conventional single-column reading order.
+- **No outcome guarantees.** Opti improves relevance and readability but does not guarantee ATS passage, interviews, or employment.
 
-### Out-of-Scope (Deferred to later phases):
-* Paid premium tiers or Stripe checkout subscriptions.
-* Custom theme styling or resume templates (only the standard, professional single-column layout is allowed for the MVP).
-* Interactive drag-and-drop resume section block sorting.
+## MVP scope
 
----
+### Included
 
-## 5. High-Level System Design & Data Flow (Anti-Over-Engineering)
+- Email/password and magic-link authentication.
+- One reusable master resume per user.
+- Master-resume creation and editing.
+- Job-description intake for each new application.
+- Structured AI generation grounded in the master resume.
+- Tailored-resume preview and single-column PDF export.
+- Generated-resume history and re-download.
 
-To ensure the MVP remains lightweight, fast, and maintainable, the system follows an ultra-lean, single-pipeline architecture. There are no background worker queues, complex object parsers, or heavily broken-out relational tables. Everything is handled in a single synchronous loop.
+### Deferred
 
-### A. The Visual Data Flow
-Raw Text Inputs (Forms) ➔ tRPC Mutation ➔ Gemini API (Structured JSON Mode) ➔ Drizzle Save (Postgres JSONB Column) ➔ @react-pdf/renderer (Client Download).
+- Multiple visual templates.
+- ATS scores presented as objective guarantees.
+- Billing, subscriptions, and usage quotas.
+- Team, organization, and enterprise accounts.
+- Public API access and automatic job-board applications.
 
-### B. Architectural Guardrails (Strict Boundaries)
-1. **Raw Text Inputs:** The frontend dashboard (`/src/app/dashboard/generator/page.tsx`) collects raw text using two standard `<textarea>` elements—one for the user's current resume and one for the target job description. No complex file parsing or upload dropzones are required for the MVP.
-2. **Structured AI Response:** The backend service (`/src/services/ai.ts`) invokes the Gemini API using **Structured JSON Output Mode**, enforcing a strict JSON schema that maps perfectly to the UI requirements. 
-3. **Flat Database Storage:** To prevent relational data bloat, the database does not use separate tables for work history, skills, or education. The `resumes` table stores the entire finalized resume layout inside a single `jsonb` column (PostgreSQL).
-4. **Client-Side Document Compilation:** The application delegates all rendering overhead to the client. The frontend receives the raw JSON payload from the database and feeds it directly into `@react-pdf/renderer` as a single prop. The PDF compiles instantly on the user's device and triggers a local browser download.
+## Domain model
+
+### Master resume
+
+The canonical source of truth for a user's contact details, skills, work history, education, and source achievements.
+
+### Generated resume
+
+An application-specific output derived from a master resume and job description. It stores the tailored structured resume, source job description, useful title, and timestamps.
+
+## AI requirements
+
+- Treat the saved master resume as the only factual source.
+- Never convert a job requirement into a claimed qualification unless supported by the master resume.
+- Preserve employer names, role titles, institutions, credentials, and dates.
+- Do not invent numerical results.
+- Prefer relevant source material over including everything.
+- Return structured JSON validated by the server before persistence or rendering.
+
+## PDF requirements
+
+- Text remains selectable and searchable.
+- Content follows a top-to-bottom, single-column reading order.
+- Avoid content tables, text boxes, canvas-rendered text, and structures that fragment extraction.
+- Use conventional section headings and readable typography.
+
+## Success criterion
+
+The MVP succeeds when a returning user can paste only a job description and receive a truthful, tailored PDF without re-entering their standard resume.
+
+## Current implementation gap
+
+The existing generator accepts resume text plus a job description, calls Gemini, validates structured output, saves it, previews it, and exports a PDF. The next product phase must separate the reusable master resume from application-specific generated resumes.
