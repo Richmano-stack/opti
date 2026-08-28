@@ -10,23 +10,21 @@ export function HeroSection() {
 
       <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
         <h1 className="text-4xl font-bold leading-[1.1] tracking-tight text-foreground sm:text-5xl md:text-6xl">
-          Tailor your resume for{" "}
-          <span className="text-brand-gradient">any job</span>
+          One resume. Tailored for{" "}
+          <span className="text-brand-gradient">every application</span>
         </h1>
 
         <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-          Paste your resume and a target job description. Opti rewrites your
-          experience to match the role and exports an ATS-friendly PDF.
+          Save your standard resume once. When you find a job, paste its
+          description and get a focused, ready-to-review PDF without rebuilding
+          your resume from scratch.
         </p>
 
         <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row">
           <Link href="/signup" className="btn-brand h-12 min-w-[180px] px-8 text-sm">
-            Get started
+            Save your resume
           </Link>
-          <Link
-            href="/login"
-            className="btn-brand-outline h-12 min-w-[180px] px-8 text-sm"
-          >
+          <Link href="/login" className="btn-brand-outline h-12 min-w-[180px] px-8 text-sm">
             Log in
           </Link>
         </div>
