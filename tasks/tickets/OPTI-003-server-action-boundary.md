@@ -26,7 +26,7 @@
 
 - [x] Action tests cover success, validation failure, and provider failure.
 - [x] Stale-reference search is empty for removed libraries and routes.
-- [ ] Lint, typecheck, and build pass.
+- [x] Lint, typecheck, and build pass.
 
 **Dependencies:** OPTI-002
 **Estimated scope:** Medium; split cleanup into a second commit within the same PR if needed
