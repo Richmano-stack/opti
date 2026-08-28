@@ -8,7 +8,7 @@
 
 - Add a Server Action that validates input and calls the OpenRouter-backed tailoring service.
 - Return a small discriminated success/error result suitable for the UI.
-- Replace the current generator's tRPC call with the action.
+- Delete the obsolete generator wizard and dashboard route instead of carrying their assumptions into the new product.
 - Remove unused tRPC routers, handlers, providers, TanStack Query, SuperJSON, and associated dependencies after callers are gone.
 - Remove obsolete usage tracking and generated-resume persistence from the generation path.
 
@@ -18,15 +18,15 @@
 
 ## Acceptance criteria
 
-- [ ] A valid request returns a validated tailored resume through the Server Action.
-- [ ] Invalid input and provider failures return safe, actionable errors.
-- [ ] tRPC, TanStack Query, SuperJSON, usage tracking, and generated-output persistence are absent from runtime code and dependencies.
+- [x] A valid request returns a validated tailored resume through the Server Action.
+- [x] Invalid input and provider failures return safe, actionable errors.
+- [x] tRPC, TanStack Query, SuperJSON, usage tracking, and generated-output persistence are absent from runtime code and dependencies.
 
 ## Verification
 
-- [ ] Action tests cover success, validation failure, and provider failure.
-- [ ] Stale-reference search is empty for removed libraries and routes.
-- [ ] Lint, typecheck, and build pass.
+- [x] Action tests cover success, validation failure, and provider failure.
+- [x] Stale-reference search is empty for removed libraries and routes.
+- [x] Lint, typecheck, and build pass.
 
 **Dependencies:** OPTI-002
 **Estimated scope:** Medium; split cleanup into a second commit within the same PR if needed

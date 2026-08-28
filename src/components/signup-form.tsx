@@ -30,7 +30,7 @@ export function SignupForm({
 }: React.ComponentProps<"div">) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") ?? "/dashboard/generator";
+  const callbackUrl = searchParams.get("callbackUrl") ?? "/";
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -73,7 +73,7 @@ export function SignupForm({
   );
 
   const loginHref =
-    callbackUrl === "/dashboard/generator"
+    callbackUrl === "/"
       ? "/login"
       : `/login?callbackUrl=${encodeURIComponent(callbackUrl)}`;
 
