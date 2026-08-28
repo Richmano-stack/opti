@@ -1,10 +1,13 @@
 export { optimizeResume } from "./optimizeResume";
 export { optimizedResumeGeminiSchema } from "./schema";
 export {
-  optimizedResumeSchema,
+  MAX_JOB_DESCRIPTION_LENGTH,
+  MAX_RESUME_LENGTH,
   contactSchema,
-  experienceEntrySchema,
   educationEntrySchema,
+  experienceEntrySchema,
+  generationInputSchema,
+  optimizedResumeSchema,
   type Contact,
   type EducationEntry,
   type ExperienceEntry,
@@ -16,4 +19,8 @@ export {
   InvalidInputError,
   ResumeValidationError,
 } from "./errors";
-export { buildSystemPrompt, buildUserPrompt, RECRUITER_SYSTEM_PROMPT } from "./prompts";
+export {
+  RECRUITER_SYSTEM_PROMPT,
+  buildSystemPrompt,
+  buildUserPrompt,
+} from "./prompts";

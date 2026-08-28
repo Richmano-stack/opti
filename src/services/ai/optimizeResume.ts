@@ -8,6 +8,7 @@ import {
 import { buildSystemPrompt, buildUserPrompt } from "./prompts";
 import { optimizedResumeGeminiSchema } from "./schema";
 import {
+  generationInputSchema,
   optimizedResumeSchema,
   type OptimizeResumeInput,
   type OptimizedResume,
@@ -28,20 +29,22 @@ function resolveApiKey(): string {
   return apiKey.trim();
 }
 
-function assertValidInput(input: OptimizeResumeInput): void {
-  if (!input.resume?.trim()) {
-    throw new InvalidInputError("Resume text is required and cannot be empty.");
+function parseInput(input: OptimizeResumeInput): OptimizeResumeInput {
+  const validation = generationInputSchema.safeParse(input);
+
+  if (!validation.success) {
+    throw new InvalidInputError(
+      validation.error.issues[0]?.message ?? "Resume generation input is invalid.",
+    );
   }
 
-  if (!input.jobDescription?.trim()) {
-    throw new InvalidInputError("Job description text is required and cannot be empty.");
-  }
+  return validation.data;
 }
 
 function parseJsonResponse(rawText: string): unknown {
   try {
     return JSON.parse(rawText) as unknown;
-  } catch (error) {
+  } catch {
     throw new ResumeValidationError(
       "Gemini returned malformed JSON that could not be parsed.",
       undefined,
@@ -57,7 +60,7 @@ function parseJsonResponse(rawText: string): unknown {
 export async function optimizeResume(
   input: OptimizeResumeInput,
 ): Promise<OptimizedResume> {
-  assertValidInput(input);
+  const validatedInput = parseInput(input);
 
   const genAI = new GoogleGenerativeAI(resolveApiKey());
   const model = genAI.getGenerativeModel({
@@ -73,7 +76,7 @@ export async function optimizeResume(
   let rawText: string;
 
   try {
-    const result = await model.generateContent(buildUserPrompt(input));
+    const result = await model.generateContent(buildUserPrompt(validatedInput));
     rawText = result.response.text();
   } catch (error) {
     throw new GeminiServiceError("Gemini API request failed.", error);
