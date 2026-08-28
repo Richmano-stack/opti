@@ -2,8 +2,6 @@ import { BenefitsSection } from "./benefits-section";
 import { HeroSection } from "./hero-section";
 import { HowItWorksSection } from "./how-it-works-section";
 import { LandingNavbar } from "./landing-navbar";
-import { PricingSection } from "./pricing-section";
-import { TestimonialsSection } from "./testimonials-section";
 
 export function LandingPage() {
   return (
@@ -14,12 +12,8 @@ export function LandingPage() {
         <div id="benefits">
           <BenefitsSection />
         </div>
-        <HowItWorksSection />
-        <div id="testimonials">
-          <TestimonialsSection />
-        </div>
-        <div id="pricing">
-          <PricingSection />
+        <div id="how-it-works">
+          <HowItWorksSection />
         </div>
       </main>
       <footer className="border-t border-border px-4 py-10 sm:px-6 lg:px-8">

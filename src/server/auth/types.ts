@@ -1,4 +1,3 @@
-/** Stable auth context shape consumed by tRPC (Task 3.B contract). */
 export type AuthUser = {
   id: string;
   email: string;
@@ -9,5 +8,4 @@ export type AuthContextUser = AuthUser | null;
 
 export type AuthSession = {
   user: AuthUser;
-  activeOrganizationId: string | null;
 };

@@ -1,25 +1,25 @@
-import { Download, FileText, Sparkles } from "lucide-react";
+import { Download, FileText, Search } from "lucide-react";
 import { GlowCard } from "./glow-card";
 import { SectionBadge } from "./section-badge";
 
 const STEPS = [
   {
     icon: FileText,
-    title: "Paste your inputs",
+    title: "Save your master resume",
     description:
-      "Add your current resume and the job description you are applying for.",
+      "Add your standard resume once so Opti has a truthful source for future applications.",
   },
   {
-    icon: Sparkles,
-    title: "AI optimization",
+    icon: Search,
+    title: "Paste a job description",
     description:
-      "Gemini rewrites bullet points to mirror the role’s keywords and skills — without inventing experience.",
+      "For each application, provide the role and let Opti focus your existing experience around it.",
   },
   {
     icon: Download,
-    title: "Download PDF",
+    title: "Review and download",
     description:
-      "Preview the result and download a single-column, ATS-parseable PDF.",
+      "Check the tailored result, then download a clean, single-column PDF.",
   },
 ] as const;
 
@@ -30,7 +30,7 @@ export function HowItWorksSection() {
         <div className="mb-14 text-center">
           <SectionBadge label="How it works" />
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Three steps to a tailored resume
+            From job description to tailored PDF
           </h2>
         </div>
 

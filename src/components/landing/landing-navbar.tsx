@@ -1,9 +1,8 @@
 import Link from "next/link";
 
 const NAV_LINKS = [
-  { label: "Benefits", href: "#benefits" },
-  { label: "Testimonials", href: "#testimonials" },
-  { label: "Pricing", href: "#pricing" },
+  { label: "Why Opti", href: "#benefits" },
+  { label: "How it works", href: "#how-it-works" },
 ];
 
 export function LandingNavbar() {
@@ -16,21 +15,14 @@ export function LandingNavbar() {
 
         <div className="hidden items-center gap-8 md:flex">
           {NAV_LINKS.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-            >
+            <a key={link.href} href={link.href} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
               {link.label}
             </a>
           ))}
         </div>
 
         <div className="flex items-center gap-3">
-          <Link
-            href="/login"
-            className="hidden text-sm font-medium text-muted-foreground transition-colors hover:text-foreground sm:inline"
-          >
+          <Link href="/login" className="hidden text-sm font-medium text-muted-foreground transition-colors hover:text-foreground sm:inline">
             Log in
           </Link>
           <Link href="/signup" className="btn-brand h-9 px-5 text-sm">

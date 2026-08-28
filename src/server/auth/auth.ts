@@ -1,7 +1,7 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
-import { magicLink, organization } from "better-auth/plugins";
+import { magicLink } from "better-auth/plugins";
 
 import { db } from "@/db/client";
 import * as schema from "@/db/schema";
@@ -20,9 +20,6 @@ export const auth = betterAuth({
     schema: {
       ...schema,
       user: schema.users,
-      organization: schema.organization,
-      member: schema.member,
-      invitation: schema.invitation,
     },
   }),
   baseURL: requireEnv("BETTER_AUTH_URL"),
@@ -31,10 +28,9 @@ export const auth = betterAuth({
     enabled: true,
   },
   plugins: [
-    organization(),
     magicLink({
       sendMagicLink: async ({ email, url }) => {
-        // Dev transport: log magic link to server console. Replace with Resend/Nodemailer in production.
+        // Dev transport: log magic link to server console. Replace with an email provider in production.
         console.info(`[auth] Magic link for ${email}:\n${url}`);
       },
     }),
