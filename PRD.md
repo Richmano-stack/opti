@@ -2,86 +2,86 @@
 
 ## Product definition
 
-Opti turns a reusable master resume into a tailored PDF resume for a specific job application.
+Opti turns a truthful master resume into a tailored PDF resume for a specific job application.
 
-The user saves their complete, truthful career history once. For each application, they paste a job description. Opti selects and rewrites the most relevant material, presents it for review, and exports a clean PDF.
+The product removes repeated work: save a master resume once, paste a new job description, review the tailored result, and download the PDF. A guest can test the same core result without creating an account by pasting both inputs for that session.
 
-## Core workflow
+## Users and modes
 
-### First-time setup
+### Guest mode
 
-1. Create an account.
-2. Paste or upload a standard resume.
-3. Review and save the reusable master resume.
+1. Paste master-resume text.
+2. Paste a job description.
+3. Generate and review the tailored resume.
+4. Download the PDF.
 
-### Every job application
+No account is required and no input or generated output is persisted.
 
-1. Paste a target job description.
-2. Opti loads the saved master resume.
-3. AI selects and rewrites the most relevant source material without inventing facts.
-4. Review the tailored resume.
-5. Download a single-column PDF.
-6. Find the generated resume later in application history.
+### Account mode
+
+1. Create an email/password account.
+2. Paste and save one master resume.
+3. For each application, paste only the job description.
+4. Generate, review, and download the tailored PDF.
+
+Only the master-resume text is saved. Job descriptions, generated resumes, and PDFs are not persisted in the MVP.
 
 ## Product principles
 
-- **Save once, reuse often.** Users should not re-enter the same resume for every application.
-- **Truth before keyword coverage.** Opti may rephrase and prioritize existing facts but must not invent employers, roles, dates, education, skills, certifications, or metrics.
-- **Job-specific output.** Each generated resume emphasizes the experience relevant to one job description.
-- **Review before export.** AI output remains visible before PDF generation.
-- **Simple documents.** The default output uses selectable text and a conventional single-column reading order.
-- **No outcome guarantees.** Opti improves relevance and readability but does not guarantee ATS passage, interviews, or employment.
+- **Save once, reuse often.** The saved master resume is the product's core advantage.
+- **Demo without friction.** Guest mode demonstrates the real transformation without requiring registration.
+- **Truth before keyword coverage.** Opti may rephrase and prioritize source facts but must not invent employers, roles, dates, education, credentials, skills, or metrics.
+- **Review before export.** AI output remains visible before PDF download.
+- **Simple documents.** The default PDF uses selectable text and a conventional single-column reading order.
+- **Private by default.** Persist only what enables the core returning-user advantage.
+- **No outcome guarantees.** Opti does not promise ATS passage, interviews, or employment.
 
 ## MVP scope
 
 ### Included
 
-- Email/password and magic-link authentication.
-- One reusable master resume per user.
+- Guest tailoring from pasted master-resume and job-description text.
+- Email/password authentication.
+- One saved raw-text master resume per authenticated user.
 - Master-resume creation and editing.
-- Job-description intake for each new application.
-- Structured AI generation grounded in the master resume.
-- Tailored-resume preview and single-column PDF export.
-- Generated-resume history and re-download.
+- Job-description-only generation for returning users.
+- OpenRouter-backed structured resume tailoring.
+- Validated preview and single-column PDF export.
+- Clear loading, validation, provider-failure, and retry states.
+- Responsive, accessible light sky-blue interface built with shadcn primitives.
 
-### Deferred
+### Excluded
 
-- Multiple visual templates.
-- ATS scores presented as objective guarantees.
-- Billing, subscriptions, and usage quotas.
-- Team, organization, and enterprise accounts.
-- Public API access and automatic job-board applications.
-
-## Domain model
-
-### Master resume
-
-The canonical source of truth for a user's contact details, skills, work history, education, and source achievements.
-
-### Generated resume
-
-An application-specific output derived from a master resume and job description. It stores the tailored structured resume, source job description, useful title, and timestamps.
+- File upload, document parsing, and external file storage.
+- Generated-resume or job-description history.
+- Stored PDFs and re-download history.
+- Magic-link authentication.
+- Multiple master resumes or visual templates.
+- Billing, subscriptions, quotas, teams, or enterprise accounts.
+- ATS scoring, job-board automation, DOCX export, and public APIs.
 
 ## AI requirements
 
-- Treat the saved master resume as the only factual source.
-- Never convert a job requirement into a claimed qualification unless supported by the master resume.
-- Preserve employer names, role titles, institutions, credentials, and dates.
-- Do not invent numerical results.
-- Prefer relevant source material over including everything.
-- Return structured JSON validated by the server before persistence or rendering.
+- OpenRouter is the sole AI provider and is called only from the server.
+- The model is selected through `OPENROUTER_MODEL`; the application does not hard-code a provider-specific model.
+- The master resume is the only factual source.
+- Job requirements must never become claimed qualifications unless supported by the source resume.
+- Employer names, titles, institutions, credentials, dates, and numerical results must not be invented.
+- Model output must be structured JSON validated with Zod before preview or rendering.
+- Resume text, job descriptions, generated output, and API credentials must not be logged.
 
 ## PDF requirements
 
 - Text remains selectable and searchable.
 - Content follows a top-to-bottom, single-column reading order.
-- Avoid content tables, text boxes, canvas-rendered text, and structures that fragment extraction.
-- Use conventional section headings and readable typography.
+- Long and sparse resumes render without clipped or overlapping content.
+- The PDF downloads immediately and is not stored by Opti.
 
-## Success criterion
+## Success criteria
 
-The MVP succeeds when a returning user can paste only a job description and receive a truthful, tailored PDF without re-entering their standard resume.
+The MVP is successful when:
 
-## Current implementation gap
-
-The existing generator accepts resume text plus a job description, calls Gemini, validates structured output, saves it, previews it, and exports a PDF. The next product phase must separate the reusable master resume from application-specific generated resumes.
+- A guest can paste two text inputs and download a valid tailored PDF without registering.
+- A returning account user can paste only a job description and download a valid tailored PDF using the saved master resume.
+- Only authenticated master-resume text is persisted.
+- Both workflows handle common failures without losing the user's current input.

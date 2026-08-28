@@ -1,55 +1,48 @@
-# Opti Product Roadmap
+# Opti MVP Roadmap
 
-## Current baseline
+The executable implementation plan is [`tasks/plan.md`](./tasks/plan.md). Primary tickets and live status are tracked in [`tasks/todo.md`](./tasks/todo.md).
 
-The repository contains authentication, a Gemini-backed resume transformation pipeline, structured validation, generated-resume persistence, preview, and PDF export. The current generator still asks for the source resume and job description on every run.
+## Phase 0: Product alignment — complete
 
-## Phase 0: Product alignment and cleanup
+- Removed obsolete repository prompting systems and unrelated expense/organization code.
+- Established the reusable-master-resume product direction.
+- Cleaned unsupported marketing claims.
+- Applied the cleanup database migration and verified the application build.
 
-Goal: establish one product direction and remove unrelated or misleading functionality without breaking resume generation.
+## Phase 1: Generation foundation
 
-- [x] Remove obsolete repository-level agent instructions.
-- [x] Replace the old requirements with the master-resume product definition.
-- [x] Remove organization-scoped expense and transaction functionality.
-- [x] Remove unsupported pricing, enterprise, testimonial, scoring, and template claims.
-- [x] Verify typecheck, lint, and production build.
+- Define the shared input/output contract.
+- Replace Gemini with a direct OpenRouter integration.
+- Replace tRPC generation with a Next.js Server Action.
+- Remove unused transport and usage-tracking dependencies.
 
-Exit condition: the repository describes only the reusable-master-resume product, contains no unrelated expense domain, and builds successfully.
+**Exit condition:** OpenRouter returns validated tailored-resume data through one simple server boundary.
 
-## Phase 1: Master resume foundation
+## Phase 2: Both core workflows
 
-- Add a user-owned `master_resumes` model.
-- Store original source text and a validated structured profile.
-- Add create, retrieve, and update procedures.
-- Build first-time setup and an editing screen.
-- Verify user data isolation.
+- Deliver guest paste-tailor-preview behavior without persistence.
+- Persist one raw-text master resume per authenticated user.
+- Build master-resume setup and editing.
+- Deliver job-description-only tailoring for returning users.
 
-Exit condition: a user can save, review, edit, and later retrieve a master resume.
+**Exit condition:** Guest and account modes both complete the core workflow, with only account master-resume text saved.
 
-## Phase 2: Job-description-only generation
+## Phase 3: Export and experience
 
-- Replace the two-input generator with job-description intake.
-- Load the authenticated user's master resume on the server.
-- Ground generation exclusively in that master resume.
-- Store the job description with each generated resume.
-- Retain preview and PDF export.
+- Verify selectable-text single-column PDF output.
+- Apply the light sky-blue shadcn design system.
+- Refine responsive layout, accessibility, and interaction states.
 
-Exit condition: a returning user can paste a job description and download a tailored PDF without re-entering resume content.
+**Exit condition:** Both modes produce a dependable PDF through a coherent, modern interface.
 
-## Phase 3: Application history
+## Phase 4: MVP hardening and release
 
-- Add a generated-resume history screen.
-- Open, re-download, and delete previous outputs.
-- Show useful job and company labels when reliably derivable.
+- Audit privacy, logs, authentication boundaries, and failure handling.
+- Add end-to-end coverage for guest and account journeys.
+- Verify configuration, migrations, documentation, and production build.
 
-## Phase 4: Quality and trust
+**Exit condition:** `staging` is ready to promote to `main`.
 
-- Show which master-resume facts support generated claims.
-- Flag uncertain output before export.
-- Improve generation retries and malformed-output handling.
-- Add tests for factual preservation and user isolation.
-- Add observability without logging private resume content.
+## Deferred until after MVP
 
-## Deferred decisions
-
-Subscriptions, multiple master resumes, multiple templates, DOCX export, team accounts, job-board integrations, and ATS scoring methodology remain deferred and must not be marketed as available.
+Generated history, file upload, multiple templates, DOCX export, billing, quotas, teams, analytics, job-board integrations, public APIs, and ATS scoring.
