@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { db, resumes } from "@/db";
 import {
-  GeminiServiceError,
+  OpenRouterServiceError,
   InvalidInputError,
   ResumeValidationError,
 } from "@/services/ai/errors";
@@ -34,7 +34,7 @@ function mapAiError(error: unknown): never {
     throw new TRPCError({ code: "BAD_REQUEST", message: error.message });
   }
 
-  if (error instanceof ResumeValidationError || error instanceof GeminiServiceError) {
+  if (error instanceof ResumeValidationError || error instanceof OpenRouterServiceError) {
     throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: error.message });
   }
 

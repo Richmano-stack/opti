@@ -1,0 +1,33 @@
+export const openRouterResumeJsonSchema = {
+  type: "object", additionalProperties: false,
+  required: ["contact", "summary", "skills", "experience", "education"],
+  properties: {
+    contact: { type: "object", additionalProperties: false,
+      required: ["name", "email", "phone", "location"],
+      properties: {
+        name: { type: "string", minLength: 1, maxLength: 200 },
+        email: { type: ["string", "null"], maxLength: 320 },
+        phone: { type: ["string", "null"], maxLength: 100 },
+        location: { type: ["string", "null"], maxLength: 200 },
+      } },
+    summary: { type: "string", minLength: 1, maxLength: 2000 },
+    skills: { type: "array", minItems: 1, maxItems: 50, items: { type: "string", minLength: 1, maxLength: 100 } },
+    experience: { type: "array", minItems: 1, maxItems: 30,
+      items: { type: "object", additionalProperties: false,
+        required: ["company", "title", "dates", "bullets"],
+        properties: {
+          company: { type: "string", minLength: 1, maxLength: 200 },
+          title: { type: "string", minLength: 1, maxLength: 200 },
+          dates: { type: "string", minLength: 1, maxLength: 100 },
+          bullets: { type: "array", minItems: 1, maxItems: 15, items: { type: "string", minLength: 1, maxLength: 500 } },
+        } } },
+    education: { type: "array", minItems: 1, maxItems: 10,
+      items: { type: "object", additionalProperties: false,
+        required: ["institution", "degree", "dates"],
+        properties: {
+          institution: { type: "string", minLength: 1, maxLength: 200 },
+          degree: { type: "string", minLength: 1, maxLength: 200 },
+          dates: { type: ["string", "null"], maxLength: 100 },
+        } } },
+  },
+} as const;
