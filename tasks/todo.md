@@ -6,15 +6,15 @@ Only one primary implementation task should be active at a time.
 
 ## Foundation
 
-- [ ] [OPTI-001 — Define the generation contract](./tickets/OPTI-001-generation-contract.md)
-- [ ] [OPTI-002 — Replace Gemini with OpenRouter](./tickets/OPTI-002-openrouter-provider.md)
-- [ ] [OPTI-003 — Establish the Server Action boundary](./tickets/OPTI-003-server-action-boundary.md)
+- [x] [OPTI-001 — Define the generation contract](./tickets/OPTI-001-generation-contract.md)
+- [x] [OPTI-002 — Replace Gemini with OpenRouter](./tickets/OPTI-002-openrouter-provider.md)
+- [x] [OPTI-003 — Establish the Server Action boundary](./tickets/OPTI-003-server-action-boundary.md)
 
 ### Checkpoint: generation engine
 
-- [ ] OpenRouter-only generation passes contract and failure tests.
-- [ ] Legacy AI/RPC dependencies are removed.
-- [ ] Production build passes.
+- [x] OpenRouter-only generation passes contract and failure tests.
+- [x] Legacy AI/RPC dependencies are removed.
+- [x] Production build passes.
 
 ## Core workflows
 

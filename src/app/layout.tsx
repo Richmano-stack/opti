@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
-import { TRPCReactProvider } from "@/utils/trpc";
 import "./globals.css";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -26,7 +25,7 @@ export default function RootLayout({
       className={`${plusJakartaSans.variable} ${plusJakartaSans.className} dark h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+        {children}
       </body>
     </html>
   );

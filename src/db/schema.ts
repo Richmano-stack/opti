@@ -3,14 +3,10 @@ import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import {
   boolean,
   index,
-  jsonb,
   pgTable,
   text,
   timestamp,
-  uuid,
 } from "drizzle-orm/pg-core";
-
-import type { OptimizedResume } from "@/services/ai/types";
 
 export const users = pgTable("users", {
   id: text("id").primaryKey(),
@@ -100,25 +96,7 @@ export const verification = pgTable(
   (table) => [index("verification_identifier_idx").on(table.identifier)]
 );
 
-/** Application-specific resume output. Master-resume storage is introduced in Phase 1. */
-export const resumes = pgTable("resumes", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  userId: text("user_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  data: jsonb("data").$type<OptimizedResume>().notNull(),
-  title: text("title"),
-  createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })
-    .notNull()
-    .defaultNow(),
-  updatedAt: timestamp("updated_at", { withTimezone: true, mode: "date" })
-    .notNull()
-    .defaultNow()
-    .$onUpdate(() => new Date()),
-});
-
 export const usersRelations = relations(users, ({ many }) => ({
-  resumes: many(resumes),
   sessions: many(session),
   accounts: many(account),
 }));
@@ -137,17 +115,8 @@ export const accountRelations = relations(account, ({ one }) => ({
   }),
 }));
 
-export const resumesRelations = relations(resumes, ({ one }) => ({
-  user: one(users, {
-    fields: [resumes.userId],
-    references: [users.id],
-  }),
-}));
-
 export type User = InferSelectModel<typeof users>;
 export type NewUser = InferInsertModel<typeof users>;
 export type Session = InferSelectModel<typeof session>;
 export type Account = InferSelectModel<typeof account>;
 export type Verification = InferSelectModel<typeof verification>;
-export type Resume = InferSelectModel<typeof resumes>;
-export type NewResume = InferInsertModel<typeof resumes>;
