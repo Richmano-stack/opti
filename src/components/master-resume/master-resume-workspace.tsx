@@ -148,7 +148,7 @@ export function MasterResumeWorkspace({
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2 text-sm font-bold text-slate-900">
               <FileText className="size-4 text-brand-ink" />
-              <span>Full, unedited career experience</span>
+              <label htmlFor="master-resume-editor">Full, unedited career experience</label>
             </div>
             {lastSavedAt ? (
               <span className="text-[11px] text-slate-400">Last saved at {lastSavedAt}</span>

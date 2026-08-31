@@ -19,8 +19,8 @@ Only one primary implementation task should be active at a time.
 ## Core workflows
 
 - [x] [OPTI-004 — Deliver the guest tailoring flow](./tickets/OPTI-004-guest-tailoring-flow.md)
-- [v] [OPTI-005 — Persist one master resume per account](./tickets/OPTI-005-master-resume-persistence.md)
-- [v] [OPTI-006 — Build the account master-resume experience](./tickets/OPTI-006-master-resume-experience.md)
+- [x] [OPTI-005 — Persist one master resume per account](./tickets/OPTI-005-master-resume-persistence.md)
+- [x] [OPTI-006 — Build the account master-resume experience](./tickets/OPTI-006-master-resume-experience.md)
 - [ ] [OPTI-007 — Unify account generation with the saved master resume](./tickets/OPTI-007-account-generation.md)
 - [ ] [OPTI-008 — Verify and finish PDF export](./tickets/OPTI-008-pdf-export.md)
 
@@ -44,7 +44,7 @@ Only one primary implementation task should be active at a time.
 
 ## Reconciliation checkpoint
 
-- [ ] Configure `OPENROUTER_API_KEY` and complete the live provider plus signed-out guest-generation checks.
-- [ ] Configure `DATABASE_URL`, apply migration `0005`, and verify persistence against PostgreSQL.
-- [ ] Complete first-time and returning-user browser checks for the master-resume experience.
-- [ ] Package the current OPTI-005/006 and UI work into scoped commits and PRs targeting `staging`.
+- [x] Configure `OPENROUTER_API_KEY` and complete the live provider plus signed-out guest-generation checks.
+- [x] Configure `DATABASE_URL`, apply migration `0005`, and verify persistence against PostgreSQL.
+- [x] First-time and returning-user click-driven Playwright journeys pass in Chromium.
+- [x] Package the current OPTI-005/006 and UI work into scoped commits and PRs targeting `staging`.

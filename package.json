@@ -20,7 +20,9 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:studio:infisical": "infisical run --env=dev --path=/ -- pnpm db:studio",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:integration": "infisical run --env=dev --path=/ -- vitest run src/services/master-resume/repository.integration.test.ts src/app/actions/master-resume.integration.test.ts",
+    "test:e2e": "infisical run --env=dev --path=/ -- playwright test"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",
@@ -41,6 +43,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
