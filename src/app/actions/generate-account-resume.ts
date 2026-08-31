@@ -1,6 +1,7 @@
 "use server";
 
 import { getServerSession } from "@/server/auth/session";
+import type { OptimizedResume } from "@/services/ai/types";
 import { findMasterResumeByUserId } from "@/services/master-resume";
 
 import {
@@ -16,6 +17,14 @@ export type AccountGenerationResult =
         code: "UNAUTHORIZED" | "MASTER_RESUME_REQUIRED";
         message: string;
       };
+    };
+
+export type AccountGenerationState =
+  | { status: "idle" }
+  | { status: "success"; data: OptimizedResume }
+  | {
+      status: "error";
+      error: Extract<AccountGenerationResult, { ok: false }>["error"];
     };
 
 export async function generateAccountResume(
@@ -61,4 +70,17 @@ export async function generateAccountResume(
     resume: masterResume.content,
     jobDescription,
   });
+}
+
+export async function submitAccountResume(
+  _previousState: AccountGenerationState,
+  formData: FormData,
+): Promise<AccountGenerationState> {
+  const result = await generateAccountResume(
+    String(formData.get("jobDescription") ?? ""),
+  );
+
+  if (result.ok) return { status: "success", data: result.data };
+
+  return { status: "error", error: result.error };
 }
