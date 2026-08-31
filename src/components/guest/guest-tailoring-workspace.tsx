@@ -17,7 +17,7 @@ import {
   submitGuestResume,
   type GuestGenerationState,
 } from "@/app/actions/generate-resume";
-import { GuestResumePreview } from "@/components/guest/guest-resume-preview";
+import { TailoredResumeResult } from "@/components/pdf";
 import { Button } from "@/components/ui/button";
 
 const initialState: GuestGenerationState = { status: "idle" };
@@ -306,7 +306,7 @@ export function GuestTailoringWorkspace() {
 
               {state.status === "success" ? (
                 <div className="flex-1 overflow-auto">
-                  <GuestResumePreview resume={state.data} />
+                  <TailoredResumeResult resume={state.data} />
                 </div>
               ) : (
                 <div className="flex flex-1 flex-col items-center justify-center text-center p-6 sm:p-10 my-auto">

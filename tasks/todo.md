@@ -22,13 +22,13 @@ Only one primary implementation task should be active at a time.
 - [x] [OPTI-005 — Persist one master resume per account](./tickets/OPTI-005-master-resume-persistence.md)
 - [x] [OPTI-006 — Build the account master-resume experience](./tickets/OPTI-006-master-resume-experience.md)
 - [x] [OPTI-007 — Unify account generation with the saved master resume](./tickets/OPTI-007-account-generation.md)
-- [ ] [OPTI-008 — Verify and finish PDF export](./tickets/OPTI-008-pdf-export.md)
+- [x] [OPTI-008 — Verify and finish PDF export](./tickets/OPTI-008-pdf-export.md)
 
 ### Checkpoint: functional MVP
 
-- [ ] Guest can paste two inputs, preview, and download without an account.
+- [x] Guest can paste two inputs, preview, and download without an account.
 - [x] Account user can save one master resume and tailor from only a job description.
-- [ ] Guest and generated data are not persisted.
+- [x] Guest and generated data are not persisted.
 
 ## Product quality
 

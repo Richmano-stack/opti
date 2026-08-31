@@ -16,7 +16,7 @@ import {
   type AccountGenerationState,
 } from "@/app/actions/generate-account-resume";
 import { AccountHeader } from "@/components/account/account-header";
-import { GuestResumePreview } from "@/components/guest/guest-resume-preview";
+import { TailoredResumeResult } from "@/components/pdf";
 import { Button } from "@/components/ui/button";
 import type { AuthUser } from "@/server/auth/types";
 
@@ -150,7 +150,7 @@ export function AccountTailoringWorkspace({
               </h2>
             </div>
             {state.status === "success" ? (
-              <div className="flex-1 overflow-auto"><GuestResumePreview resume={state.data} /></div>
+              <div className="flex-1 overflow-auto"><TailoredResumeResult resume={state.data} /></div>
             ) : (
               <div className="flex flex-1 flex-col items-center justify-center px-4 text-center">
                 <span className="flex size-16 items-center justify-center rounded-2xl bg-brand-soft text-brand-ink">
@@ -158,7 +158,7 @@ export function AccountTailoringWorkspace({
                 </span>
                 <h3 className="mt-4 font-bold">Your tailored résumé will appear here</h3>
                 <p className="mt-1.5 max-w-sm text-xs leading-relaxed text-slate-500">
-                  Review the result before downloading it in the PDF export step.
+                  Review the result, then download a clean PDF when you are ready.
                 </p>
               </div>
             )}
