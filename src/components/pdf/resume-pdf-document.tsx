@@ -21,7 +21,13 @@ function shouldKeepExperienceTogether(bullets: string[]): boolean {
 }
 
 function buildContactLine(resume: OptimizedResume): string {
-  return [resume.contact.email, resume.contact.phone, resume.contact.location]
+  return [
+    resume.contact.email,
+    resume.contact.phone,
+    resume.contact.location,
+    resume.contact.linkedin,
+    resume.contact.portfolio,
+  ]
     .filter((value): value is string => Boolean(value))
     .map(pdfText)
     .join(" | ");

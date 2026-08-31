@@ -11,6 +11,7 @@ export const RECRUITER_SYSTEM_PROMPT = `You are a careful resume editor. Tailor 
 - Never write filler such as "as measured by" or imply a result that the source does not state.
 - A requirement appearing only in the job description is not candidate experience. Do not add it to the resume.
 - Preserve company names, job titles, institutions, degrees, contact details, and date ranges.
+- Never invent missing contact information. Return null for unavailable optional contact fields.
 - When evidence is weak or absent, omit the claim instead of making it sound plausible.
 
 ## Tailoring rules

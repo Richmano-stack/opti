@@ -1,7 +1,13 @@
 import type { OptimizedResume } from "@/services/ai/types";
 
 export function GuestResumePreview({ resume }: { resume: OptimizedResume }) {
-  const contact = [resume.contact.email, resume.contact.phone, resume.contact.location]
+  const contact = [
+    resume.contact.email,
+    resume.contact.phone,
+    resume.contact.location,
+    resume.contact.linkedin,
+    resume.contact.portfolio,
+  ]
     .filter(Boolean)
     .join(" · ");
 

@@ -16,6 +16,7 @@ import {
   type AccountGenerationState,
 } from "@/app/actions/generate-account-resume";
 import { AccountHeader } from "@/components/account/account-header";
+import { ContactInformationPreflight } from "@/components/contact-information-preflight";
 import { TailoredResumeResult } from "@/components/pdf";
 import { Button } from "@/components/ui/button";
 import type { AuthUser } from "@/server/auth/types";
@@ -38,6 +39,9 @@ export function AccountTailoringWorkspace({
 
   useEffect(() => {
     if (state.status === "success") resultHeading.current?.focus();
+    if (state.status === "error") {
+      console.error("[resume-generation] Request failed", state.error);
+    }
   }, [state]);
 
   return (
@@ -117,6 +121,15 @@ export function AccountTailoringWorkspace({
                 </p>
               ) : null}
 
+              {state.status === "missing_contact_info" ? (
+                <ContactInformationPreflight
+                  missingFields={state.missingFields}
+                  canSave
+                  isPending={isPending}
+                />
+              ) : null}
+
+              {state.status !== "missing_contact_info" ? (
               <Button
                 type="submit"
                 size="lg"
@@ -129,6 +142,7 @@ export function AccountTailoringWorkspace({
                   <><Sparkles aria-hidden className="size-4" /> Tailor my résumé</>
                 )}
               </Button>
+              ) : null}
               <p className="mt-3 flex items-center justify-center gap-1.5 text-[11px] text-slate-500">
                 <Lock aria-hidden className="size-3.5" />
                 Job descriptions and generated résumés are not saved.

@@ -17,6 +17,7 @@ import {
   submitGuestResume,
   type GuestGenerationState,
 } from "@/app/actions/generate-resume";
+import { ContactInformationPreflight } from "@/components/contact-information-preflight";
 import { TailoredResumeResult } from "@/components/pdf";
 import { Button } from "@/components/ui/button";
 
@@ -166,6 +167,9 @@ export function GuestTailoringWorkspace() {
 
   useEffect(() => {
     if (state.status === "success") resultHeading.current?.focus();
+    if (state.status === "error") {
+      console.error("[resume-generation] Request failed", state.error);
+    }
   }, [state]);
 
   return (
@@ -256,6 +260,15 @@ export function GuestTailoringWorkspace() {
                 </p>
               ) : null}
 
+              {state.status === "missing_contact_info" ? (
+                <ContactInformationPreflight
+                  missingFields={state.missingFields}
+                  canSave={false}
+                  isPending={isPending}
+                />
+              ) : null}
+
+              {state.status !== "missing_contact_info" ? (
               <div className="pt-2">
                 <Button
                   type="submit"
@@ -281,6 +294,7 @@ export function GuestTailoringWorkspace() {
                   Nothing is saved. Everything stays in this browser session.
                 </p>
               </div>
+              ) : null}
             </form>
           </div>
 

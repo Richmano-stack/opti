@@ -3,12 +3,14 @@ export const openRouterResumeJsonSchema = {
   required: ["contact", "summary", "skills", "experience", "education"],
   properties: {
     contact: { type: "object", additionalProperties: false,
-      required: ["name", "email", "phone", "location"],
+      required: ["name", "email", "phone", "location", "linkedin", "portfolio"],
       properties: {
         name: { type: "string", minLength: 1, maxLength: 200 },
         email: { type: ["string", "null"], maxLength: 320 },
         phone: { type: ["string", "null"], maxLength: 100 },
         location: { type: ["string", "null"], maxLength: 200 },
+        linkedin: { type: ["string", "null"], maxLength: 500 },
+        portfolio: { type: ["string", "null"], maxLength: 500 },
       } },
     summary: { type: "string", minLength: 1, maxLength: 2000 },
     skills: { type: "array", minItems: 1, maxItems: 50, items: { type: "string", minLength: 1, maxLength: 100 } },
