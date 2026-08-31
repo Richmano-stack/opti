@@ -28,7 +28,7 @@
 - [ ] Manual returning-user journey succeeds.
 - [ ] Lint, typecheck, and build pass.
 
-**Audit status (2026-08-31):** Planned, not started. The dashboard links to `/dashboard/generator`, but that route and authenticated generation action do not exist yet.
+**Audit status (2026-08-31):** In progress. The authenticated server action now loads the current user's saved master resume and reuses the guest generation path. The `/dashboard/generator` route, job-description-only UI, and manual returning-user journey remain.
 
 **Dependencies:** OPTI-003, OPTI-006
 **Estimated scope:** Medium
