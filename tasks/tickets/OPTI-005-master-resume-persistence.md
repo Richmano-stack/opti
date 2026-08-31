@@ -24,10 +24,10 @@
 ## Verification
 
 - [x] Migration applies successfully to the local PostgreSQL database.
-- [ ] Persistence and isolation tests pass against PostgreSQL.
+- [x] Persistence and isolation tests pass against PostgreSQL.
 - [x] Lint, typecheck, and build pass.
 
-**Audit status (2026-08-31):** Schema, migration, authenticated operations, and unit tests are implemented. Migration `0005` was applied successfully to local PostgreSQL on port `5461`; existing repository tests still use injected mocks and do not yet prove real-database persistence/isolation.
+**Audit status (2026-08-31):** Complete. Migration `0005` applies successfully on PostgreSQL 16 at port `5461`. Real-database repository and authenticated Server Action integration tests prove create, reload, update, one-row-per-user behavior, and cross-user isolation.
 
 **Dependencies:** OPTI-001
 **Estimated scope:** Medium

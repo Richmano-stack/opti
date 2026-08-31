@@ -20,7 +20,8 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:studio:infisical": "infisical run --env=dev --path=/ -- pnpm db:studio",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:integration": "infisical run --env=dev --path=/ -- vitest run src/services/master-resume/repository.integration.test.ts src/app/actions/master-resume.integration.test.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",
