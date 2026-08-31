@@ -32,8 +32,8 @@ describe("guest tailoring components", () => {
 
     expect(html).toContain("Master résumé");
     expect(html).toContain("Job description");
-    expect(html).toContain("Generate tailored résumé");
-    expect(html).toContain("Guest documents are not persisted");
+    expect(html).toContain("Tailor my résumé");
+    expect(html).toContain("Nothing is saved. Everything stays in this browser session.");
     expect(html).toContain("Your tailored résumé will appear here");
   });
 

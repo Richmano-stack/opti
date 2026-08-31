@@ -4,23 +4,9 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
+import { LoaderCircle, Lock } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Field,
-  FieldDescription,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { authClient } from "@/server/auth/client";
 
@@ -30,7 +16,7 @@ export function SignupForm({
 }: React.ComponentProps<"div">) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") ?? "/";
+  const callbackUrl = searchParams.get("callbackUrl") ?? "/dashboard";
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -65,114 +51,152 @@ export function SignupForm({
         return;
       }
 
-      toast.success("Account created — welcome!");
+      toast.success("Account created  welcome!");
       router.push(callbackUrl);
       router.refresh();
     },
-    [callbackUrl, confirmPassword, email, name, password, router]
+    [callbackUrl, confirmPassword, email, name, password, router],
   );
 
   const loginHref =
-    callbackUrl === "/"
+    callbackUrl === "/dashboard" || callbackUrl === "/"
       ? "/login"
       : `/login?callbackUrl=${encodeURIComponent(callbackUrl)}`;
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
-        <CardHeader>
-          <CardTitle>Create an account</CardTitle>
-          <CardDescription>
-            Enter your information below to create your account
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSignUp}>
-            <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor="name">Full Name</FieldLabel>
-                <Input
-                  id="name"
-                  type="text"
-                  autoComplete="name"
-                  placeholder="Jane Doe"
-                  value={name}
-                  onChange={(event) => setName(event.target.value)}
-                />
-              </Field>
-              <Field>
-                <FieldLabel htmlFor="email">Email</FieldLabel>
-                <Input
-                  id="email"
-                  type="email"
-                  autoComplete="email"
-                  placeholder="m@example.com"
-                  required
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                />
-                <FieldDescription>
-                  We&apos;ll use this to contact you. We will not share your
-                  email with anyone else.
-                </FieldDescription>
-              </Field>
-              <Field data-invalid={passwordMismatch || undefined}>
-                <FieldLabel htmlFor="password">Password</FieldLabel>
-                <Input
-                  id="password"
-                  type="password"
-                  autoComplete="new-password"
-                  required
-                  minLength={8}
-                  aria-invalid={passwordMismatch}
-                  value={password}
-                  onChange={(event) => {
-                    setPassword(event.target.value);
-                    setPasswordMismatch(false);
-                  }}
-                />
-                <FieldDescription>
-                  Must be at least 8 characters long.
-                </FieldDescription>
-              </Field>
-              <Field data-invalid={passwordMismatch || undefined}>
-                <FieldLabel htmlFor="confirm-password">
-                  Confirm Password
-                </FieldLabel>
-                <Input
-                  id="confirm-password"
-                  type="password"
-                  autoComplete="new-password"
-                  required
-                  minLength={8}
-                  aria-invalid={passwordMismatch}
-                  value={confirmPassword}
-                  onChange={(event) => {
-                    setConfirmPassword(event.target.value);
-                    setPasswordMismatch(false);
-                  }}
-                />
-                {passwordMismatch ? (
-                  <FieldError>Passwords do not match.</FieldError>
-                ) : (
-                  <FieldDescription>
-                    Please confirm your password.
-                  </FieldDescription>
-                )}
-              </Field>
-              <Field>
-                <Button type="submit" className="w-full" disabled={isSubmitting}>
-                  {isSubmitting ? "Creating account…" : "Create Account"}
-                </Button>
-                <FieldDescription className="text-center">
-                  Already have an account?{" "}
-                  <Link href={loginHref}>Sign in</Link>
-                </FieldDescription>
-              </Field>
-            </FieldGroup>
-          </form>
-        </CardContent>
-      </Card>
+    <div className={cn("w-full", className)} {...props}>
+      <div className="rounded-2xl border border-slate-200/80 bg-white p-7 sm:p-8 shadow-[0_4px_24px_rgba(0,0,0,0.04)]">
+        <div className="text-center mb-6">
+          <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900">
+            Create an account
+          </h1>
+          <p className="mt-1 text-xs text-slate-500">
+            Save your master resume and tailor it for every job
+          </p>
+        </div>
+
+        <form onSubmit={handleSignUp} className="space-y-3.5">
+          <div>
+            <label
+              htmlFor="name"
+              className="block text-xs font-bold text-slate-900 mb-1"
+            >
+              Full name
+            </label>
+            <input
+              id="name"
+              type="text"
+              autoComplete="name"
+              placeholder="Jane Doe"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              className="w-full rounded-xl border border-slate-200 bg-[#fbfcfe] px-3.5 py-2 text-xs text-slate-800 placeholder:text-slate-400 focus:border-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-muted/30 transition-all"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-xs font-bold text-slate-900 mb-1"
+            >
+              Email address
+            </label>
+            <input
+              id="email"
+              type="email"
+              autoComplete="email"
+              placeholder="you@example.com"
+              required
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              className="w-full rounded-xl border border-slate-200 bg-[#fbfcfe] px-3.5 py-2 text-xs text-slate-800 placeholder:text-slate-400 focus:border-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-muted/30 transition-all"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="password"
+              className="block text-xs font-bold text-slate-900 mb-1"
+            >
+              Password
+            </label>
+            <input
+              id="password"
+              type="password"
+              autoComplete="new-password"
+              placeholder=" (min 8 chars)"
+              required
+              minLength={8}
+              value={password}
+              onChange={(event) => {
+                setPassword(event.target.value);
+                setPasswordMismatch(false);
+              }}
+              className="w-full rounded-xl border border-slate-200 bg-[#fbfcfe] px-3.5 py-2 text-xs text-slate-800 placeholder:text-slate-400 focus:border-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-muted/30 transition-all"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="confirm-password"
+              className="block text-xs font-bold text-slate-900 mb-1"
+            >
+              Confirm password
+            </label>
+            <input
+              id="confirm-password"
+              type="password"
+              autoComplete="new-password"
+              placeholder=""
+              required
+              minLength={8}
+              value={confirmPassword}
+              onChange={(event) => {
+                setConfirmPassword(event.target.value);
+                setPasswordMismatch(false);
+              }}
+              className="w-full rounded-xl border border-slate-200 bg-[#fbfcfe] px-3.5 py-2 text-xs text-slate-800 placeholder:text-slate-400 focus:border-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-muted/30 transition-all"
+            />
+            {passwordMismatch ? (
+              <p className="mt-1 text-[11px] text-red-500 font-medium">
+                Passwords do not match.
+              </p>
+            ) : null}
+          </div>
+
+          <div className="pt-2">
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full h-11 rounded-xl bg-brand-action hover:bg-brand-action-hover text-slate-900 font-semibold text-xs shadow-sm shadow-sky-200/20 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+            >
+              {isSubmitting ? (
+                <>
+                  <LoaderCircle className="size-4 animate-spin" />
+                  Creating account
+                </>
+              ) : (
+                "Create Account"
+              )}
+            </Button>
+          </div>
+
+          <p className="text-center text-xs text-slate-500 pt-1">
+            Already have an account?{" "}
+            <Link
+              href={loginHref}
+              className="font-semibold text-brand-ink hover:text-brand-ink underline underline-offset-2"
+            >
+              Sign in
+            </Link>
+          </p>
+
+          <p className="mt-3 flex items-center justify-center gap-1.5 text-[11px] text-slate-400 pt-3 border-t border-slate-100">
+            <Lock className="size-3 text-slate-400" />
+            Your documents and credentials stay private
+          </p>
+        </form>
+      </div>
     </div>
   );
 }

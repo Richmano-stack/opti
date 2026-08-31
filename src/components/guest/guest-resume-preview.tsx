@@ -15,21 +15,21 @@ export function GuestResumePreview({ resume }: { resume: OptimizedResume }) {
       </header>
 
       <section className="mt-6" aria-labelledby="preview-summary">
-        <h3 id="preview-summary" className="text-xs font-bold uppercase tracking-[0.16em] text-sky-700">
+        <h3 id="preview-summary" className="text-xs font-bold uppercase tracking-[0.16em] text-brand-ink">
           Professional summary
         </h3>
         <p className="mt-2 text-sm leading-6 text-slate-700">{resume.summary}</p>
       </section>
 
       <section className="mt-6" aria-labelledby="preview-skills">
-        <h3 id="preview-skills" className="text-xs font-bold uppercase tracking-[0.16em] text-sky-700">
+        <h3 id="preview-skills" className="text-xs font-bold uppercase tracking-[0.16em] text-brand-ink">
           Skills
         </h3>
         <p className="mt-2 text-sm leading-6 text-slate-700">{resume.skills.join(" · ")}</p>
       </section>
 
       <section className="mt-6" aria-labelledby="preview-experience">
-        <h3 id="preview-experience" className="text-xs font-bold uppercase tracking-[0.16em] text-sky-700">
+        <h3 id="preview-experience" className="text-xs font-bold uppercase tracking-[0.16em] text-brand-ink">
           Experience
         </h3>
         <div className="mt-3 space-y-5">
@@ -49,7 +49,7 @@ export function GuestResumePreview({ resume }: { resume: OptimizedResume }) {
       </section>
 
       <section className="mt-6" aria-labelledby="preview-education">
-        <h3 id="preview-education" className="text-xs font-bold uppercase tracking-[0.16em] text-sky-700">
+        <h3 id="preview-education" className="text-xs font-bold uppercase tracking-[0.16em] text-brand-ink">
           Education
         </h3>
         <div className="mt-3 space-y-3">
