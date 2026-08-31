@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
 import { LoaderCircle, Lock } from "lucide-react";
@@ -14,7 +14,6 @@ export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") ?? "/dashboard";
 
@@ -52,10 +51,9 @@ export function SignupForm({
       }
 
       toast.success("Account created  welcome!");
-      router.push(callbackUrl);
-      router.refresh();
+      window.location.assign(callbackUrl);
     },
-    [callbackUrl, confirmPassword, email, name, password, router],
+    [callbackUrl, confirmPassword, email, name, password],
   );
 
   const loginHref =

@@ -24,10 +24,10 @@
 ## Verification
 
 - [x] UI and server-operation tests cover empty, create, update, and error states.
-- [ ] Manual first-time and returning-user journeys pass.
+- [x] Click-driven first-time and returning-user journeys pass in Chromium.
 - [x] Lint, typecheck, and build pass.
 
-**Audit status (2026-08-31):** The dashboard editor, authenticated save/load operations, and migration are implemented. Unit and real-database integration tests cover validation, create, reload, update, and ownership isolation. A disposable Better Auth session also passed the first-time, created-resume reload, and updated-resume reload journey over localhost HTTP. Click-driven browser verification remains pending because the local browser automation runtime could not start.
+**Audit status (2026-08-31):** Complete. Unit and real-database integration tests cover validation, create, reload, update, and ownership isolation. A disposable-account Playwright test passes the complete Chromium journey: sign up, authenticated redirect, first save, reload, edit, second save, and second reload. The browser test also verifies the editor has an accessible label and removes its test account afterward.
 
 **Dependencies:** OPTI-005
 **Estimated scope:** Medium
