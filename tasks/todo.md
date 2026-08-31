@@ -21,7 +21,7 @@ Only one primary implementation task should be active at a time.
 - [x] [OPTI-004 — Deliver the guest tailoring flow](./tickets/OPTI-004-guest-tailoring-flow.md)
 - [x] [OPTI-005 — Persist one master resume per account](./tickets/OPTI-005-master-resume-persistence.md)
 - [x] [OPTI-006 — Build the account master-resume experience](./tickets/OPTI-006-master-resume-experience.md)
-- [ ] [OPTI-007 — Unify account generation with the saved master resume](./tickets/OPTI-007-account-generation.md)
+- [~] [OPTI-007 — Unify account generation with the saved master resume](./tickets/OPTI-007-account-generation.md)
 - [ ] [OPTI-008 — Verify and finish PDF export](./tickets/OPTI-008-pdf-export.md)
 
 ### Checkpoint: functional MVP
