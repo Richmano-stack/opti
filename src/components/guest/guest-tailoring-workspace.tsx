@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useEffect, useRef, useState, type DragEvent, type ChangeEvent } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import {
   Briefcase,
   CheckCircle2,
@@ -10,7 +10,6 @@ import {
   Lock,
   Shield,
   Sparkles,
-  Upload,
   Zap,
 } from "lucide-react";
 
@@ -100,7 +99,7 @@ function HeroIllustration() {
   );
 }
 
-interface DropZoneProps {
+interface TextAreaFieldProps {
   id: string;
   name: string;
   value: string;
@@ -108,12 +107,12 @@ interface DropZoneProps {
   title: string;
   subtitle: string;
   icon: React.ReactNode;
-  placeholderTitle: string;
+  placeholder: string;
   maxChars: number;
   disabled?: boolean;
 }
 
-function DropZone({
+function TextAreaField({
   id,
   name,
   value,
@@ -121,109 +120,35 @@ function DropZone({
   title,
   subtitle,
   icon,
-  placeholderTitle,
+  placeholder,
   maxChars,
   disabled,
-}: DropZoneProps) {
-  const [isDragging, setIsDragging] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  const handleFile = (file: File) => {
-    if (file.type.includes("text") || file.name.endsWith(".txt") || file.name.endsWith(".md")) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const text = e.target?.result as string;
-        if (text) onChange(text);
-      };
-      reader.readAsText(file);
-    } else {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const text = e.target?.result as string;
-        if (text) onChange(text);
-      };
-      reader.readAsText(file);
-    }
-  };
-
-  const handleDrop = (e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDragging(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      handleFile(e.dataTransfer.files[0]);
-    }
-  };
-
-  const handleFileInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      handleFile(e.target.files[0]);
-    }
-  };
-
+}: TextAreaFieldProps) {
   return (
     <div className="space-y-2">
       <div className="flex items-start gap-2.5">
         <div className="mt-0.5 text-brand-ink">{icon}</div>
         <div>
-          <label htmlFor={id} className="block text-sm font-bold text-slate-900 cursor-pointer">
+          <label htmlFor={id} className="block cursor-pointer text-sm font-bold text-slate-900">
             {title}
           </label>
           <p className="text-xs text-slate-500">{subtitle}</p>
         </div>
       </div>
 
-      <div
-        onDragOver={(e) => {
-          e.preventDefault();
-          setIsDragging(true);
-        }}
-        onDragLeave={() => setIsDragging(false)}
-        onDrop={handleDrop}
-        className={`relative rounded-xl border border-dashed transition-all cursor-text overflow-hidden ${
-          isDragging
-            ? "border-brand-muted bg-brand-soft/80 ring-2 ring-brand-muted/30"
-            : value.length > 0
-            ? "border-brand-border/80 bg-white"
-            : "border-brand-border bg-[#f7faff] hover:bg-brand-soft/50"
-        }`}
-      >
-        <input
-          type="file"
-          ref={fileInputRef}
-          onChange={handleFileInputChange}
-          accept=".txt,.md,.pdf,.docx"
-          className="hidden"
-          disabled={disabled}
-        />
+      <textarea
+        id={id}
+        name={name}
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        maxLength={maxChars}
+        required
+        disabled={disabled}
+        placeholder={placeholder}
+        className="min-h-[140px] w-full resize-y rounded-xl border border-slate-200 bg-white p-3 text-sm leading-relaxed text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-brand-muted focus:ring-2 focus:ring-brand-soft disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500"
+      />
 
-        {/* Decorative empty-state overlay — pointer-events-none so clicks reach the textarea */}
-        {value.length === 0 ? (
-          <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center px-4 py-8 text-center">
-            <div className="flex size-9 items-center justify-center rounded-lg bg-white shadow-sm border border-brand-border text-brand-ink mb-2.5">
-              <Upload className="size-4" />
-            </div>
-            <p className="text-sm font-semibold text-slate-800">{placeholderTitle}</p>
-            <p className="mt-0.5 text-xs text-slate-400">Paste plain text to continue</p>
-          </div>
-        ) : null}
-
-        {/* Always-visible textarea — MVP: click anywhere to type or paste */}
-        <textarea
-          id={id}
-          ref={textareaRef}
-          name={name}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          maxLength={maxChars}
-          required
-          disabled={disabled}
-          placeholder=""
-          className="relative z-10 w-full min-h-[140px] resize-y bg-transparent p-3 text-xs leading-relaxed text-slate-800 focus:outline-none"
-        />
-      </div>
-
-      <div className="flex items-center justify-between text-[11px] text-slate-400 px-0.5">
+      <div className="flex items-center justify-between px-0.5 text-[11px] text-slate-400">
         <span>Plain text only</span>
         <span>
           {value.length.toLocaleString()} / {maxChars.toLocaleString()} characters
@@ -299,7 +224,7 @@ export function GuestTailoringWorkspace() {
             </div>
 
             <form action={formAction} className="space-y-5">
-              <DropZone
+              <TextAreaField
                 id="guest-resume"
                 name="resume"
                 value={resume}
@@ -307,12 +232,12 @@ export function GuestTailoringWorkspace() {
                 title="Master résumé"
                 subtitle="Add your full, unedited résumé."
                 icon={<FileText className="size-4" />}
-                placeholderTitle="Paste your résumé here"
+                placeholder="Paste your résumé here"
                 maxChars={50_000}
                 disabled={isPending}
               />
 
-              <DropZone
+              <TextAreaField
                 id="guest-job-description"
                 name="jobDescription"
                 value={jobDescription}
@@ -320,7 +245,7 @@ export function GuestTailoringWorkspace() {
                 title="Job description"
                 subtitle="Paste the full job description."
                 icon={<Briefcase className="size-4" />}
-                placeholderTitle="Paste the job description here"
+                placeholder="Paste the job description here"
                 maxChars={30_000}
                 disabled={isPending}
               />
