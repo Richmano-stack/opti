@@ -36,6 +36,13 @@
       "when": 1787939377268,
       "tag": "0004_talented_cannonball",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1787946857597,
+      "tag": "0005_clean_puppet_master",
+      "breakpoints": true
     }
   ]
 }

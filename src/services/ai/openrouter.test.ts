@@ -50,6 +50,13 @@ describe("optimizeResume with OpenRouter", () => {
     await expect(optimizeResume(input)).rejects.toMatchObject({ code: "OPENROUTER_RATE_LIMITED" });
   });
 
+  it("maps insufficient credits without exposing provider details", async () => {
+    vi.stubEnv("OPENROUTER_API_KEY", "test-key");
+    vi.stubEnv("OPENROUTER_MODEL", "test/model");
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response("private upstream detail", { status: 402 })));
+
+    await expect(optimizeResume(input)).rejects.toMatchObject({ code: "OPENROUTER_CREDITS_EXHAUSTED" });
+  });
   it("rejects malformed model content", async () => {
     vi.stubEnv("OPENROUTER_API_KEY", "test-key");
     vi.stubEnv("OPENROUTER_MODEL", "test/model");

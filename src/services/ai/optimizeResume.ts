@@ -29,6 +29,7 @@ export async function optimizeResume(input: OptimizeResumeInput): Promise<Optimi
     throw new OpenRouterServiceError("OPENROUTER_UNAVAILABLE", "OpenRouter is unavailable.", error);
   }
   if (!response.ok) {
+    if (response.status === 402) throw new OpenRouterServiceError("OPENROUTER_CREDITS_EXHAUSTED", "OpenRouter credits are exhausted.");
     if (response.status === 401 || response.status === 403) throw new OpenRouterServiceError("OPENROUTER_UNAUTHORIZED", "OpenRouter rejected the credentials.");
     if (response.status === 429) throw new OpenRouterServiceError("OPENROUTER_RATE_LIMITED", "OpenRouter rate limit reached.");
     throw new OpenRouterServiceError("OPENROUTER_UNAVAILABLE", "OpenRouter request failed.");

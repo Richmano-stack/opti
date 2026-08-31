@@ -8,6 +8,20 @@ import {
   timestamp,
 } from "drizzle-orm/pg-core";
 
+export const masterResumes = pgTable("master_resumes", {
+  userId: text("user_id")
+    .primaryKey()
+    .references(() => users.id, { onDelete: "cascade" }),
+  content: text("content").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true, mode: "date" })
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => new Date()),
+});
+
 export const users = pgTable("users", {
   id: text("id").primaryKey(),
   email: text("email").notNull().unique(),
@@ -96,9 +110,13 @@ export const verification = pgTable(
   (table) => [index("verification_identifier_idx").on(table.identifier)]
 );
 
-export const usersRelations = relations(users, ({ many }) => ({
+export const usersRelations = relations(users, ({ many, one }) => ({
   sessions: many(session),
   accounts: many(account),
+  masterResume: one(masterResumes, {
+    fields: [users.id],
+    references: [masterResumes.userId],
+  }),
 }));
 
 export const sessionRelations = relations(session, ({ one }) => ({
@@ -115,8 +133,17 @@ export const accountRelations = relations(account, ({ one }) => ({
   }),
 }));
 
+export const masterResumesRelations = relations(masterResumes, ({ one }) => ({
+  user: one(users, {
+    fields: [masterResumes.userId],
+    references: [users.id],
+  }),
+}));
+
 export type User = InferSelectModel<typeof users>;
 export type NewUser = InferInsertModel<typeof users>;
 export type Session = InferSelectModel<typeof session>;
 export type Account = InferSelectModel<typeof account>;
 export type Verification = InferSelectModel<typeof verification>;
+export type MasterResume = InferSelectModel<typeof masterResumes>;
+export type NewMasterResume = InferInsertModel<typeof masterResumes>;

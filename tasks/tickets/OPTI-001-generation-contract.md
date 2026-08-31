@@ -17,14 +17,14 @@
 
 ## Acceptance criteria
 
-- [ ] The same inferred output type is consumed by preview and PDF code.
-- [ ] Empty, excessive, malformed, and structurally incomplete values are rejected.
-- [ ] Tests prove valid output passes and malformed output fails safely.
+- [x] The same inferred output type is consumed by preview and PDF code.
+- [x] Empty, excessive, malformed, and structurally incomplete values are rejected.
+- [x] Tests prove valid output passes and malformed output fails safely.
 
 ## Verification
 
-- [ ] Focused schema tests pass.
-- [ ] `npm run lint`, `npx tsc --noEmit`, and `npm run build` pass.
+- [x] Focused schema tests pass.
+- [x] `pnpm lint`, `pnpm exec tsc --noEmit`, and `pnpm build` pass.
 
 **Dependencies:** None
 **Estimated scope:** Medium

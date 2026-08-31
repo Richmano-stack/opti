@@ -28,6 +28,8 @@
 - [ ] Manual returning-user journey succeeds.
 - [ ] Lint, typecheck, and build pass.
 
+**Audit status (2026-08-31):** Planned, not started. The dashboard links to `/dashboard/generator`, but that route and authenticated generation action do not exist yet.
+
 **Dependencies:** OPTI-003, OPTI-006
 **Estimated scope:** Medium
 **Likely areas:** generation action, dashboard generator route, generator components

@@ -70,6 +70,22 @@ describe("generateResume", () => {
       },
     });
   });
+  it("maps exhausted provider credits to a safe configuration error", async () => {
+    optimizeResume.mockRejectedValue(
+      new OpenRouterServiceError(
+        "OPENROUTER_CREDITS_EXHAUSTED",
+        "private upstream details",
+      ),
+    );
+
+    await expect(generateResume(validInput)).resolves.toEqual({
+      ok: false,
+      error: {
+        code: "CONFIGURATION_ERROR",
+        message: "Résumé generation needs provider credits or a free model.",
+      },
+    });
+  });
 });
 
 describe("submitGuestResume", () => {
