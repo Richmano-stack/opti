@@ -21,8 +21,16 @@ const globalForDb = globalThis as unknown as {
   db: DbClient | undefined;
 };
 
-export const db = globalForDb.db ?? createDb();
-
-if (process.env.NODE_ENV !== "production") {
-  globalForDb.db = db;
+export function getDb(): DbClient {
+  if (!globalForDb.db) {
+    globalForDb.db = createDb();
+  }
+  return globalForDb.db;
 }
+
+export const db = new Proxy({} as DbClient, {
+  get(_target, prop, receiver) {
+    const instance = getDb();
+    return Reflect.get(instance, prop, receiver);
+  },
+});
