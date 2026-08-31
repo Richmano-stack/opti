@@ -18,17 +18,17 @@
 
 ## Acceptance criteria
 
-- [ ] A returning user with a saved master resume generates from only a pasted job description.
-- [ ] The action cannot be made to use another user's master resume.
-- [ ] Guest and account generation share one output contract and provider path.
+- [x] A returning user with a saved master resume generates from only a pasted job description.
+- [x] The action cannot be made to use another user's master resume.
+- [x] Guest and account generation share one output contract and provider path.
 
 ## Verification
 
-- [ ] Integration tests cover authenticated success, missing master resume, and ownership isolation.
-- [ ] Manual returning-user journey succeeds.
-- [ ] Lint, typecheck, and build pass.
+- [x] Integration tests cover authenticated success, missing master resume, and ownership isolation.
+- [x] Manual returning-user journey succeeds.
+- [x] Lint, typecheck, and build pass.
 
-**Audit status (2026-08-31):** In progress. The authenticated server action now loads the current user's saved master resume and reuses the guest generation path. The `/dashboard/generator` route, job-description-only UI, and manual returning-user journey remain.
+**Audit status (2026-08-31):** Complete. Signed-in users with a saved master resume see a job-description-only generator, while users without one receive setup guidance. The authenticated action loads only the session user's resume, reuses the shared generation contract/provider, and the synthetic Playwright journey passes end to end.
 
 **Dependencies:** OPTI-003, OPTI-006
 **Estimated scope:** Medium

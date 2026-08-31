@@ -1,5 +1,8 @@
 import { defineConfig } from "@playwright/test";
 
+const port = process.env.PLAYWRIGHT_PORT ?? "3000";
+const baseURL = `http://localhost:${port}`;
+
 export default defineConfig({
   testDir: "./e2e",
   testMatch: "*.e2e.ts",
@@ -8,14 +11,14 @@ export default defineConfig({
   retries: 0,
   reporter: "list",
   use: {
-    baseURL: "http://localhost:3000",
+    baseURL,
     screenshot: "only-on-failure",
     trace: "retain-on-failure",
   },
   webServer: {
-    command: "pnpm dev:next",
-    url: "http://localhost:3000",
-    reuseExistingServer: false,
+    command: `pnpm dev:next --port ${port}`,
+    url: baseURL,
+    reuseExistingServer: true,
     timeout: 120_000,
   },
 });

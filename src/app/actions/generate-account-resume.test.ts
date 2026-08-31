@@ -10,7 +10,10 @@ vi.mock("@/server/auth/session", () => ({ getServerSession }));
 vi.mock("@/services/master-resume", () => ({ findMasterResumeByUserId }));
 vi.mock("./generate-resume", () => ({ generateResume }));
 
-import { generateAccountResume } from "./generate-account-resume";
+import {
+  generateAccountResume,
+  submitAccountResume,
+} from "./generate-account-resume";
 
 const user = { id: "user-123", email: "user@example.com", name: "Test User" };
 const masterResume = {
@@ -72,6 +75,39 @@ describe("generateAccountResume", () => {
       error: {
         code: "SERVICE_UNAVAILABLE",
         message: "Your saved resume could not be loaded. Please try again.",
+      },
+    });
+  });
+});
+describe("submitAccountResume", () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  it("returns the generated resume as account form state", async () => {
+    const generated = { contact: { name: "Test User" } };
+    getServerSession.mockResolvedValue({ user });
+    findMasterResumeByUserId.mockResolvedValue(masterResume);
+    generateResume.mockResolvedValue({ ok: true, data: generated });
+    const formData = new FormData();
+    formData.set("jobDescription", "Target job description");
+
+    await expect(
+      submitAccountResume({ status: "idle" }, formData),
+    ).resolves.toEqual({ status: "success", data: generated });
+  });
+
+  it("returns generation failures as account form state", async () => {
+    getServerSession.mockResolvedValue({ user });
+    findMasterResumeByUserId.mockResolvedValue(null);
+    const formData = new FormData();
+    formData.set("jobDescription", "Target job description");
+
+    await expect(
+      submitAccountResume({ status: "idle" }, formData),
+    ).resolves.toEqual({
+      status: "error",
+      error: {
+        code: "MASTER_RESUME_REQUIRED",
+        message: "Save your master resume before tailoring it for a role.",
       },
     });
   });
