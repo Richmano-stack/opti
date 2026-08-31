@@ -17,15 +17,17 @@
 
 ## Acceptance criteria
 
-- [ ] Each authenticated user can have at most one master resume.
-- [ ] Create and update preserve ownership and update timestamps correctly.
-- [ ] Unauthenticated and cross-user access is rejected.
+- [x] Each authenticated user can have at most one master resume.
+- [x] Create and update preserve ownership and update timestamps correctly.
+- [x] Unauthenticated and cross-user access is rejected.
 
 ## Verification
 
-- [ ] Migration applies successfully to a clean local database.
-- [ ] Persistence and isolation tests pass.
-- [ ] Lint, typecheck, and build pass.
+- [x] Migration applies successfully to the local PostgreSQL database.
+- [ ] Persistence and isolation tests pass against PostgreSQL.
+- [x] Lint, typecheck, and build pass.
+
+**Audit status (2026-08-31):** Schema, migration, authenticated operations, and unit tests are implemented. Migration `0005` was applied successfully to local PostgreSQL on port `5461`; existing repository tests still use injected mocks and do not yet prove real-database persistence/isolation.
 
 **Dependencies:** OPTI-001
 **Estimated scope:** Medium

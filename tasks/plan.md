@@ -92,7 +92,7 @@ Every task must satisfy all of the following:
 
 - Acceptance criteria in its ticket are met.
 - Relevant automated tests are added or updated.
-- `npm run lint`, `npx tsc --noEmit`, and `npm run build` pass.
+- `pnpm lint`, `pnpm exec tsc --noEmit`, and `pnpm build` pass.
 - Manual verification listed in the ticket is completed.
 - No secrets, resume content, or job-description content are committed or logged.
 - Documentation and `tasks/todo.md` reflect any changed decision or status.

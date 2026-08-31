@@ -18,15 +18,17 @@
 
 ## Acceptance criteria
 
-- [ ] No production code or dependency references Gemini.
-- [ ] Tests mock `fetch` and cover success plus representative OpenRouter failures.
-- [ ] Neither API keys nor resume/job-description content appears in logs or returned errors.
+- [x] No production code or dependency references Gemini.
+- [x] Tests mock `fetch` and cover success plus representative OpenRouter failures.
+- [x] Neither API keys nor resume/job-description content appears in logs or returned errors.
 
 ## Verification
 
-- [ ] Provider tests pass without a live API call.
-- [ ] One manual call succeeds with developer-provided OpenRouter configuration.
-- [ ] Lint, typecheck, and build pass.
+- [x] Provider tests pass without a live API call.
+- [x] One manual call succeeds with developer-provided OpenRouter configuration.
+- [x] Lint, typecheck, and build pass.
+
+**Audit status (2026-08-31):** Complete. Infisical injects the configured OpenRouter key, and a live request through `openrouter/free` returned output that passed the application schema.
 
 **Dependencies:** OPTI-001
 **Estimated scope:** Medium
