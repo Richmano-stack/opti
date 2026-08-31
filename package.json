@@ -17,12 +17,14 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:migrate:infisical": "infisical run --env=dev --path=/ -- pnpm db:migrate",
+    "db:seed": "infisical run --env=dev --path=/ -- tsx scripts/seed-dev-users.ts",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:studio:infisical": "infisical run --env=dev --path=/ -- pnpm db:studio",
     "test": "vitest run",
     "test:integration": "infisical run --env=dev --path=/ -- vitest run src/services/master-resume/repository.integration.test.ts src/app/actions/master-resume.integration.test.ts",
-    "test:e2e": "infisical run --env=dev --path=/ -- playwright test"
+    "test:e2e": "infisical run --env=dev --path=/ -- playwright test",
+    "pdf:fixtures": "tsx scripts/render-pdf-fixtures.tsx"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",

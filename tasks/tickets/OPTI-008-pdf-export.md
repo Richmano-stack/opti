@@ -18,16 +18,18 @@
 
 ## Acceptance criteria
 
-- [ ] Both modes download a valid PDF without server-side file persistence.
-- [ ] Text can be selected and extracted in sensible order.
-- [ ] Long and sparse fixtures render without clipped or overlapping content.
+- [x] Both modes download a valid PDF without server-side file persistence.
+- [x] Text can be selected and extracted in sensible order.
+- [x] Long and sparse fixtures render without clipped or overlapping content.
 
 ## Verification
 
-- [ ] PDF-focused automated tests pass.
-- [ ] Rendered fixture PDFs receive manual visual inspection.
-- [ ] Lint, typecheck, and build pass.
+- [x] PDF-focused automated tests pass.
+- [x] Rendered fixture PDFs receive manual visual inspection.
+- [x] Lint, typecheck, and build pass.
 
 **Dependencies:** OPTI-004, OPTI-007
 **Estimated scope:** Medium
 **Likely areas:** `src/components/pdf`, result UI, PDF fixtures/tests
+
+**Audit status (2026-08-31):** Complete. Guest and account results share one browser-only PDF download component. Sparse and seven-page stress fixtures render cleanly, extracted text follows the resume reading order, filenames are sanitized, and PDF resources are released after download.

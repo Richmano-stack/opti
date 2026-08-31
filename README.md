@@ -84,6 +84,19 @@ Apply migrations with `DATABASE_URL` injected by Infisical:
 pnpm db:migrate:infisical
 ```
 
+Seed two local test accounts:
+
+```bash
+pnpm db:seed
+```
+
+| Account | Password | State |
+| --- | --- | --- |
+| `demo@opti.local` | `OptiDemo123!` | Has a realistic saved master resume |
+| `setup@opti.local` | `OptiSetup123!` | Has no master resume, for testing onboarding |
+
+The command is idempotent and refuses to run against a non-loopback database host.
+
 Start Next.js with the development environment injected:
 
 ```bash
@@ -109,6 +122,7 @@ Open [http://localhost:3000](http://localhost:3000).
 | `pnpm db:reset` | Delete and recreate the local PostgreSQL volume |
 | `pnpm db:generate` | Generate a Drizzle migration |
 | `pnpm db:migrate:infisical` | Apply migrations with Infisical's `dev` variables |
+| `pnpm db:seed` | Create or refresh local test users through Infisical |
 | `pnpm db:studio:infisical` | Open Drizzle Studio with Infisical's `dev` variables |
 
 `pnpm db:reset` permanently deletes the local Docker database volume.

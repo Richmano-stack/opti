@@ -1,5 +1,8 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { Toaster } from "sonner";
+
+import { getServerSession } from "@/server/auth/session";
 
 function OptiLogo() {
   return (
@@ -17,11 +20,17 @@ function OptiLogo() {
   );
 }
 
-export default function AuthLayout({
+export default async function AuthLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getServerSession();
+
+  if (session?.user) {
+    redirect("/dashboard");
+  }
+
   return (
     <div className="page-sky-gradient relative flex min-h-svh flex-col items-center justify-center text-slate-900 p-4 sm:p-6">
       {/* Ambient glow */}
