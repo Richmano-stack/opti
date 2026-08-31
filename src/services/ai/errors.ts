@@ -1,5 +1,5 @@
 import type { ZodError } from "zod";
-export type OpenRouterErrorCode = "OPENROUTER_CONFIGURATION_ERROR" | "OPENROUTER_UNAUTHORIZED" | "OPENROUTER_RATE_LIMITED" | "OPENROUTER_TIMEOUT" | "OPENROUTER_UNAVAILABLE";
+export type OpenRouterErrorCode = "OPENROUTER_CONFIGURATION_ERROR" | "OPENROUTER_CREDITS_EXHAUSTED" | "OPENROUTER_UNAUTHORIZED" | "OPENROUTER_RATE_LIMITED" | "OPENROUTER_TIMEOUT" | "OPENROUTER_UNAVAILABLE";
 export class OpenRouterServiceError extends Error {
   constructor(readonly code: OpenRouterErrorCode, message: string, readonly cause?: unknown) { super(message); this.name = "OpenRouterServiceError"; }
 }

@@ -42,6 +42,13 @@ const providerErrors: Record<
       message: "Résumé generation is not configured yet.",
     },
   },
+  OPENROUTER_CREDITS_EXHAUSTED: {
+    ok: false,
+    error: {
+      code: "CONFIGURATION_ERROR",
+      message: "Résumé generation needs provider credits or a free model.",
+    },
+  },
   OPENROUTER_RATE_LIMITED: {
     ok: false,
     error: {
