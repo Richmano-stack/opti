@@ -6,7 +6,7 @@ export const resumePdfStyles = StyleSheet.create({
     fontSize: 10,
     lineHeight: 1.45,
     paddingTop: 48,
-    paddingBottom: 48,
+    paddingBottom: 58,
     paddingHorizontal: 54,
     color: "#111111",
   },
@@ -66,6 +66,7 @@ export const resumePdfStyles = StyleSheet.create({
     fontSize: 10,
     marginBottom: 3,
     paddingLeft: 10,
+    textIndent: -7,
   },
   educationEntry: {
     marginBottom: 6,
