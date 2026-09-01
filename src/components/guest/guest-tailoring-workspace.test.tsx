@@ -33,7 +33,11 @@ describe("guest tailoring components", () => {
     expect(html).toContain("Master résumé");
     expect(html).toContain("Job description");
     expect(html).toContain("Tailor my résumé");
-    expect(html).toContain("Nothing is saved. Everything stays in this browser session.");
+    expect(html).toContain("Nothing is saved after this session.");
+    expect(html).toContain("Processed only to generate this result");
+    expect(html).toContain("Designed for ATS readability");
+    expect(html).not.toContain("never leaves your browser");
+    expect(html).not.toContain("passes ATS scans");
     expect(html).toContain("Your tailored résumé will appear here");
     expect(html).toContain('placeholder="Paste your résumé here"');
     expect(html).toContain('placeholder="Paste the job description here"');

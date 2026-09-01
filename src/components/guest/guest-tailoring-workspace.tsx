@@ -86,7 +86,7 @@ function HeroIllustration() {
       </div>
 
       {/* Sparkles */}
-      <div className="absolute -top-1 right-24 text-brand-muted animate-pulse">
+      <div className="absolute -top-1 right-24 text-brand-muted motion-safe:animate-pulse">
         <svg viewBox="0 0 24 24" fill="currentColor" className="size-4">
           <path d="M12 2C12.5 7.5 16.5 11.5 22 12C16.5 12.5 12.5 16.5 12 22C11.5 16.5 7.5 12.5 2 12C7.5 11.5 11.5 7.5 12 2Z" />
         </svg>
@@ -177,18 +177,18 @@ export function GuestTailoringWorkspace() {
       {/* Top Navigation */}
       <header className="border-b border-slate-200/70 bg-white/80 backdrop-blur-md sticky top-0 z-20">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-          <Link href="/" className="transition-opacity hover:opacity-90">
+          <Link href="/" aria-label="Opti home" className="rounded-md transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-ink focus-visible:ring-offset-4">
             <OptiLogo />
           </Link>
 
           <div className="flex items-center gap-4 sm:gap-6">
             <div className="flex items-center gap-1.5 text-xs text-slate-500">
-              <Shield className="size-4 text-slate-400" />
-              <span>Your data stays private</span>
+              <Shield aria-hidden className="size-4 text-slate-400" />
+              <span className="hidden sm:inline">Guest mode � Nothing saved</span>
             </div>
             <Link
               href="/login"
-              className="rounded-lg border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50 hover:text-slate-900 transition-colors"
+              className="rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-ink focus-visible:ring-offset-2"
             >
               Log in
             </Link>
@@ -255,7 +255,7 @@ export function GuestTailoringWorkspace() {
               />
 
               {state.status === "error" ? (
-                <p className="rounded-lg bg-red-50 p-3 text-xs font-medium text-red-600 border border-red-100">
+                <p role="alert" className="rounded-lg border border-red-100 bg-red-50 p-3 text-xs font-medium text-red-700">
                   {state.error.message}
                 </p>
               ) : null}
@@ -291,7 +291,7 @@ export function GuestTailoringWorkspace() {
 
                 <p className="mt-3 flex items-center justify-center gap-1.5 text-[11px] text-slate-500">
                   <Lock aria-hidden className="size-3.5 text-slate-400" />
-                  Nothing is saved. Everything stays in this browser session.
+                  Nothing is saved after this session.
                 </p>
               </div>
               ) : null}
@@ -326,7 +326,7 @@ export function GuestTailoringWorkspace() {
                 <div className="flex flex-1 flex-col items-center justify-center text-center p-6 sm:p-10 my-auto">
                   <div className="relative mb-4 flex size-16 items-center justify-center rounded-2xl bg-brand-soft/80 text-brand-ink">
                     <FileText className="size-8 stroke-[1.5]" />
-                    <Sparkles className="absolute -top-1.5 -right-1.5 size-4 text-brand-muted animate-pulse" />
+                    <Sparkles className="absolute -top-1.5 -right-1.5 size-4 text-brand-muted motion-safe:animate-pulse" />
                     <Sparkles className="absolute -bottom-1 -left-1.5 size-3.5 text-brand-muted" />
                   </div>
                   <h3 className="text-base font-bold text-slate-900">
@@ -347,9 +347,9 @@ export function GuestTailoringWorkspace() {
                   <Shield className="size-3.5" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-slate-900">Private & secure</h4>
+                  <h4 className="text-xs font-bold text-slate-900">Processed for this request</h4>
                   <p className="mt-0.5 text-[11px] leading-tight text-slate-500">
-                    Your data never leaves your browser session.
+                    Processed only to generate this result, then not saved by Opti.
                   </p>
                 </div>
               </div>
@@ -359,9 +359,9 @@ export function GuestTailoringWorkspace() {
                   <Zap className="size-3.5" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-slate-900">ATS-friendly</h4>
+                  <h4 className="text-xs font-bold text-slate-900">Designed for ATS readability</h4>
                   <p className="mt-0.5 text-[11px] leading-tight text-slate-500">
-                    Optimized formatting that passes ATS scans.
+                    A simple, single-column layout that is easy for systems to parse.
                   </p>
                 </div>
               </div>
