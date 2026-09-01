@@ -29,10 +29,16 @@ export async function optimizeResume(input: OptimizeResumeInput): Promise<Optimi
     throw new OpenRouterServiceError("OPENROUTER_UNAVAILABLE", "OpenRouter is unavailable.", error);
   }
   if (!response.ok) {
-    if (response.status === 402) throw new OpenRouterServiceError("OPENROUTER_CREDITS_EXHAUSTED", "OpenRouter credits are exhausted.");
-    if (response.status === 401 || response.status === 403) throw new OpenRouterServiceError("OPENROUTER_UNAUTHORIZED", "OpenRouter rejected the credentials.");
-    if (response.status === 429) throw new OpenRouterServiceError("OPENROUTER_RATE_LIMITED", "OpenRouter rate limit reached.");
-    throw new OpenRouterServiceError("OPENROUTER_UNAVAILABLE", "OpenRouter request failed.");
+    const cause = {
+      status: response.status,
+      statusText: response.statusText,
+      requestId: response.headers.get("x-request-id") ?? undefined,
+      model,
+    };
+    if (response.status === 402) throw new OpenRouterServiceError("OPENROUTER_CREDITS_EXHAUSTED", "OpenRouter credits are exhausted.", cause);
+    if (response.status === 401 || response.status === 403) throw new OpenRouterServiceError("OPENROUTER_UNAUTHORIZED", "OpenRouter rejected the credentials.", cause);
+    if (response.status === 429) throw new OpenRouterServiceError("OPENROUTER_RATE_LIMITED", "OpenRouter rate limit reached.", cause);
+    throw new OpenRouterServiceError("OPENROUTER_UNAVAILABLE", `OpenRouter request failed with HTTP ${response.status}.`, cause);
   }
   const envelope = responseSchema.safeParse(await response.json().catch(() => null));
   if (!envelope.success) throw new ResumeValidationError("OpenRouter returned an invalid response.");

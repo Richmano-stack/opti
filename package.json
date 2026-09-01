@@ -17,6 +17,7 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:migrate:infisical": "infisical run --env=dev --path=/ -- pnpm db:migrate",
+    "db:seed": "infisical run --env=dev --path=/ -- tsx scripts/seed-dev-users.ts",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:studio:infisical": "infisical run --env=dev --path=/ -- pnpm db:studio",

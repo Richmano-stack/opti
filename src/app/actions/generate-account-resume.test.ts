@@ -18,7 +18,7 @@ import {
 const user = { id: "user-123", email: "user@example.com", name: "Test User" };
 const masterResume = {
   userId: user.id,
-  content: "Saved master resume content",
+  content: "Saved master resume content user@example.com +1 415 555 0192 https://linkedin.com/in/test-user https://testuser.dev",
   createdAt: new Date("2026-01-01T00:00:00Z"),
   updatedAt: new Date("2026-01-01T00:00:00Z"),
 };

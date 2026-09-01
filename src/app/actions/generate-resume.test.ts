@@ -9,7 +9,7 @@ vi.mock("../../services/ai/optimizeResume", () => ({ optimizeResume }));
 import { generateResume, submitGuestResume } from "./generate-resume";
 
 const validInput = {
-  resume: "Product designer with five years of experience.",
+  resume: "Product designer with five years of experience. taylor@example.com +1 415 555 0192 https://linkedin.com/in/taylor-doe https://taylordoe.dev",
   jobDescription: "Seeking a product designer for a SaaS platform.",
 };
 

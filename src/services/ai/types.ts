@@ -14,10 +14,9 @@ const optionalText = (maxLength: number) =>
   z
     .string()
     .trim()
-    .min(1)
     .max(maxLength)
     .nullish()
-    .transform((value) => value ?? undefined);
+    .transform((value) => value || undefined);
 
 export const generationInputSchema = z
   .object({
@@ -35,12 +34,21 @@ export const contactSchema = z
     email: z
       .string()
       .trim()
-      .email("Contact email must be valid")
       .max(320)
       .nullish()
-      .transform((value) => value ?? undefined),
+      .transform((value, context) => {
+        if (!value) return undefined;
+        const parsed = z.email().safeParse(value);
+        if (!parsed.success) {
+          context.addIssue({ code: "custom", message: "Contact email must be valid" });
+          return z.NEVER;
+        }
+        return value;
+      }),
     phone: optionalText(100),
     location: optionalText(200),
+    linkedin: optionalText(500).optional(),
+    portfolio: optionalText(500).optional(),
   })
   .strict();
 

@@ -82,6 +82,8 @@ test("an account user tailors from only a saved master resume", async ({ page })
 
     await page.getByLabel("Job description").fill(syntheticJobDescription);
     await page.getByRole("button", { name: "Tailor my résumé" }).click();
+    await expect(page.getByRole("heading", { name: "Complete your contact details" })).toBeVisible();
+    await page.getByRole("button", { name: "Continue without them" }).click();
     await expect(page.getByRole("heading", { name: "Alex Example" })).toBeVisible({
       timeout: 120_000,
     });

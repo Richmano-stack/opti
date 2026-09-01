@@ -1,6 +1,10 @@
 "use server";
 
+import { parseContactReview, type ContactField } from "@/services/contact-info";
+import { prepareContactPreflight } from "@/services/contact-preflight";
+
 import { OpenRouterServiceError } from "../../services/ai/errors";
+import { logGenerationError } from "../../services/ai/log-generation-error";
 import { optimizeResume } from "../../services/ai/optimizeResume";
 import {
   generationInputSchema,
@@ -25,6 +29,7 @@ export type GenerateResumeResult =
 
 export type GuestGenerationState =
   | { status: "idle" }
+  | { status: "missing_contact_info"; missingFields: ContactField[] }
   | { status: "success"; data: OptimizedResume }
   | {
       status: "error";
@@ -97,6 +102,8 @@ export async function generateResume(
   try {
     return { ok: true, data: await optimizeResume(parsed.data) };
   } catch (error) {
+    logGenerationError(error);
+
     if (error instanceof OpenRouterServiceError) {
       return providerErrors[error.code];
     }
@@ -114,9 +121,37 @@ export async function submitGuestResume(
   _previousState: GuestGenerationState,
   formData: FormData,
 ): Promise<GuestGenerationState> {
-  const result = await generateResume({
+  const input = {
     resume: String(formData.get("resume") ?? ""),
     jobDescription: String(formData.get("jobDescription") ?? ""),
+  };
+  const parsedInput = generationInputSchema.safeParse(input);
+
+  if (!parsedInput.success) {
+    return {
+      status: "error",
+      error: {
+        code: "INVALID_INPUT",
+        message: "Add your résumé and the job description to continue.",
+      },
+    };
+  }
+
+  const preflight = prepareContactPreflight(
+    parsedInput.data.resume,
+    parseContactReview(formData),
+  );
+
+  if (preflight.status === "missing") {
+    return {
+      status: "missing_contact_info",
+      missingFields: preflight.fields,
+    };
+  }
+
+  const result = await generateResume({
+    resume: preflight.resume,
+    jobDescription: parsedInput.data.jobDescription,
   });
 
   if (result.ok) {
