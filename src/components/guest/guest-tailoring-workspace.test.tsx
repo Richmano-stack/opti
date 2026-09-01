@@ -39,8 +39,12 @@ describe("guest tailoring components", () => {
     expect(html).not.toContain("never leaves your browser");
     expect(html).not.toContain("passes ATS scans");
     expect(html).toContain("Your tailored résumé will appear here");
-    expect(html).toContain('placeholder="Paste your résumé here"');
-    expect(html).toContain('placeholder="Paste the job description here"');
+    expect(html).toContain("Your result will be editable before download.");
+    expect(html).toContain("Add both documents to continue.");
+    expect(html).toContain('aria-label="Primary navigation"');
+    expect(html).not.toContain("Opti will tailor your experience to match the role.");
+    expect(html).toContain('placeholder="Paste your complete résumé here"');
+    expect(html).toContain('placeholder="Paste the complete job posting here"');
     expect(html).not.toContain('type="file"');
   });
 
