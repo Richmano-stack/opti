@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useRef, useState } from "react";
-import { LoaderCircle, Lock, Sparkles } from "lucide-react";
+import { ArrowRight, LoaderCircle, Lock, Sparkles } from "lucide-react";
 
 import {
   submitGuestResume,
@@ -24,6 +24,7 @@ export function GuestTailoringWorkspace() {
   const [jobDescription, setJobDescription] = useState("");
   const resultHeading = useRef<HTMLHeadingElement>(null);
   const isReady = Boolean(resume.trim() && jobDescription.trim());
+  const hasResult = state.status === "success";
 
   useEffect(() => {
     if (state.status === "success") resultHeading.current?.focus();
@@ -33,23 +34,35 @@ export function GuestTailoringWorkspace() {
   }, [state]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-sky-50/45 to-sky-100/45 text-slate-900 antialiased selection:bg-sky-100 selection:text-slate-900">
+    <div className="horizon-page relative min-h-screen overflow-hidden text-horizon-ink antialiased selection:bg-horizon-inverse-primary selection:text-horizon-ink">
+      <div aria-hidden className="horizon-aurora fixed">
+        <span className="horizon-orb horizon-orb-primary" />
+        <span className="horizon-orb horizon-orb-secondary" />
+        <span className="horizon-orb horizon-orb-tertiary" />
+      </div>
       <GuestWorkspaceHeader />
 
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
-        <div className="mb-7 max-w-3xl">
-          <h1 className="text-3xl font-extrabold tracking-tight text-slate-950 sm:text-4xl">
-            Tailor your résumé for this role
+      <main className="relative mx-auto max-w-[1728px] px-6 pb-12 pt-8 sm:px-8 sm:pt-12 lg:px-16 lg:pb-16">
+        <div className="mb-8 max-w-3xl lg:mb-10">
+          <span className="horizon-eyebrow">{hasResult ? "Step 2 of 2" : "Step 1 of 2"}</span>
+          <h1 className="mt-5 text-[2.5rem] font-extrabold leading-[1.08] tracking-[-0.03em] text-horizon-ink sm:text-5xl lg:text-[3.5rem]">
+            {hasResult ? "Your tailored résumé is ready." : "Shape your next opportunity."}
           </h1>
-          <p className="mt-2 text-sm leading-6 text-slate-600 sm:text-base">
-            Paste your résumé and the job description. Nothing is saved after this session.
+          <p className="mt-4 max-w-2xl text-base leading-7 text-horizon-muted sm:text-lg">
+            {hasResult
+              ? "Review every detail before downloading your PDF."
+              : "Paste your résumé and the role description. We’ll create a focused draft for you to review."}
           </p>
         </div>
 
-        <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
-          <section aria-labelledby="guest-source-heading" className="rounded-xl border border-sky-100 bg-white/95 p-5 shadow-xs sm:p-6">
-            <h2 id="guest-source-heading" className="sr-only">Source documents</h2>
-            <form action={formAction} className="space-y-5">
+        <div className="grid items-start gap-6 xl:grid-cols-[minmax(20rem,0.82fr)_minmax(0,1.18fr)] xl:gap-8">
+          <section aria-labelledby="guest-source-heading" className="horizon-glass rounded-3xl p-5 sm:p-8 lg:p-10">
+            <div className="mb-7">
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-horizon-secondary">Source documents</p>
+              <h2 id="guest-source-heading" className="mt-2 text-2xl font-semibold tracking-[-0.01em] text-horizon-ink">Paste your source material</h2>
+              <p className="mt-2 text-sm leading-6 text-horizon-muted">Both fields are required. Plain text works best.</p>
+            </div>
+            <form action={formAction} className="space-y-6">
               <GuestTextAreaField
                 id="guest-resume"
                 name="resume"
@@ -73,7 +86,7 @@ export function GuestTailoringWorkspace() {
               />
 
               {state.status === "error" ? (
-                <p role="alert" className="rounded-lg border border-red-100 bg-red-50 p-3 text-sm font-medium text-red-700">
+                <p role="alert" className="rounded-2xl border border-red-200 bg-red-50/80 p-4 text-sm font-medium text-red-800">
                   {state.error.message}
                 </p>
               ) : null}
@@ -89,13 +102,13 @@ export function GuestTailoringWorkspace() {
               {state.status !== "missing_contact_info" ? (
                 <div className="pt-1">
                   {!isReady && !isPending ? (
-                    <p className="mb-2 text-xs text-slate-500">Add both documents to continue.</p>
+                    <p className="mb-3 text-xs font-medium text-horizon-muted">Add both documents to continue.</p>
                   ) : null}
                   <Button
                     type="submit"
                     size="lg"
                     disabled={isPending || !isReady}
-                    className="h-12 w-full border-0 bg-gradient-to-r from-sky-300 via-sky-100 to-white text-sm font-bold text-slate-900 shadow-sm transition-[filter,transform] hover:from-sky-200 hover:via-sky-50 hover:to-white hover:brightness-[1.02] focus-visible:ring-sky-300 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="h-13 w-full rounded-full border-0 bg-horizon-primary px-6 text-sm font-bold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-[#8b1a00] focus-visible:ring-horizon-primary active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45"
                   >
                     {isPending ? (
                       <>
@@ -106,11 +119,12 @@ export function GuestTailoringWorkspace() {
                       <>
                         <Sparkles aria-hidden className="size-4" />
                         Tailor my résumé
+                        <ArrowRight aria-hidden className="ml-1 size-4" />
                       </>
                     )}
                   </Button>
-                  <p className="mt-3 flex items-center justify-center gap-1.5 text-xs text-slate-500">
-                    <Lock aria-hidden className="size-3.5 text-slate-400" />
+                  <p className="mt-4 flex items-center justify-center gap-1.5 text-xs text-horizon-muted">
+                    <Lock aria-hidden className="size-3.5 text-horizon-secondary" />
                     Nothing is saved after this session.
                   </p>
                 </div>
