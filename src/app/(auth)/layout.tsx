@@ -2,29 +2,10 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Toaster } from "sonner";
 
+import { BrandMark } from "@/components/landing/brand-mark";
 import { getServerSession } from "@/server/auth/session";
 
-function OptiLogo() {
-  return (
-    <div className="flex items-center gap-2.5">
-      <svg
-        viewBox="0 0 24 24"
-        fill="currentColor"
-        className="size-6 text-brand-ink"
-        aria-hidden="true"
-      >
-        <path d="M12 2C12.5 7.5 16.5 11.5 22 12C16.5 12.5 12.5 16.5 12 22C11.5 16.5 7.5 12.5 2 12C7.5 11.5 11.5 7.5 12 2Z" />
-      </svg>
-      <span className="text-xl font-bold tracking-tight text-slate-900">Opti</span>
-    </div>
-  );
-}
-
-export default async function AuthLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default async function AuthLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const session = await getServerSession();
 
   if (session?.user) {
@@ -32,22 +13,34 @@ export default async function AuthLayout({
   }
 
   return (
-    <div className="page-sky-gradient relative flex min-h-svh flex-col items-center justify-center text-slate-900 p-4 sm:p-6">
-      {/* Ambient glow */}
-      <div aria-hidden className="ambient-glow">
-        <div className="absolute left-1/2 top-0 h-[480px] w-[720px] -translate-x-1/2 rounded-full bg-brand-soft/35 blur-[100px]" />
-        <div className="absolute right-0 top-1/3 h-[320px] w-[420px] rounded-full bg-brand-soft/25 blur-[80px]" />
+    <div className="horizon-page relative flex min-h-svh flex-col overflow-hidden text-horizon-ink">
+      <div aria-hidden="true" className="horizon-aurora">
+        <div className="horizon-orb horizon-orb-primary" />
+        <div className="horizon-orb horizon-orb-secondary" />
+        <div className="horizon-orb horizon-orb-tertiary" />
       </div>
 
-      <div className="mb-6">
-        <Link href="/" className="transition-opacity hover:opacity-90">
-          <OptiLogo />
-        </Link>
-      </div>
+      <header className="fixed inset-x-0 top-0 z-20 px-4 pt-4 sm:px-6 sm:pt-6">
+        <nav className="horizon-glass mx-auto flex max-w-[112rem] items-center justify-between rounded-full px-4 py-2.5 sm:px-6" aria-label="Authentication navigation">
+          <Link href="/" aria-label="Opti home" className="rounded-full transition-opacity hover:opacity-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-primary focus-visible:ring-offset-2">
+            <BrandMark className="scale-90 sm:scale-100" />
+          </Link>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Link href="/" className="hidden px-3 py-2 text-xs font-bold text-horizon-muted underline-offset-4 hover:text-horizon-ink hover:underline sm:inline-flex">
+              How it works
+            </Link>
+            <Link href="/try" className="horizon-button-ghost px-4 py-2 text-xs sm:px-5">
+              Guest mode
+            </Link>
+          </div>
+        </nav>
+      </header>
 
-      <div className="relative z-10 w-full max-w-md">
-        {children}
-      </div>
+      {children}
+
+      <footer className="relative z-10 px-6 pb-6 text-center text-[11px] text-horizon-muted">
+        Your master resume is saved to your account. Guest sessions are temporary.
+      </footer>
 
       <Toaster richColors closeButton position="top-center" />
     </div>
