@@ -9,6 +9,7 @@ import type { AuthUser } from "@/server/auth/types";
 export function AccountGeneratorSetupRequired({ user }: { user: AuthUser }) {
   return (
     <div className="horizon-page min-h-screen text-horizon-ink lg:pl-64">
+      <AuthenticatedSidebar />
       <AccountGeneratorHeader user={user} />
       <main className="mx-auto flex max-w-[760px] flex-col items-center px-4 py-20 text-center sm:px-6 sm:py-28">
         <span className="horizon-eyebrow">One step before tailoring</span>
@@ -30,6 +31,7 @@ export function AccountGeneratorSetupRequired({ user }: { user: AuthUser }) {
     </div>
   );
 }
+
 
 
 

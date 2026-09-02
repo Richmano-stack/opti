@@ -27,6 +27,7 @@ export function AccountTailoringWorkspace({ user, masterResumeUpdatedAt }: { use
 
   return (
     <div className="horizon-page min-h-screen text-horizon-ink antialiased lg:pl-64">
+      <AuthenticatedSidebar />
       <AccountGeneratorHeader user={user} />
       <main className="mx-auto max-w-[1120px] px-4 py-10 sm:px-6 sm:py-14">
         <Link href="/dashboard" className="inline-flex items-center gap-2 rounded-full text-xs font-bold text-horizon-muted hover:text-horizon-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-primary">
@@ -134,6 +135,7 @@ export function AccountGeneratorReview({ resume, resultHeading, jobDescription, 
     </div>
   );
 }
+
 
 
 
