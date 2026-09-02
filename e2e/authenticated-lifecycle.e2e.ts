@@ -40,3 +40,4 @@ test("authenticated users follow the protected lifecycle", async ({ page }) => {
     await sql.end();
   }
 });
+
