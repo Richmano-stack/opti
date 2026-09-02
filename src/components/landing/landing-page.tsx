@@ -69,6 +69,7 @@ function LandingFooter() {
   );
 }
 export async function LandingPage() {
+  const navbar = await LandingNavbar();
   return (
     <div className="horizon-page min-h-screen text-horizon-ink">
       {navbar}
@@ -83,6 +84,7 @@ export async function LandingPage() {
     </div>
   );
 }
+
 
 
 
