@@ -68,7 +68,7 @@ function LandingFooter() {
     </footer>
   );
 }
-export function LandingPage() {
+export async function LandingPage() {
   return (
     <div className="horizon-page min-h-screen text-horizon-ink">
       <LandingNavbar />
@@ -83,5 +83,6 @@ export function LandingPage() {
     </div>
   );
 }
+
 
 

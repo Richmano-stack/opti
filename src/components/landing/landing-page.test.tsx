@@ -1,11 +1,13 @@
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { LandingPage } from "./landing-page";
 
+vi.mock("@/server/auth/session", () => ({ getServerSession: vi.fn().mockResolvedValue(null) }));
+
 describe("LandingPage", () => {
   it("presents the Horizon landing experience with truthful product paths", () => {
-    const html = renderToStaticMarkup(<LandingPage />);
+    const html = renderToStaticMarkup(await LandingPage());
 
     expect(html).not.toContain('href="#"');
     expect(html).not.toContain("4.9/5");
@@ -22,4 +24,5 @@ describe("LandingPage", () => {
     expect(html).toContain("Privacy boundary");
   });
 });
+
 
