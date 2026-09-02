@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { BrandMark } from "@/components/landing/brand-mark";
 import type { AuthUser } from "@/server/auth/types";
+import { AccountSignOutButton } from "@/components/account/account-sign-out-button";
 
 export function AccountGeneratorHeader({ user }: { user: AuthUser }) {
   return (
@@ -15,9 +16,10 @@ export function AccountGeneratorHeader({ user }: { user: AuthUser }) {
             <p className="text-xs font-bold text-horizon-ink">{user.name || user.email}</p>
             <p className="text-[10px] text-horizon-muted">Account workspace</p>
           </div>
-          <Link href="/dashboard" className="horizon-button-ghost h-10 px-4 text-xs">Master résumé</Link>
+          <Link href="/dashboard" className="horizon-button-ghost h-10 px-4 text-xs">Master résumé</Link><AccountSignOutButton />
         </div>
       </div>
     </header>
   );
 }
+

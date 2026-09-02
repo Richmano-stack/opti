@@ -8,6 +8,7 @@ import { ArrowRight, LoaderCircle, Lock } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { getSafeCallbackUrl } from "@/lib/auth/callback-url";
 import { authClient } from "@/server/auth/client";
 
 export function LoginForm({
@@ -16,7 +17,7 @@ export function LoginForm({
 }: React.ComponentProps<"div">) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") ?? "/dashboard";
+  const callbackUrl = getSafeCallbackUrl(searchParams.get("callbackUrl"));
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -146,3 +147,4 @@ export function LoginForm({
     </div>
   );
 }
+
