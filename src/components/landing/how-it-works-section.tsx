@@ -1,73 +1,57 @@
-import { Fragment } from "react";
-import { ArrowRight, Download, FileText, Search } from "lucide-react";
-import { GlowCard } from "./glow-card";
-import { SectionBadge } from "./section-badge";
+import { ArrowDown, Download, ScanSearch, SquarePen } from "lucide-react";
 
 const STEPS = [
   {
-    icon: FileText,
-    title: "Save your master resume",
-    description:
-      "Add your standard resume once so Opti has a truthful source for future applications.",
+    icon: SquarePen,
+    number: "01",
+    title: "Bring your source",
+    description: "Paste your master resume for a guest session, or save it once with an account.",
   },
   {
-    icon: Search,
-    title: "Paste a job description",
-    description:
-      "For each application, provide the role and let Opti focus your existing experience around it.",
+    icon: ScanSearch,
+    number: "02",
+    title: "Set the opportunity",
+    description: "Add the job description so Opti understands what the role calls for.",
   },
   {
     icon: Download,
-    title: "Review and download",
-    description:
-      "Check the tailored result, then download a clean, single-column ATS-friendly PDF.",
+    number: "03",
+    title: "Review, then export",
+    description: "Inspect the tailored result and download a clean, selectable-text PDF.",
   },
 ] as const;
 
 export function HowItWorksSection() {
   return (
-    <section className="relative px-4 py-16 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-5xl">
-        <div className="mb-12 text-center">
-          <SectionBadge label="How it works" />
-          <h2 className="mt-3 text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">
-            From job description to tailored PDF
-          </h2>
-          <p className="mt-2 text-xs sm:text-sm text-slate-500 max-w-md mx-auto">
-            Three simple steps to submit tailored applications in seconds.
-          </p>
-        </div>
+    <section className="px-4 py-20 sm:px-6 sm:py-28 lg:px-8" aria-labelledby="process-title">
+      <div className="relative mx-auto max-w-[1120px] overflow-hidden rounded-[2rem] bg-horizon-ink px-6 py-14 text-white sm:px-10 sm:py-16 lg:px-14">
+        <div aria-hidden className="absolute -right-28 -top-36 size-96 rounded-full bg-horizon-secondary/25 blur-3xl" />
+        <div aria-hidden className="absolute -bottom-48 left-1/3 size-96 rounded-full bg-horizon-tertiary/20 blur-3xl" />
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-[1fr_auto_1fr_auto_1fr] md:items-center">
-          {STEPS.map(({ icon: Icon, title, description }, index) => (
-            <Fragment key={title}>
-              <GlowCard className="h-full flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-brand-ink bg-brand-soft px-2 py-0.5 rounded border border-brand-border">
-                      STEP {index + 1}
-                    </span>
-                    <div className="inline-flex size-8 items-center justify-center rounded-lg bg-brand-soft text-brand-ink border border-brand-border">
-                      <Icon className="size-4" />
-                    </div>
-                  </div>
-                  <h3 className="text-sm sm:text-base font-bold text-slate-900">{title}</h3>
-                  <p className="mt-1.5 text-xs sm:text-sm leading-relaxed text-slate-500">
-                    {description}
-                  </p>
-                </div>
-              </GlowCard>
+        <div className="relative">
+          <span className="inline-flex rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.17em] text-white/80">How it works</span>
+          <div className="mt-5 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+            <h2 id="process-title" className="max-w-xl text-3xl font-bold leading-tight tracking-[-0.03em] sm:text-4xl">
+              From source resume to focused application.
+            </h2>
+            <p className="max-w-sm text-sm leading-6 text-white/60">A simple workflow for guests today and a faster repeat workflow when you create an account.</p>
+          </div>
 
-              {index < STEPS.length - 1 ? (
-                <div
-                  key={`arrow-${title}`}
-                  className="hidden md:flex items-center justify-center text-brand-ink px-1"
-                >
-                  <ArrowRight className="size-4" />
+          <ol className="mt-12 grid gap-4 lg:grid-cols-3">
+            {STEPS.map(({ icon: Icon, number, title, description }, index) => (
+              <li key={title} className="relative rounded-[1.5rem] border border-white/15 bg-white/8 p-6 backdrop-blur-xl sm:p-7">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold tracking-[0.14em] text-horizon-inverse-primary">{number}</span>
+                  <Icon className="size-5 text-white/80" aria-hidden="true" />
                 </div>
-              ) : null}
-            </Fragment>
-          ))}
+                <h3 className="mt-12 text-xl font-bold tracking-[-0.02em]">{title}</h3>
+                <p className="mt-3 text-sm leading-6 text-white/60">{description}</p>
+                {index < STEPS.length - 1 ? (
+                  <ArrowDown className="mt-6 size-4 text-white/30 lg:hidden" aria-hidden="true" />
+                ) : null}
+              </li>
+            ))}
+          </ol>
         </div>
       </div>
     </section>

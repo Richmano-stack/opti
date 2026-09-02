@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
-import { LoaderCircle, Lock } from "lucide-react";
+import { ArrowRight, LoaderCircle, Lock } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -54,21 +54,22 @@ export function LoginForm({
 
   return (
     <div className={cn("w-full", className)} {...props}>
-      <div className="rounded-2xl border border-slate-200/80 bg-white p-7 sm:p-8 shadow-[0_4px_24px_rgba(0,0,0,0.04)]">
-        <div className="text-center mb-6">
-          <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900">
-            Welcome back
-          </h1>
-          <p className="mt-1 text-xs text-slate-500">
-            Enter your email and password to sign in
+      <div className="horizon-glass rounded-[2rem] p-6 sm:p-10">
+        <div className="mb-7">
+          <p className="text-[10px] font-bold uppercase tracking-[0.17em] text-horizon-primary">Sign in</p>
+          <h2 className="mt-3 text-2xl font-bold tracking-[-0.02em] text-horizon-ink sm:text-3xl">
+            Pick up where you left off.
+          </h2>
+          <p className="mt-2 text-sm leading-6 text-horizon-muted">
+            Enter your account details to continue.
           </p>
         </div>
 
-        <form onSubmit={handleSignIn} className="space-y-4">
+        <form onSubmit={handleSignIn} className="space-y-5" aria-busy={isSubmitting}>
           <div>
             <label
               htmlFor="email"
-              className="block text-xs font-bold text-slate-900 mb-1.5"
+              className="mb-2 block text-xs font-bold text-horizon-ink"
             >
               Email address
             </label>
@@ -80,15 +81,15 @@ export function LoginForm({
               required
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              className="w-full rounded-xl border border-slate-200 bg-[#fbfcfe] px-3.5 py-2 text-xs text-slate-800 placeholder:text-slate-400 focus:border-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-muted/30 transition-all"
+              className="w-full rounded-full border border-white/80 bg-white/55 px-5 py-3.5 text-sm text-horizon-ink placeholder:text-horizon-muted/55 transition-all hover:bg-white/70 focus:border-horizon-secondary/40 focus:bg-white/80 focus:outline-none focus:ring-2 focus:ring-horizon-secondary/25"
             />
           </div>
 
           <div>
-            <div className="flex items-center justify-between mb-1.5">
+            <div className="mb-2 flex items-center justify-between">
               <label
                 htmlFor="password"
-                className="block text-xs font-bold text-slate-900"
+                className="block text-xs font-bold text-horizon-ink"
               >
                 Password
               </label>
@@ -102,15 +103,15 @@ export function LoginForm({
               minLength={8}
               value={password}
               onChange={(event) => setPassword(event.target.value)}
-              className="w-full rounded-xl border border-slate-200 bg-[#fbfcfe] px-3.5 py-2 text-xs text-slate-800 placeholder:text-slate-400 focus:border-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-muted/30 transition-all"
+              className="w-full rounded-full border border-white/80 bg-white/55 px-5 py-3.5 text-sm text-horizon-ink transition-all hover:bg-white/70 focus:border-horizon-secondary/40 focus:bg-white/80 focus:outline-none focus:ring-2 focus:ring-horizon-secondary/25"
             />
           </div>
 
-          <div className="pt-2">
+          <div className="pt-1">
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="w-full h-11 rounded-xl bg-brand-action hover:bg-brand-action-hover text-slate-900 font-semibold text-xs shadow-sm shadow-sky-200/20 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              className="h-12 w-full rounded-full bg-horizon-primary text-sm font-bold text-white transition-all hover:-translate-y-0.5 hover:bg-[#8b1a00] focus-visible:ring-horizon-primary active:scale-[0.98] disabled:pointer-events-none disabled:opacity-55"
             >
               {isSubmitting ? (
                 <>
@@ -118,23 +119,26 @@ export function LoginForm({
                   Signing in
                 </>
               ) : (
-                "Sign in"
+                <>
+                  Sign in
+                  <ArrowRight className="size-4" aria-hidden="true" />
+                </>
               )}
             </Button>
           </div>
 
-          <p className="text-center text-xs text-slate-500 pt-2">
+          <p className="pt-1 text-center text-xs text-horizon-muted">
             Don&apos;t have an account?{" "}
             <Link
               href={signupHref}
-              className="font-semibold text-brand-ink hover:text-brand-ink underline underline-offset-2"
+              className="font-bold text-horizon-primary underline underline-offset-4"
             >
               Sign up
             </Link>
           </p>
 
-          <p className="mt-4 flex items-center justify-center gap-1.5 text-[11px] text-slate-400 pt-3 border-t border-slate-100">
-            <Lock className="size-3 text-slate-400" />
+          <p className="mt-4 flex items-center justify-center gap-1.5 border-t border-white/70 pt-4 text-[11px] text-horizon-muted">
+            <Lock className="size-3" aria-hidden="true" />
             Your sign-in details are never shown publicly
           </p>
         </form>

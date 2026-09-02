@@ -32,7 +32,7 @@ Only one primary implementation task should be active at a time.
 
 ## Product quality
 
-- [ ] [OPTI-009 — Apply the sky design system and refine the workflow](./tickets/OPTI-009-ui-refinement.md)
+- [~] [OPTI-009 — Apply the sky design system and refine the workflow](./tickets/OPTI-009-ui-refinement.md)
 - [ ] [OPTI-010 — Harden and verify the MVP release](./tickets/OPTI-010-mvp-hardening.md)
 
 ### Checkpoint: release candidate

@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 
+import { AuthPageShell } from "@/components/auth/auth-page-shell";
 import { SignupForm } from "@/components/signup-form";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -13,12 +14,10 @@ function SignupFormFallback() {
 
 export default function SignupPage() {
   return (
-    <div className="flex flex-1 items-center justify-center p-6 md:p-10">
-      <div className="w-full max-w-sm">
-        <Suspense fallback={<SignupFormFallback />}>
-          <SignupForm />
-        </Suspense>
-      </div>
-    </div>
+    <AuthPageShell variant="signup">
+      <Suspense fallback={<SignupFormFallback />}>
+        <SignupForm />
+      </Suspense>
+    </AuthPageShell>
   );
 }
