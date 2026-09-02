@@ -19,9 +19,8 @@ describe("AuthLayout", () => {
 
     const html = renderToStaticMarkup(result);
 
-    expect(html).toContain('aria-label="Opti home"');
-    expect(html).toContain('href="/"');
     expect(html).toContain("Log in");
+    expect(html).not.toContain("Authentication navigation");
     expect(redirect).not.toHaveBeenCalled();
   });
 
@@ -35,3 +34,5 @@ describe("AuthLayout", () => {
     expect(redirect).toHaveBeenCalledWith("/dashboard");
   });
 });
+
+
