@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
-import { LoaderCircle, Lock } from "lucide-react";
+import { ArrowRight, LoaderCircle, Lock } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -63,21 +63,22 @@ export function SignupForm({
 
   return (
     <div className={cn("w-full", className)} {...props}>
-      <div className="rounded-2xl border border-slate-200/80 bg-white p-7 sm:p-8 shadow-[0_4px_24px_rgba(0,0,0,0.04)]">
-        <div className="text-center mb-6">
-          <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900">
-            Create an account
-          </h1>
-          <p className="mt-1 text-xs text-slate-500">
-            Save your master resume and tailor it for every job
+      <div className="horizon-glass rounded-[2rem] p-6 sm:p-10">
+        <div className="mb-6">
+          <p className="text-[10px] font-bold uppercase tracking-[0.17em] text-horizon-primary">Create an account</p>
+          <h2 className="mt-3 text-2xl font-bold tracking-[-0.02em] text-horizon-ink sm:text-3xl">
+            Make your best starting point reusable.
+          </h2>
+          <p className="mt-2 text-sm leading-6 text-horizon-muted">
+            Save one master resume to your account and return to it later.
           </p>
         </div>
 
-        <form onSubmit={handleSignUp} className="space-y-3.5">
+        <form onSubmit={handleSignUp} className="space-y-4" aria-busy={isSubmitting}>
           <div>
             <label
               htmlFor="name"
-              className="block text-xs font-bold text-slate-900 mb-1"
+              className="mb-2 block text-xs font-bold text-horizon-ink"
             >
               Full name
             </label>
@@ -88,14 +89,14 @@ export function SignupForm({
               placeholder="Jane Doe"
               value={name}
               onChange={(event) => setName(event.target.value)}
-              className="w-full rounded-xl border border-slate-200 bg-[#fbfcfe] px-3.5 py-2 text-xs text-slate-800 placeholder:text-slate-400 focus:border-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-muted/30 transition-all"
+              className="w-full rounded-full border border-white/80 bg-white/55 px-5 py-3 text-sm text-horizon-ink placeholder:text-horizon-muted/55 transition-all hover:bg-white/70 focus:border-horizon-secondary/40 focus:bg-white/80 focus:outline-none focus:ring-2 focus:ring-horizon-secondary/25"
             />
           </div>
 
           <div>
             <label
               htmlFor="email"
-              className="block text-xs font-bold text-slate-900 mb-1"
+              className="mb-2 block text-xs font-bold text-horizon-ink"
             >
               Email address
             </label>
@@ -107,14 +108,14 @@ export function SignupForm({
               required
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              className="w-full rounded-xl border border-slate-200 bg-[#fbfcfe] px-3.5 py-2 text-xs text-slate-800 placeholder:text-slate-400 focus:border-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-muted/30 transition-all"
+              className="w-full rounded-full border border-white/80 bg-white/55 px-5 py-3 text-sm text-horizon-ink placeholder:text-horizon-muted/55 transition-all hover:bg-white/70 focus:border-horizon-secondary/40 focus:bg-white/80 focus:outline-none focus:ring-2 focus:ring-horizon-secondary/25"
             />
           </div>
 
           <div>
             <label
               htmlFor="password"
-              className="block text-xs font-bold text-slate-900 mb-1"
+              className="mb-2 block text-xs font-bold text-horizon-ink"
             >
               Password
             </label>
@@ -122,7 +123,7 @@ export function SignupForm({
               id="password"
               type="password"
               autoComplete="new-password"
-              placeholder=" (min 8 chars)"
+              placeholder="Minimum 8 characters"
               required
               minLength={8}
               value={password}
@@ -130,14 +131,14 @@ export function SignupForm({
                 setPassword(event.target.value);
                 setPasswordMismatch(false);
               }}
-              className="w-full rounded-xl border border-slate-200 bg-[#fbfcfe] px-3.5 py-2 text-xs text-slate-800 placeholder:text-slate-400 focus:border-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-muted/30 transition-all"
+              className="w-full rounded-full border border-white/80 bg-white/55 px-5 py-3 text-sm text-horizon-ink placeholder:text-horizon-muted/55 transition-all hover:bg-white/70 focus:border-horizon-secondary/40 focus:bg-white/80 focus:outline-none focus:ring-2 focus:ring-horizon-secondary/25"
             />
           </div>
 
           <div>
             <label
               htmlFor="confirm-password"
-              className="block text-xs font-bold text-slate-900 mb-1"
+              className="mb-2 block text-xs font-bold text-horizon-ink"
             >
               Confirm password
             </label>
@@ -148,15 +149,17 @@ export function SignupForm({
               placeholder=""
               required
               minLength={8}
+              aria-invalid={passwordMismatch}
+              aria-describedby={passwordMismatch ? "confirm-password-error" : undefined}
               value={confirmPassword}
               onChange={(event) => {
                 setConfirmPassword(event.target.value);
                 setPasswordMismatch(false);
               }}
-              className="w-full rounded-xl border border-slate-200 bg-[#fbfcfe] px-3.5 py-2 text-xs text-slate-800 placeholder:text-slate-400 focus:border-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-muted/30 transition-all"
+              className="w-full rounded-full border border-white/80 bg-white/55 px-5 py-3 text-sm text-horizon-ink transition-all hover:bg-white/70 focus:border-horizon-secondary/40 focus:bg-white/80 focus:outline-none focus:ring-2 focus:ring-horizon-secondary/25 aria-invalid:border-red-500 aria-invalid:ring-2 aria-invalid:ring-red-500/20"
             />
             {passwordMismatch ? (
-              <p className="mt-1 text-[11px] text-red-500 font-medium">
+              <p id="confirm-password-error" role="alert" className="mt-2 text-xs font-semibold text-red-700">
                 Passwords do not match.
               </p>
             ) : null}
@@ -166,7 +169,7 @@ export function SignupForm({
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="w-full h-11 rounded-xl bg-brand-action hover:bg-brand-action-hover text-slate-900 font-semibold text-xs shadow-sm shadow-sky-200/20 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              className="h-12 w-full rounded-full bg-horizon-primary text-sm font-bold text-white transition-all hover:-translate-y-0.5 hover:bg-[#8b1a00] focus-visible:ring-horizon-primary active:scale-[0.98] disabled:pointer-events-none disabled:opacity-55"
             >
               {isSubmitting ? (
                 <>
@@ -174,24 +177,27 @@ export function SignupForm({
                   Creating account
                 </>
               ) : (
-                "Create Account"
+                <>
+                  Create account
+                  <ArrowRight className="size-4" aria-hidden="true" />
+                </>
               )}
             </Button>
           </div>
 
-          <p className="text-center text-xs text-slate-500 pt-1">
+          <p className="pt-1 text-center text-xs text-horizon-muted">
             Already have an account?{" "}
             <Link
               href={loginHref}
-              className="font-semibold text-brand-ink hover:text-brand-ink underline underline-offset-2"
+              className="font-bold text-horizon-primary underline underline-offset-4"
             >
               Sign in
             </Link>
           </p>
 
-          <p className="mt-3 flex items-center justify-center gap-1.5 text-[11px] text-slate-400 pt-3 border-t border-slate-100">
-            <Lock className="size-3 text-slate-400" />
-            Your documents and credentials stay private
+          <p className="mt-3 flex items-center justify-center gap-1.5 border-t border-white/70 pt-4 text-center text-[11px] text-horizon-muted">
+            <Lock className="size-3 shrink-0" aria-hidden="true" />
+            Your credentials and saved master resume stay private
           </p>
         </form>
       </div>

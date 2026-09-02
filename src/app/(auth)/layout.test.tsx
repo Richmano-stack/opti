@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import { renderToStaticMarkup } from "react-dom/server";
 
 const { getServerSession, redirect } = vi.hoisted(() => ({
   getServerSession: vi.fn(),
@@ -16,7 +17,11 @@ describe("AuthLayout", () => {
 
     const result = await AuthLayout({ children: <div>Log in</div> });
 
-    expect(result).toBeTruthy();
+    const html = renderToStaticMarkup(result);
+
+    expect(html).toContain('aria-label="Opti home"');
+    expect(html).toContain('href="/"');
+    expect(html).toContain("Log in");
     expect(redirect).not.toHaveBeenCalled();
   });
 
