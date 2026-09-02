@@ -1,34 +1,37 @@
 import Link from "next/link";
 
-function OptiLogo() {
-  return (
-    <div className="flex items-center gap-2.5">
-      <svg viewBox="0 0 24 24" fill="currentColor" className="size-6 text-brand-ink" aria-hidden="true">
-        <path d="M12 2C12.5 7.5 16.5 11.5 22 12C16.5 12.5 12.5 16.5 12 22C11.5 16.5 7.5 12.5 2 12C7.5 11.5 11.5 7.5 12 2Z" />
-      </svg>
-      <span className="text-xl font-bold tracking-tight text-slate-900">Opti</span>
-    </div>
-  );
-}
+import { BrandMark } from "./brand-mark";
 
 const navLinkClass =
-  "rounded-sm text-xs font-medium text-slate-600 transition-colors hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-ink focus-visible:ring-offset-4";
+  "rounded-full px-3 py-2 text-xs font-semibold text-horizon-muted transition-colors hover:text-horizon-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-primary focus-visible:ring-offset-2";
 
 export function LandingNavbar() {
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/90 backdrop-blur-md">
-      <nav aria-label="Primary navigation" className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link href="/" aria-label="Opti home" className="rounded-md transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-ink focus-visible:ring-offset-4">
-          <OptiLogo />
+    <header className="fixed inset-x-0 top-0 z-50 px-4 pt-4 sm:px-6 sm:pt-6">
+      <nav
+        aria-label="Primary navigation"
+        className="horizon-glass mx-auto flex h-16 max-w-[1120px] items-center justify-between rounded-full px-4 sm:px-6"
+      >
+        <Link
+          href="/"
+          aria-label="Opti home"
+          className="rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-primary focus-visible:ring-offset-2"
+        >
+          <BrandMark />
         </Link>
-        <div className="hidden items-center gap-7 md:flex">
+
+        <div className="hidden items-center gap-1 md:flex">
           <a href="#benefits" className={navLinkClass}>Why Opti</a>
           <a href="#how-it-works" className={navLinkClass}>How it works</a>
+          <a href="#privacy" className={navLinkClass}>Privacy</a>
         </div>
-        <div className="flex items-center gap-2 sm:gap-3">
-          <Link href="/login" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-ink focus-visible:ring-offset-2 sm:px-3.5">Log in</Link>
-          <Link href="/try" className="flex h-9 items-center justify-center rounded-lg bg-brand-action px-3 text-xs font-semibold text-slate-900 shadow-sm shadow-sky-200/20 transition-colors hover:bg-brand-action-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-ink focus-visible:ring-offset-2 sm:px-4">
-            <span className="sm:hidden">Try free</span><span className="hidden sm:inline">Try it free</span>
+
+        <div className="flex items-center gap-2">
+          <Link href="/login" className="horizon-button-ghost hidden h-10 px-5 text-xs sm:inline-flex">
+            Log in
+          </Link>
+          <Link href="/try" className="horizon-button-primary h-10 px-5 text-xs">
+            Try it free
           </Link>
         </div>
       </nav>

@@ -29,6 +29,14 @@
   --color-brand-action-hover: var(--brand-action-hover);
   --color-brand-soft: var(--brand-soft);
   --color-brand-border: var(--brand-border);
+  --color-horizon-canvas: var(--horizon-canvas);
+  --color-horizon-ink: var(--horizon-ink);
+  --color-horizon-muted: var(--horizon-muted);
+  --color-horizon-outline: var(--horizon-outline);
+  --color-horizon-primary: var(--horizon-primary);
+  --color-horizon-secondary: var(--horizon-secondary);
+  --color-horizon-tertiary: var(--horizon-tertiary);
+  --color-horizon-inverse-primary: var(--horizon-inverse-primary);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
@@ -85,6 +93,14 @@
   --brand-action-hover: #5da8dc;
   --brand-soft: #eef8ff;
   --brand-border: #cfe8f7;
+  --horizon-canvas: #f9f9f9;
+  --horizon-ink: #1a1c1c;
+  --horizon-muted: #5a413b;
+  --horizon-outline: #8e7069;
+  --horizon-primary: #b42907;
+  --horizon-secondary: #00668a;
+  --horizon-tertiary: #7b41b4;
+  --horizon-inverse-primary: #ffb4a3;
   --foreground: oklch(0.18 0.03 264);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.18 0.03 264);
@@ -173,3 +189,65 @@
     @apply pointer-events-none absolute inset-0 -z-10 overflow-hidden;
   }
 }
+
+@layer utilities {
+  .horizon-page {
+    background-color: var(--horizon-canvas);
+    background-image:
+      radial-gradient(circle at 8% 18%, rgb(255 94 58 / 0.1), transparent 30rem),
+      radial-gradient(circle at 88% 22%, rgb(64 194 253 / 0.12), transparent 32rem),
+      radial-gradient(circle at 64% 72%, rgb(180 121 240 / 0.09), transparent 30rem);
+  }
+
+  .horizon-glass {
+    border: 1px solid rgb(255 255 255 / 0.68);
+    background: rgb(255 255 255 / 0.44);
+    box-shadow: 0 16px 50px rgb(47 49 49 / 0.055);
+    backdrop-filter: blur(24px);
+  }
+
+  .horizon-button-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-horizon-primary font-bold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#8b1a00] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-primary focus-visible:ring-offset-2 active:scale-95;
+  }
+
+  .horizon-button-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/70 bg-white/45 font-bold text-horizon-ink backdrop-blur-xl transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-secondary focus-visible:ring-offset-2 active:scale-95;
+  }
+
+  .horizon-eyebrow {
+    @apply inline-flex rounded-full border border-horizon-primary/15 bg-horizon-primary/8 px-3.5 py-2 text-[10px] font-bold uppercase tracking-[0.17em] text-horizon-primary;
+  }
+
+  .horizon-aurora {
+    @apply pointer-events-none absolute inset-0 -z-10 overflow-hidden;
+  }
+
+  .horizon-orb {
+    @apply absolute rounded-full blur-3xl;
+  }
+
+  .horizon-orb-primary {
+    left: -9rem;
+    top: 5rem;
+    width: 26rem;
+    height: 26rem;
+    background: rgb(255 94 58 / 0.12);
+  }
+
+  .horizon-orb-secondary {
+    right: -8rem;
+    top: 1rem;
+    width: 32rem;
+    height: 32rem;
+    background: rgb(64 194 253 / 0.14);
+  }
+
+  .horizon-orb-tertiary {
+    bottom: -12rem;
+    left: 46%;
+    width: 25rem;
+    height: 25rem;
+    background: rgb(180 121 240 / 0.1);
+  }
+}
+
