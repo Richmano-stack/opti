@@ -18,5 +18,8 @@ describe("LandingPage", () => {
     expect(html).toContain('aria-label="Opti home"');
     expect(html).toContain("Nothing from guest sessions is saved");
     expect(html).toContain("Built around your real experience");
+    expect(html).toContain("Make the next application feel like yours.");
+    expect(html).toContain("Privacy boundary");
   });
 });
+
