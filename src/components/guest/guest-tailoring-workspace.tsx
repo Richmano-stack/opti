@@ -139,9 +139,11 @@ export function GuestTailoringWorkspace() {
 
         <GuestTrustRow />
       </main>
+      <AuthenticatedFooter />
     </div>
   );
 }
+
 
 
 
