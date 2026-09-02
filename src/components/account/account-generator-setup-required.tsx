@@ -2,7 +2,6 @@ import Link from "next/link";
 import { ArrowRight, FileText, LockKeyhole } from "lucide-react";
 
 import { AccountGeneratorHeader } from "@/components/account/account-generator-header";
-import { AuthenticatedFooter } from "@/components/account/authenticated-footer";
 import { AuthenticatedSidebar } from "@/components/account/authenticated-sidebar";
 import type { AuthUser } from "@/server/auth/types";
 
@@ -27,10 +26,10 @@ export function AccountGeneratorSetupRequired({ user }: { user: AuthUser }) {
         <p className="mt-6 flex items-center justify-center gap-2 text-xs text-horizon-muted"><LockKeyhole aria-hidden className="size-3.5 text-horizon-secondary" /> Only your master résumé is saved.</p>
         </div>
       </main>
-      <AuthenticatedFooter />
     </div>
   );
 }
+
 
 
 

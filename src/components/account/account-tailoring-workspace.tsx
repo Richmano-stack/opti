@@ -6,7 +6,6 @@ import { AlertCircle, ArrowLeft, ArrowRight, BriefcaseBusiness, FileText, Loader
 
 import { submitAccountResume, type AccountGenerationState } from "@/app/actions/generate-account-resume";
 import { AccountGeneratorHeader } from "@/components/account/account-generator-header";
-import { AuthenticatedFooter } from "@/components/account/authenticated-footer";
 import { AuthenticatedSidebar } from "@/components/account/authenticated-sidebar";
 import { ContactInformationPreflight } from "@/components/contact-information-preflight";
 import { TailoredResumeResult } from "@/components/pdf";
@@ -80,7 +79,6 @@ export function AccountTailoringWorkspace({ user, masterResumeUpdatedAt }: { use
           </div>
         )}
       </main>
-      <AuthenticatedFooter />
     </div>
   );
 }
@@ -135,6 +133,7 @@ export function AccountGeneratorReview({ resume, resultHeading, jobDescription, 
     </div>
   );
 }
+
 
 
 
