@@ -71,7 +71,7 @@ function LandingFooter() {
 export async function LandingPage() {
   return (
     <div className="horizon-page min-h-screen text-horizon-ink">
-      <LandingNavbar />
+      {navbar}
       <main>
         <HeroSection />
         <div id="benefits" className="scroll-mt-28"><BenefitsSection /></div>
@@ -83,6 +83,7 @@ export async function LandingPage() {
     </div>
   );
 }
+
 
 
 
