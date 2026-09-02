@@ -8,6 +8,7 @@ import { ArrowRight, LoaderCircle, Lock } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { getSafeCallbackUrl } from "@/lib/auth/callback-url";
 import { authClient } from "@/server/auth/client";
 
 export function SignupForm({
@@ -15,7 +16,7 @@ export function SignupForm({
   ...props
 }: React.ComponentProps<"div">) {
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") ?? "/dashboard";
+  const callbackUrl = getSafeCallbackUrl(searchParams.get("callbackUrl"));
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -204,3 +205,4 @@ export function SignupForm({
     </div>
   );
 }
+

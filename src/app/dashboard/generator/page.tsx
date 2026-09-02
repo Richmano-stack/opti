@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 export default async function AccountGeneratorPage() {
   const session = await getServerSession();
 
-  if (!session?.user) redirect("/login");
+  if (!session?.user) redirect(`/login?callbackUrl=${encodeURIComponent("/dashboard/generator")}`);
 
   const masterResume = await findMasterResumeByUserId(session.user.id);
 
@@ -25,3 +25,4 @@ export default async function AccountGeneratorPage() {
     />
   );
 }
+

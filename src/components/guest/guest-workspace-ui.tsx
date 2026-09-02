@@ -177,3 +177,19 @@ export function GuestTrustRow() {
   );
 }
 
+
+export function GuestWorkspaceFooter() {
+  return (
+    <footer className="mt-16 bg-horizon-ink px-6 pb-8 pt-12 text-white sm:px-8 lg:px-16">
+      <div className="mx-auto max-w-[1120px]">
+        <div className="flex flex-col gap-5 border-b border-white/15 pb-8 sm:flex-row sm:items-end sm:justify-between">
+          <div><p className="text-[10px] font-bold uppercase tracking-[0.17em] text-horizon-inverse-primary">Guest mode</p><h2 className="mt-3 text-2xl font-bold tracking-[-0.03em] sm:text-3xl">Try the flow. Keep your privacy.</h2></div>
+          <Link href="/signup" className="horizon-button-primary h-11 shrink-0 bg-white px-5 text-xs !text-horizon-ink hover:bg-horizon-inverse-primary">Create your workspace <span aria-hidden>→</span></Link>
+        </div>
+        <div className="flex flex-col gap-5 py-8 sm:flex-row sm:items-center sm:justify-between"><div><BrandMark /><p className="mt-3 text-xs text-white/50">Guest inputs and generated results are not saved.</p></div><nav aria-label="Footer navigation" className="flex flex-wrap gap-x-5 gap-y-2 text-xs font-semibold text-white/65"><Link href="/" className="hover:text-white">Opti home</Link><Link href="/login" className="hover:text-white">Log in</Link><Link href="/signup" className="hover:text-white">Create account</Link></nav></div>
+        <div className="border-t border-white/15 pt-5 text-xs text-white/40">© {new Date().getFullYear()} Opti. Built for focused applications.</div>
+      </div>
+    </footer>
+  );
+}
+
