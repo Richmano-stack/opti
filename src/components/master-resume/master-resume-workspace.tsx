@@ -8,6 +8,7 @@ import { ArrowRight, Check, CheckCircle2, FileText, LoaderCircle, LockKeyhole, L
 import { saveMasterResume } from "@/app/actions/master-resume";
 import { BrandMark } from "@/components/landing/brand-mark";
 import { AuthenticatedFooter } from "@/components/account/authenticated-footer";
+import { AuthenticatedSidebar } from "@/components/account/authenticated-sidebar";
 import { authClient } from "@/server/auth/client";
 import type { AuthUser } from "@/server/auth/types";
 
@@ -49,7 +50,8 @@ export function MasterResumeWorkspace({ user, initialContent = "", initialUpdate
   };
 
   return (
-    <div className="horizon-page relative min-h-screen overflow-hidden text-horizon-ink">
+    <div className="horizon-page relative min-h-screen overflow-hidden text-horizon-ink lg:pl-64">
+      <AuthenticatedSidebar />
       <div className="horizon-aurora" aria-hidden="true">
         <div className="horizon-orb horizon-orb-primary" />
         <div className="horizon-orb horizon-orb-secondary" />
@@ -162,6 +164,7 @@ export function MasterResumeWorkspace({ user, initialContent = "", initialUpdate
     </div>
   );
 }
+
 
 
 

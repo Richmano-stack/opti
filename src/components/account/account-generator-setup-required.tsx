@@ -3,11 +3,12 @@ import { ArrowRight, FileText, LockKeyhole } from "lucide-react";
 
 import { AccountGeneratorHeader } from "@/components/account/account-generator-header";
 import { AuthenticatedFooter } from "@/components/account/authenticated-footer";
+import { AuthenticatedSidebar } from "@/components/account/authenticated-sidebar";
 import type { AuthUser } from "@/server/auth/types";
 
 export function AccountGeneratorSetupRequired({ user }: { user: AuthUser }) {
   return (
-    <div className="horizon-page min-h-screen text-horizon-ink">
+    <div className="horizon-page min-h-screen text-horizon-ink lg:pl-64">
       <AccountGeneratorHeader user={user} />
       <main className="mx-auto flex max-w-[760px] flex-col items-center px-4 py-20 text-center sm:px-6 sm:py-28">
         <span className="horizon-eyebrow">One step before tailoring</span>
@@ -29,6 +30,7 @@ export function AccountGeneratorSetupRequired({ user }: { user: AuthUser }) {
     </div>
   );
 }
+
 
 
 

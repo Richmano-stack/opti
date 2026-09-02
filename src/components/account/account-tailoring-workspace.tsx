@@ -7,6 +7,7 @@ import { AlertCircle, ArrowLeft, ArrowRight, BriefcaseBusiness, FileText, Loader
 import { submitAccountResume, type AccountGenerationState } from "@/app/actions/generate-account-resume";
 import { AccountGeneratorHeader } from "@/components/account/account-generator-header";
 import { AuthenticatedFooter } from "@/components/account/authenticated-footer";
+import { AuthenticatedSidebar } from "@/components/account/authenticated-sidebar";
 import { ContactInformationPreflight } from "@/components/contact-information-preflight";
 import { TailoredResumeResult } from "@/components/pdf";
 import type { AuthUser } from "@/server/auth/types";
@@ -25,7 +26,7 @@ export function AccountTailoringWorkspace({ user, masterResumeUpdatedAt }: { use
   }, [state]);
 
   return (
-    <div className="horizon-page min-h-screen text-horizon-ink antialiased">
+    <div className="horizon-page min-h-screen text-horizon-ink antialiased lg:pl-64">
       <AccountGeneratorHeader user={user} />
       <main className="mx-auto max-w-[1120px] px-4 py-10 sm:px-6 sm:py-14">
         <Link href="/dashboard" className="inline-flex items-center gap-2 rounded-full text-xs font-bold text-horizon-muted hover:text-horizon-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-primary">
@@ -133,6 +134,7 @@ export function AccountGeneratorReview({ resume, resultHeading, jobDescription, 
     </div>
   );
 }
+
 
 
 
