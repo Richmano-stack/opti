@@ -24,6 +24,7 @@ export function MasterResumeWorkspace({ user, initialContent = "", initialUpdate
   const [lastSavedAt, setLastSavedAt] = useState<string | undefined>(initialUpdatedAt);
   const [error, setError] = useState<string | null>(null);
   const [isSavedRecently, setIsSavedRecently] = useState(false);
+  const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const isDirty = content !== savedContent;
@@ -164,6 +165,7 @@ export function MasterResumeWorkspace({ user, initialContent = "", initialUpdate
     </div>
   );
 }
+
 
 
 
