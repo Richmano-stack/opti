@@ -11,7 +11,7 @@ export function GuestWorkspaceHeader() {
     <header className="sticky top-0 z-20 px-4 pt-4 sm:px-6 sm:pt-6">
       <nav
         aria-label="Primary navigation"
-        className="horizon-glass mx-auto flex h-16 max-w-[1600px] items-center justify-between rounded-full px-4 sm:px-6"
+        className="horizon-glass mx-auto flex h-16 max-w-[1120px] items-center justify-between rounded-full px-4 sm:px-6"
       >
         <div className="flex min-w-0 items-center gap-3 sm:gap-5">
           <Link
@@ -176,3 +176,4 @@ export function GuestTrustRow() {
     </aside>
   );
 }
+
