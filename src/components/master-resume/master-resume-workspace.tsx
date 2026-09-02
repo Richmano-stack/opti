@@ -7,6 +7,7 @@ import { ArrowRight, Check, CheckCircle2, FileText, LoaderCircle, LockKeyhole, L
 
 import { saveMasterResume } from "@/app/actions/master-resume";
 import { BrandMark } from "@/components/landing/brand-mark";
+import { AuthenticatedFooter } from "@/components/account/authenticated-footer";
 import { authClient } from "@/server/auth/client";
 import type { AuthUser } from "@/server/auth/types";
 
@@ -157,6 +158,10 @@ export function MasterResumeWorkspace({ user, initialContent = "", initialUpdate
           </aside>
         </div>
       </main>
+      <AuthenticatedFooter />
     </div>
   );
 }
+
+
+

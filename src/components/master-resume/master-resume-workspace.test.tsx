@@ -32,7 +32,6 @@ describe("MasterResumeWorkspace", () => {
     expect(html).toContain("Save master resume");
     expect(html).toContain("Save it once. Update it whenever your experience changes.");
     expect(html).toContain("Generated resumes, job descriptions, and PDFs are not stored.");
-    expect(html).not.toContain('href="/dashboard/generator"');
     expect(html).toContain("0 / 50,000 characters");
   });
 
@@ -56,3 +55,4 @@ describe("MasterResumeWorkspace", () => {
     expect(html).toContain(content);
   });
 });
+

@@ -6,6 +6,7 @@ import { AlertCircle, ArrowLeft, ArrowRight, BriefcaseBusiness, FileText, Loader
 
 import { submitAccountResume, type AccountGenerationState } from "@/app/actions/generate-account-resume";
 import { AccountGeneratorHeader } from "@/components/account/account-generator-header";
+import { AuthenticatedFooter } from "@/components/account/authenticated-footer";
 import { ContactInformationPreflight } from "@/components/contact-information-preflight";
 import { TailoredResumeResult } from "@/components/pdf";
 import type { AuthUser } from "@/server/auth/types";
@@ -77,6 +78,7 @@ export function AccountTailoringWorkspace({ user, masterResumeUpdatedAt }: { use
           </div>
         )}
       </main>
+      <AuthenticatedFooter />
     </div>
   );
 }
@@ -89,6 +91,7 @@ function SavedSource({ updatedAt }: { updatedAt?: string }) {
         <div className="min-w-0"><p className="truncate text-sm font-bold">Using your saved master résumé</p><p className="mt-0.5 text-[11px] text-horizon-muted">{updatedAt ? `Last updated ${updatedAt}` : "Stored securely in your account"}</p></div>
       </div>
       <Link href="/dashboard" className="shrink-0 text-xs font-bold text-horizon-primary hover:underline">Edit</Link>
+      
     </div>
   );
 }
@@ -102,6 +105,7 @@ export function ErrorNotice({ message }: { message: string }) {
     <div role="alert" className="mt-5 flex items-start gap-3 rounded-2xl border border-red-200/70 bg-red-50/80 p-4 text-red-900">
       <AlertCircle aria-hidden className="mt-0.5 size-4 shrink-0" />
       <div><p className="text-xs font-bold">We couldn’t tailor this résumé</p><p className="mt-1 text-xs leading-5 text-red-700">{message}</p></div>
+      
     </div>
   );
 }
@@ -125,6 +129,10 @@ export function AccountGeneratorReview({ resume, resultHeading, jobDescription, 
       <section aria-live="polite" className="min-w-0 rounded-[1.5rem] border border-white/80 bg-white p-4 shadow-[0_20px_70px_rgba(47,49,49,0.08)] sm:p-7">
         <TailoredResumeResult resume={resume} />
       </section>
+      
     </div>
   );
 }
+
+
+
