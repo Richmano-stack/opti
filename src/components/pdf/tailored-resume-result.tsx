@@ -27,15 +27,15 @@ export function TailoredResumeResult({ resume }: { resume: OptimizedResume }) {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col gap-3 rounded-xl border border-brand-border bg-brand-soft/45 p-4 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-xs leading-relaxed text-slate-600">
+      <div className="flex flex-col gap-4 rounded-2xl border border-horizon-secondary/15 bg-horizon-secondary/7 p-4 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-xs leading-relaxed text-horizon-muted">
           Your PDF is generated in this browser and is not saved by Opti.
         </p>
         <Button
           type="button"
           onClick={handleDownload}
           disabled={isDownloading}
-          className="h-9 shrink-0 rounded-lg px-4 text-xs font-semibold"
+          className="h-10 shrink-0 rounded-full bg-horizon-primary px-5 text-xs font-bold text-white hover:bg-[#8b1a00] focus-visible:ring-horizon-primary"
         >
           {isDownloading ? (
             <>
@@ -51,7 +51,7 @@ export function TailoredResumeResult({ resume }: { resume: OptimizedResume }) {
       {downloadError ? (
         <p
           role="alert"
-          className="rounded-lg border border-red-100 bg-red-50 p-3 text-xs font-medium text-red-600"
+          className="rounded-2xl border border-red-200 bg-red-50/80 p-4 text-xs font-medium text-red-800"
         >
           {downloadError}
         </p>
