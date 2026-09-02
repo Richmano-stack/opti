@@ -1,59 +1,74 @@
-import { Download, FileText, RefreshCw, Shield } from "lucide-react";
-import { GlowCard } from "./glow-card";
-import { SectionBadge } from "./section-badge";
+import { Download, FileCheck2, RefreshCw, ShieldCheck } from "lucide-react";
 
 const BENEFITS = [
   {
-    icon: FileText,
-    title: "One source of truth",
-    description:
-      "Keep your complete career history in one master resume instead of pasting it into AI tools every time.",
+    icon: FileCheck2,
+    label: "One source",
+    title: "Your complete story stays intact.",
+    description: "Save one master resume with the experience, skills, and outcomes that are actually yours.",
+    tone: "primary",
   },
   {
     icon: RefreshCw,
-    title: "Tailored for each role",
-    description:
-      "Paste a job description and Opti selects and rewrites the experience that is most relevant to that opportunity.",
+    label: "Role by role",
+    title: "Relevance without rewriting from zero.",
+    description: "Opti emphasizes the parts of your background that matter to each job description.",
+    tone: "secondary",
   },
   {
-    icon: Shield,
-    title: "Grounded in your experience",
-    description:
-      "Generated content stays anchored to the employers, roles, education, skills, and results in your master resume.",
+    icon: ShieldCheck,
+    label: "Truth first",
+    title: "No invented employers or achievements.",
+    description: "Every tailored result remains grounded in the source resume you provide.",
+    tone: "tertiary",
   },
   {
     icon: Download,
-    title: "Ready-to-review PDF",
-    description:
-      "Review the tailored result and export a clean, single-column PDF that is ATS-friendly and easy to submit.",
+    label: "Ready to send",
+    title: "Review once. Download a clean PDF.",
+    description: "The final document keeps a conventional single-column reading order and selectable text.",
+    tone: "primary",
   },
 ] as const;
 
+const toneClasses = {
+  primary: "bg-horizon-primary/10 text-horizon-primary",
+  secondary: "bg-horizon-secondary/10 text-horizon-secondary",
+  tertiary: "bg-horizon-tertiary/10 text-horizon-tertiary",
+} as const;
+
 export function BenefitsSection() {
   return (
-    <section className="relative px-4 py-16 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-5xl">
-        <div className="mb-12 text-center">
-          <SectionBadge label="Why Opti" />
-          <h2 className="mt-3 text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">
-            Stop rebuilding the same resume
-          </h2>
-          <p className="mt-2 text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">
-            Let Opti handle the rewriting so you can focus on getting more opportunities.
+    <section className="px-4 py-20 sm:px-6 sm:py-28 lg:px-8" aria-labelledby="benefits-title">
+      <div className="mx-auto max-w-[1120px]">
+        <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-end">
+          <div>
+            <span className="horizon-eyebrow">Why Opti</span>
+            <h2 id="benefits-title" className="mt-5 text-3xl font-bold leading-tight tracking-[-0.03em] text-horizon-ink sm:text-4xl">
+              A sharper application starts with what is already true.
+            </h2>
+          </div>
+          <p className="max-w-2xl text-base leading-7 text-horizon-muted lg:justify-self-end">
+            Opti is designed around restraint: preserve your facts, reduce repetitive work, and give every opportunity the most relevant version of your experience.
           </p>
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2">
-          {BENEFITS.map(({ icon: Icon, title, description }) => (
-            <GlowCard key={title}>
-              <div className="mb-4 inline-flex size-10 items-center justify-center rounded-xl bg-brand-soft text-brand-ink border border-brand-border">
-                <Icon className="size-5" />
+        <div className="mt-12 grid gap-4 md:grid-cols-2">
+          {BENEFITS.map(({ icon: Icon, label, title, description, tone }, index) => (
+            <article
+              key={title}
+              className={`horizon-glass group rounded-[1.5rem] p-7 transition-transform duration-300 hover:-translate-y-1 sm:p-9 ${index === 0 || index === 3 ? "md:col-span-1" : ""}`}
+            >
+              <div className="flex items-start justify-between gap-6">
+                <span className={`flex size-11 items-center justify-center rounded-2xl ${toneClasses[tone]}`}>
+                  <Icon className="size-5" aria-hidden="true" />
+                </span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-horizon-muted">0{index + 1}</span>
               </div>
-              <h3 className="text-sm sm:text-base font-bold text-slate-900">{title}</h3>
-              <p className="mt-1.5 text-xs sm:text-sm leading-relaxed text-slate-500">
-                {description}
-              </p>
-            </GlowCard>
+              <p className="mt-8 text-[10px] font-bold uppercase tracking-[0.16em] text-horizon-muted">{label}</p>
+              <h3 className="mt-2 max-w-md text-xl font-bold tracking-[-0.02em] text-horizon-ink sm:text-2xl">{title}</h3>
+              <p className="mt-3 max-w-lg text-sm leading-6 text-horizon-muted">{description}</p>
+            </article>
           ))}
         </div>
       </div>
