@@ -12,7 +12,7 @@ import {
   GuestResultPanel,
   GuestTextAreaField,
   GuestTrustRow,
-  GuestWorkspaceFooter,
+
   GuestWorkspaceHeader,
 } from "@/components/guest/guest-workspace-ui";
 import { Button } from "@/components/ui/button";
@@ -141,4 +141,5 @@ export function GuestTailoringWorkspace() {
     </div>
   );
 }
+
 
