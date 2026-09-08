@@ -35,11 +35,16 @@ describe("guest tailoring components", () => {
     expect(html).toContain("Tailor my résumé");
     expect(html).toContain("Nothing is saved after this session.");
     expect(html).toContain("Processed only to generate this result");
-    expect(html).toContain("Designed for ATS readability");
+    expect(html).toContain("Private by design");
+    expect(html).toContain("Step 1 of 2");
+    expect(html).toContain("Paste your source material");
+    expect(html).toContain('aria-label="Opti home"');
+    expect(html).not.toContain("Designed for ATS readability");
     expect(html).not.toContain("never leaves your browser");
     expect(html).not.toContain("passes ATS scans");
     expect(html).toContain("Your tailored résumé will appear here");
-    expect(html).toContain("Your result will be editable before download.");
+    expect(html).toContain("Review it here before you download.");
+    expect(html).not.toContain("editable before download");
     expect(html).toContain("Add both documents to continue.");
     expect(html).toContain('aria-label="Primary navigation"');
     expect(html).not.toContain("Opti will tailor your experience to match the role.");

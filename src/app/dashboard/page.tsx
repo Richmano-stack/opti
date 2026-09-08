@@ -10,7 +10,7 @@ export default async function DashboardPage() {
   const session = await getServerSession();
 
   if (!session?.user) {
-    redirect("/login");
+    redirect(`/login?callbackUrl=${encodeURIComponent("/dashboard")}`);
   }
 
   const masterResume = await findMasterResumeByUserId(session.user.id);
@@ -27,3 +27,4 @@ export default async function DashboardPage() {
     />
   );
 }
+

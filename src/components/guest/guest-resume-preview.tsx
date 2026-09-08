@@ -12,7 +12,7 @@ export function GuestResumePreview({ resume }: { resume: OptimizedResume }) {
     .join(" · ");
 
   return (
-    <article className="mx-auto w-full max-w-[760px] bg-white px-6 py-8 text-slate-900 shadow-sm sm:px-10 sm:py-12">
+    <article className="mx-auto w-full max-w-[760px] rounded-2xl border border-horizon-outline/10 bg-white px-6 py-8 text-horizon-ink shadow-[0_12px_40px_rgb(47_49_49/0.06)] sm:px-10 sm:py-12">
       <header className="border-b border-slate-200 pb-5 text-center">
         <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
           {resume.contact.name}
@@ -21,21 +21,21 @@ export function GuestResumePreview({ resume }: { resume: OptimizedResume }) {
       </header>
 
       <section className="mt-6" aria-labelledby="preview-summary">
-        <h3 id="preview-summary" className="text-xs font-bold uppercase tracking-[0.16em] text-brand-ink">
+        <h3 id="preview-summary" className="text-xs font-bold uppercase tracking-[0.16em] text-horizon-primary">
           Professional summary
         </h3>
         <p className="mt-2 text-sm leading-6 text-slate-700">{resume.summary}</p>
       </section>
 
       <section className="mt-6" aria-labelledby="preview-skills">
-        <h3 id="preview-skills" className="text-xs font-bold uppercase tracking-[0.16em] text-brand-ink">
+        <h3 id="preview-skills" className="text-xs font-bold uppercase tracking-[0.16em] text-horizon-primary">
           Skills
         </h3>
         <p className="mt-2 text-sm leading-6 text-slate-700">{resume.skills.join(" · ")}</p>
       </section>
 
       <section className="mt-6" aria-labelledby="preview-experience">
-        <h3 id="preview-experience" className="text-xs font-bold uppercase tracking-[0.16em] text-brand-ink">
+        <h3 id="preview-experience" className="text-xs font-bold uppercase tracking-[0.16em] text-horizon-primary">
           Experience
         </h3>
         <div className="mt-3 space-y-5">
@@ -55,7 +55,7 @@ export function GuestResumePreview({ resume }: { resume: OptimizedResume }) {
       </section>
 
       <section className="mt-6" aria-labelledby="preview-education">
-        <h3 id="preview-education" className="text-xs font-bold uppercase tracking-[0.16em] text-brand-ink">
+        <h3 id="preview-education" className="text-xs font-bold uppercase tracking-[0.16em] text-horizon-primary">
           Education
         </h3>
         <div className="mt-3 space-y-3">

@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 
+import { AuthPageShell } from "@/components/auth/auth-page-shell";
 import { LoginForm } from "@/components/login-form";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -13,12 +14,10 @@ function LoginFormFallback() {
 
 export default function LoginPage() {
   return (
-    <div className="flex flex-1 items-center justify-center p-6 md:p-10">
-      <div className="w-full max-w-sm">
-        <Suspense fallback={<LoginFormFallback />}>
-          <LoginForm />
-        </Suspense>
-      </div>
-    </div>
+    <AuthPageShell variant="login">
+      <Suspense fallback={<LoginFormFallback />}>
+        <LoginForm />
+      </Suspense>
+    </AuthPageShell>
   );
 }

@@ -1,11 +1,12 @@
 import Link from "next/link";
 
 import { BrandMark } from "./brand-mark";
+import { getServerSession } from "@/server/auth/session";
 
 const navLinkClass =
   "rounded-full px-3 py-2 text-xs font-semibold text-horizon-muted transition-colors hover:text-horizon-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-primary focus-visible:ring-offset-2";
 
-export function LandingNavbar() {
+export async function LandingNavbar() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 px-4 pt-4 sm:px-6 sm:pt-6">
       <nav
@@ -38,3 +39,4 @@ export function LandingNavbar() {
     </header>
   );
 }
+

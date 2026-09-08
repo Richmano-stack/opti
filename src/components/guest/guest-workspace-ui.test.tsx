@@ -54,5 +54,7 @@ describe("GuestResultPanel", () => {
 
     expect(html).toContain("Taylor Doe");
     expect(html).toContain("Download PDF");
+    expect(html).toContain("Ready to review");
+    expect(html).toContain("Review every detail before downloading");
   });
 });

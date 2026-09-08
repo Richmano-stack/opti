@@ -1,0 +1,1 @@
+# UI-008: Redesign the generator`n`n## Goal`nImplement focused input, blocked, loading, provider-error, review, and PDF-download states inside the shared shell.`n`n## Done when`n- Generated résumé remains visually dominant after generation.`n- Job descriptions and generated results remain temporary.`n- Retry, validation, accessibility, and PDF export remain intact.

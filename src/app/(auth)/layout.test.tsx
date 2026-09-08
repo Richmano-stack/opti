@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import { renderToStaticMarkup } from "react-dom/server";
 
 const { getServerSession, redirect } = vi.hoisted(() => ({
   getServerSession: vi.fn(),
@@ -16,7 +17,10 @@ describe("AuthLayout", () => {
 
     const result = await AuthLayout({ children: <div>Log in</div> });
 
-    expect(result).toBeTruthy();
+    const html = renderToStaticMarkup(result);
+
+    expect(html).toContain("Log in");
+    expect(html).not.toContain("Authentication navigation");
     expect(redirect).not.toHaveBeenCalled();
   });
 
@@ -30,3 +34,5 @@ describe("AuthLayout", () => {
     expect(redirect).toHaveBeenCalledWith("/dashboard");
   });
 });
+
+

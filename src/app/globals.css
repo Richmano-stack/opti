@@ -41,6 +41,18 @@
   --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
   --font-heading: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --text-horizon-display: var(--horizon-display);
+  --text-horizon-title: var(--horizon-title);
+  --text-horizon-heading: var(--horizon-heading);
+  --text-horizon-body: var(--horizon-body);
+  --text-horizon-meta: var(--horizon-meta);
+  --spacing-horizon-shell: var(--horizon-shell);
+  --spacing-horizon-content: var(--horizon-content);
+  --spacing-horizon-section: var(--horizon-section);
+  --radius-horizon-card: var(--horizon-radius-card);
+  --radius-horizon-control: var(--horizon-radius-control);
+  --shadow-horizon-card: var(--horizon-shadow-card);
+  --shadow-horizon-focus: var(--horizon-shadow-focus);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -101,6 +113,18 @@
   --horizon-secondary: #00668a;
   --horizon-tertiary: #7b41b4;
   --horizon-inverse-primary: #ffb4a3;
+  --horizon-display: 2.5rem;
+  --horizon-title: 2rem;
+  --horizon-heading: 1.25rem;
+  --horizon-body: 0.9375rem;
+  --horizon-meta: 0.75rem;
+  --horizon-shell: 1rem;
+  --horizon-content: 1.5rem;
+  --horizon-section: 3rem;
+  --horizon-radius-card: 1.25rem;
+  --horizon-radius-control: 0.75rem;
+  --horizon-shadow-card: 0 12px 32px rgb(26 28 28 / 0.06);
+  --horizon-shadow-focus: 0 0 0 3px rgb(0 102 138 / 0.2);
   --foreground: oklch(0.18 0.03 264);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.18 0.03 264);
@@ -250,4 +274,5 @@
     background: rgb(180 121 240 / 0.1);
   }
 }
+
 
