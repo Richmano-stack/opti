@@ -31,4 +31,17 @@ describe("AuthPageShell", () => {
     expect(html).not.toContain("job descriptions are saved");
     expect(html).not.toContain("PDFs are saved");
   });
+
+  it("uses a compact mobile header while preserving desktop context", () => {
+    const html = renderToStaticMarkup(
+      <AuthPageShell variant="login"><div>Form</div></AuthPageShell>,
+    );
+
+    expect(html).toContain('aria-label="Authentication navigation"');
+    expect(html).toContain("lg:hidden");
+    expect(html).toContain("relative hidden");
+    expect(html).toContain("lg:block");
+    expect(html).toContain("Continue as guest");
+    expect(html).toContain("Sign in to Opti");
+  });
 });
