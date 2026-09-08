@@ -1,16 +1,13 @@
 import Link from "next/link";
 import { ArrowRight, FileText, LockKeyhole } from "lucide-react";
 
-import { AccountGeneratorHeader } from "@/components/account/account-generator-header";
-import { AuthenticatedSidebar } from "@/components/account/authenticated-sidebar";
+import { AuthenticatedAppShell } from "@/components/horizon/authenticated-app-shell";
 import type { AuthUser } from "@/server/auth/types";
 
 export function AccountGeneratorSetupRequired({ user }: { user: AuthUser }) {
   return (
-    <div className="horizon-page min-h-screen text-horizon-ink lg:pl-64">
-      <AuthenticatedSidebar />
-      <AccountGeneratorHeader user={user} />
-      <main className="mx-auto flex max-w-[760px] flex-col items-center px-4 py-20 text-center sm:px-6 sm:py-28">
+    <AuthenticatedAppShell user={user} title="Tailor a résumé">
+      <main className="mx-auto flex max-w-[760px] flex-col items-center px-4 py-16 text-center sm:px-6 sm:py-24">
         <span className="horizon-eyebrow">One step before tailoring</span>
         <div className="horizon-glass mt-8 w-full rounded-[2rem] p-8 sm:p-12">
         <span className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-horizon-primary/10 text-horizon-primary">
@@ -26,7 +23,7 @@ export function AccountGeneratorSetupRequired({ user }: { user: AuthUser }) {
         <p className="mt-6 flex items-center justify-center gap-2 text-xs text-horizon-muted"><LockKeyhole aria-hidden className="size-3.5 text-horizon-secondary" /> Only your master résumé is saved.</p>
         </div>
       </main>
-    </div>
+    </AuthenticatedAppShell>
   );
 }
 

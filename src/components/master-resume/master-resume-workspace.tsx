@@ -2,13 +2,10 @@
 
 import { useState, useTransition } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { ArrowRight, Check, CheckCircle2, FileText, LoaderCircle, LockKeyhole, LogOut, Save, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowRight, Check, CheckCircle2, FileText, LoaderCircle, LockKeyhole, Save, ShieldCheck, Sparkles } from "lucide-react";
 
 import { saveMasterResume } from "@/app/actions/master-resume";
-import { BrandMark } from "@/components/landing/brand-mark";
-import { AuthenticatedSidebar } from "@/components/account/authenticated-sidebar";
-import { authClient } from "@/server/auth/client";
+import { AuthenticatedAppShell } from "@/components/horizon/authenticated-app-shell";
 import type { AuthUser } from "@/server/auth/types";
 
 interface MasterResumeWorkspaceProps {
@@ -24,7 +21,6 @@ export function MasterResumeWorkspace({ user, initialContent = "", initialUpdate
   const [error, setError] = useState<string | null>(null);
   const [isSavedRecently, setIsSavedRecently] = useState(false);
   const [isPending, startTransition] = useTransition();
-  const router = useRouter();
   const isDirty = content !== savedContent;
   const isSetup = savedContent.length > 0;
 
@@ -43,40 +39,9 @@ export function MasterResumeWorkspace({ user, initialContent = "", initialUpdate
     });
   };
 
-  const handleSignOut = async () => {
-    await authClient.signOut();
-    router.push("/");
-  };
-
   return (
-    <div className="horizon-page relative min-h-screen overflow-hidden text-horizon-ink lg:pl-64">
-      <AuthenticatedSidebar />
-      <div className="horizon-aurora" aria-hidden="true">
-        <div className="horizon-orb horizon-orb-primary" />
-        <div className="horizon-orb horizon-orb-secondary" />
-        <div className="horizon-orb horizon-orb-tertiary" />
-      </div>
-
-      <header className="sticky top-0 z-20 px-4 pt-4 sm:px-6 sm:pt-6">
-        <nav aria-label="Account navigation" className="horizon-glass mx-auto flex h-16 max-w-[1120px] items-center justify-between rounded-full px-4 py-2.5 sm:px-5">
-          <Link href="/dashboard" aria-label="Opti dashboard" className="rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-primary focus-visible:ring-offset-2">
-            <BrandMark />
-          </Link>
-          <div className="flex items-center gap-2 sm:gap-4">
-            <div className="hidden text-right sm:block">
-              <p className="text-xs font-bold text-horizon-ink">{user.name || user.email}</p>
-              <p className="text-[10px] text-horizon-muted">{user.email}</p>
-            </div>
-            <button type="button" onClick={handleSignOut} className="horizon-button-ghost h-10 px-3 text-xs sm:px-4">
-              <LogOut aria-hidden="true" className="size-3.5" />
-              <span className="hidden sm:inline">Sign out</span>
-              <span className="sr-only sm:hidden">Sign out</span>
-            </button>
-          </div>
-        </nav>
-      </header>
-
-      <main className="mx-auto max-w-7xl px-6 pb-16 pt-12 sm:px-8 sm:pt-16 lg:px-16 lg:pb-24">
+    <AuthenticatedAppShell user={user} title="Master résumé">
+      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-8 lg:px-12">
         <section aria-labelledby="dashboard-title" className="max-w-4xl">
           <span className="horizon-eyebrow">{isSetup ? "Source resume ready" : "Set up your source resume"}</span>
           <h1 id="dashboard-title" className="mt-5 max-w-3xl text-4xl font-extrabold leading-[1.08] tracking-[-0.035em] sm:text-5xl lg:text-6xl">
@@ -159,7 +124,7 @@ export function MasterResumeWorkspace({ user, initialContent = "", initialUpdate
           </aside>
         </div>
       </main>
-    </div>
+    </AuthenticatedAppShell>
   );
 }
 

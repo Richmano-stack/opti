@@ -5,6 +5,15 @@ vi.mock("@/app/actions/generate-account-resume", () => ({
   submitAccountResume: vi.fn(),
 }));
 
+vi.mock("next/navigation", () => ({
+  usePathname: () => "/dashboard/generator",
+  useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }),
+}));
+
+vi.mock("@/server/auth/client", () => ({
+  authClient: { signOut: vi.fn() },
+}));
+
 import { AccountGeneratorSetupRequired } from "./account-generator-setup-required";
 import {
   AccountGeneratorReview,
