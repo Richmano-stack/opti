@@ -1,0 +1,1 @@
+# UI-006: Define responsive rules`n`n## Goal`nDocument and implement mobile-first behavior at 320, 375, 768, 1024, and 1440px.`n`n## Done when`n- Sidebar collapse, stacking, wrapping, sheet behavior, and internal scrolling are explicit.`n- No horizontal overflow occurs.`n- Playwright checks cover representative breakpoints.

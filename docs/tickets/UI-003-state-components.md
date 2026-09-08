@@ -1,0 +1,1 @@
+# UI-003: Build shared state components`n`n## Goal`nCreate Empty, Loading, Error, Success, Blocked/setup, validation, toast, and confirmation components.`n`n## Done when`n- Each state has consistent hierarchy and accessible semantics.`n- Components support the dashboard and generator states.`n- Unit tests cover meaningful content and interactions.

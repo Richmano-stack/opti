@@ -1,0 +1,1 @@
+# UI-002: Build Horizon UI primitives`n`n## Goal`nCreate consistent Horizon Button, IconButton, Input, Textarea, Label, Card, Surface, Badge, Divider, Avatar, and Tooltip primitives.`n`n## Done when`n- Variants use the Horizon token system.`n- Focus, disabled, hover, and invalid states are accessible.`n- Authenticated pages can stop using duplicated Tailwind styles.

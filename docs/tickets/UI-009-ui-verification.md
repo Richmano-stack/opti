@@ -1,0 +1,1 @@
+# UI-009: Verify the UI foundation`n`n## Goal`nRun quality and visual verification before merging.`n`n## Done when`n- Unit tests, lint, TypeScript, build, and Playwright pass.`n- Desktop and mobile screenshots are reviewed.`n- Keyboard focus, contrast, overflow, and console errors are checked.`n- Any known limitations are documented.
