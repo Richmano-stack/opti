@@ -74,6 +74,22 @@ describe("Horizon state components", () => {
     expect(html).toContain('aria-hidden="true"');
   });
 
+  it("preserves required status semantics when inherited props conflict", () => {
+    const html = renderToStaticMarkup(
+      <>
+        <ErrorState role="presentation" title="Still an error" />
+        <LoadingState aria-busy={false} role="presentation" />
+        <SkeletonBlock aria-hidden={false} />
+      </>,
+    );
+
+    expect(html).toContain('role="alert"');
+    expect(html).toContain('role="status"');
+    expect(html).toContain('aria-busy="true"');
+    expect(html).toContain('aria-hidden="true"');
+    expect(html).not.toContain('role="presentation"');
+  });
+
   it("renders a linked validation summary and field-level message", () => {
     const html = renderToStaticMarkup(
       <>
