@@ -36,15 +36,15 @@ function StatePanel({ title, description, icon, label, action, tone = "neutral",
 type FeedbackStateProps = Omit<StatePanelProps, "icon" | "label" | "tone">;
 
 export function EmptyState(props: FeedbackStateProps) {
-  return <StatePanel icon={<Inbox className="size-6" />} label="Empty" role="status" {...props} />;
+  return <StatePanel {...props} icon={<Inbox className="size-6" />} label="Empty" role="status" />;
 }
 
 export function SuccessState(props: FeedbackStateProps) {
-  return <StatePanel aria-live="polite" icon={<CheckCircle2 className="size-6" />} label="Success" role="status" tone="success" {...props} />;
+  return <StatePanel {...props} aria-live="polite" icon={<CheckCircle2 className="size-6" />} label="Success" role="status" tone="success" />;
 }
 
 export function BlockedState(props: FeedbackStateProps) {
-  return <StatePanel icon={<Ban className="size-6" />} label="Setup required" role="status" tone="blocked" {...props} />;
+  return <StatePanel {...props} icon={<Ban className="size-6" />} label="Setup required" role="status" tone="blocked" />;
 }
 
 type ErrorStateProps = FeedbackStateProps & {
@@ -54,7 +54,7 @@ type ErrorStateProps = FeedbackStateProps & {
 
 export function ErrorState({ onRetry, retryLabel = "Try again", action, ...props }: ErrorStateProps) {
   const retryAction = onRetry ? <HorizonButton onClick={onRetry} type="button">{retryLabel}</HorizonButton> : null;
-  return <StatePanel action={action ?? retryAction} icon={<AlertCircle className="size-6" />} label="Error" role="alert" tone="danger" {...props} />;
+  return <StatePanel {...props} action={action ?? retryAction} icon={<AlertCircle className="size-6" />} label="Error" role="alert" tone="danger" />;
 }
 
 export type ValidationError = {
@@ -65,7 +65,7 @@ export type ValidationError = {
 export function ValidationSummary({ title = "Check the highlighted fields", errors, className, ...props }: Omit<HTMLAttributes<HTMLDivElement>, "title"> & { title?: ReactNode; errors: ValidationError[] }) {
   if (errors.length === 0) return null;
   return (
-    <div className={cn("rounded-[var(--horizon-radius-control)] border border-red-200 bg-red-50 p-4 text-red-900", className)} role="alert" {...props}>
+    <div {...props} className={cn("rounded-[var(--horizon-radius-control)] border border-red-200 bg-red-50 p-4 text-red-900", className)} role="alert">
       <div className="flex items-start gap-3">
         <AlertCircle aria-hidden="true" className="mt-0.5 size-5 shrink-0" />
         <div className="min-w-0">
@@ -84,5 +84,5 @@ export function ValidationSummary({ title = "Check the highlighted fields", erro
 }
 
 export function ValidationMessage({ className, ...props }: HTMLAttributes<HTMLParagraphElement>) {
-  return <p className={cn("mt-2 text-sm font-semibold text-red-700", className)} role="alert" {...props} />;
+  return <p {...props} className={cn("mt-2 text-sm font-semibold text-red-700", className)} role="alert" />;
 }
