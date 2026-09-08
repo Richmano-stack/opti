@@ -1,1 +1,11 @@
-# UI-005: Build page composition primitives`n`n## Goal`nCreate PageHeader, SectionHeader, ContentContainer, ActionGroup, DocumentPreviewCard, FormSection, Dialog, Sheet, and ScrollRegion.`n`n## Done when`n- Page layouts share composition primitives.`n- Dialog and sheet focus behavior is accessible.`n- Long content scrolls within intentional regions.
+# UI-005: Build page composition primitives
+
+## Goal
+
+Create PageHeader, SectionHeader, ContentContainer, ActionGroup, DocumentPreviewCard, FormSection, Dialog, Sheet, and ScrollRegion.
+
+## Done when
+
+- Page layouts share composition primitives.
+- Dialog and sheet focus behavior is accessible.
+- Long content scrolls within intentional regions.
