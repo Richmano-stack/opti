@@ -6,7 +6,7 @@ import { ArrowRight, CheckCircle2, FileText, LoaderCircle, LockKeyhole, Pencil, 
 
 import { saveMasterResume } from "@/app/actions/master-resume";
 import { AuthenticatedAppShell } from "@/components/horizon/authenticated-app-shell";
-import { ActionGroup, ContentContainer, DocumentPreviewCard, HorizonDialog, PageHeader } from "@/components/horizon/page-composition";
+import { ActionGroup, ContentContainer, HorizonDialog } from "@/components/horizon/page-composition";
 import { HorizonBadge, HorizonButton, HorizonSurface, HorizonTextarea } from "@/components/horizon";
 import type { AuthUser } from "@/server/auth/types";
 
@@ -14,6 +14,21 @@ interface MasterResumeWorkspaceProps {
   user: AuthUser;
   initialContent?: string;
   initialUpdatedAt?: string;
+}
+
+function ResumeMockup() {
+  return (
+    <div aria-label="Document preview" className="rounded-[var(--horizon-radius-control)] border border-horizon-outline/10 bg-white p-5 shadow-sm sm:p-6">
+      <div className="h-2.5 w-2/5 rounded-full bg-horizon-ink/70" />
+      <div className="mt-3 h-2 w-1/3 rounded-full bg-horizon-ink/10" />
+      <div className="mt-6 space-y-3">
+        <div className="h-1.5 w-1/4 rounded-full bg-horizon-primary/60" />
+        <div className="space-y-2"><div className="h-2 w-full rounded-full bg-horizon-ink/10" /><div className="h-2 w-11/12 rounded-full bg-horizon-ink/10" /><div className="h-2 w-4/5 rounded-full bg-horizon-ink/10" /></div>
+        <div className="h-1.5 w-1/4 rounded-full bg-horizon-primary/60" />
+        <div className="space-y-2"><div className="h-2 w-full rounded-full bg-horizon-ink/10" /><div className="h-2 w-5/6 rounded-full bg-horizon-ink/10" /><div className="h-2 w-2/3 rounded-full bg-horizon-ink/10" /></div>
+      </div>
+    </div>
+  );
 }
 
 export function MasterResumeWorkspace({ user, initialContent = "", initialUpdatedAt }: MasterResumeWorkspaceProps) {
@@ -61,22 +76,29 @@ export function MasterResumeWorkspace({ user, initialContent = "", initialUpdate
 
   return (
     <AuthenticatedAppShell user={user} title="Master résumé">
-      <ContentContainer className="py-6 sm:py-8 lg:py-10" size="wide">
-        <PageHeader
-          actions={isSetup ? <Link className="horizon-button-primary px-5" href="/dashboard/generator"><Sparkles aria-hidden="true" className="size-4" />Tailor for a role<ArrowRight aria-hidden="true" className="size-4" /></Link> : undefined}
-          description={isSetup ? "Your saved source stays factual while each tailored résumé is created for a specific role." : "Save your source once, then use it to create focused résumés for the roles you want."}
-          eyebrow={<HorizonBadge>{isSetup ? "Source document" : "Get started"}</HorizonBadge>}
-          title={isSetup ? "Your master résumé" : "Set up your master résumé"}
-        />
+      <ContentContainer className="max-w-5xl py-6 sm:py-8 lg:py-12" size="wide">
+        <section aria-labelledby="dashboard-title" className="max-w-3xl">
+          <HorizonBadge>{isSetup ? "Your source document" : "Get started"}</HorizonBadge>
+          <h1 id="dashboard-title" className="mt-4 text-xl font-bold tracking-[-0.03em] text-horizon-ink sm:text-2xl">{isSetup ? "Your master résumé is the foundation for every application." : "Set up your master résumé once, then tailor from it with confidence."}</h1>
+        </section>
 
-        <div className="mt-8 grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-6">
+        <div className="mt-6">
           {isSetup ? (
-            <DocumentPreviewCard
-              action={<HorizonButton onClick={openEditor} tone="secondary" type="button"><Pencil aria-hidden="true" className="size-4" />Edit master résumé</HorizonButton>}
-              metadata={<span className="flex flex-wrap items-center gap-x-2 gap-y-1"><span className="inline-flex items-center gap-1 text-green-700"><CheckCircle2 aria-hidden="true" className="size-3.5" />Saved</span><span aria-hidden="true">·</span><span>{updatedLabel}</span><span aria-hidden="true">·</span><span>{savedContent.length.toLocaleString()} characters</span></span>}
-              summary="A concise overview of the factual document Opti uses for every tailored application."
-              title="Master résumé"
-            />
+            <HorizonSurface className="overflow-hidden">
+              <div className="p-5 sm:p-7">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                  <div><h2 className="text-horizon-title font-bold tracking-[-0.035em] text-horizon-ink">Master résumé</h2><div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-horizon-body text-horizon-muted"><span className="inline-flex items-center gap-1 font-bold text-green-700"><CheckCircle2 aria-hidden="true" className="size-4" />Saved</span><span aria-hidden="true">·</span><span>{updatedLabel}</span><span aria-hidden="true">·</span><span>{savedContent.length.toLocaleString()} characters</span></div></div>
+                  <HorizonButton onClick={openEditor} tone="secondary" type="button"><Pencil aria-hidden="true" className="size-4" />Edit master résumé</HorizonButton>
+                </div>
+                <div className="mt-6 grid items-center gap-6 md:grid-cols-[18rem_minmax(0,1fr)] md:gap-8">
+                  <ResumeMockup />
+                  <div className="space-y-3"><p className="text-horizon-heading font-bold text-horizon-ink">Your factual source document</p><p className="text-horizon-body leading-6 text-horizon-muted">Opti uses this source to create focused versions for specific roles, without changing what is here.</p></div>
+                </div>
+              </div>
+              <Link className="flex min-h-20 items-center justify-between gap-5 bg-horizon-primary px-5 py-5 text-white transition hover:bg-horizon-primary/90 sm:px-7" href="/dashboard/generator">
+                <span className="flex items-center gap-4"><Sparkles aria-hidden="true" className="size-6 shrink-0 text-horizon-inverse-primary" /><span><span className="block text-lg font-bold">Tailor for a role</span><span className="mt-1 block text-sm text-white/80">Create a focused version without changing your source.</span></span></span><ArrowRight aria-hidden="true" className="size-5 shrink-0" />
+              </Link>
+            </HorizonSurface>
           ) : (
             <HorizonSurface className="p-5 sm:p-7">
               <span aria-hidden="true" className="inline-flex size-11 items-center justify-center rounded-full bg-horizon-primary/10 text-horizon-primary"><FileText className="size-5" /></span>
@@ -85,17 +107,9 @@ export function MasterResumeWorkspace({ user, initialContent = "", initialUpdate
               <HorizonButton className="mt-6" onClick={openEditor} type="button"><Pencil aria-hidden="true" className="size-4" />Add master résumé</HorizonButton>
             </HorizonSurface>
           )}
-
-          <HorizonSurface className="p-5 sm:p-6">
-            <ShieldCheck aria-hidden="true" className="size-6 text-horizon-secondary" />
-            <h2 className="mt-4 text-horizon-heading font-bold text-horizon-ink">Your data stays private</h2>
-            <p className="mt-2 text-horizon-body leading-6 text-horizon-muted">Your source document is stored privately on your account. Job descriptions, generated résumés, and PDFs are not stored.</p>
-            <div className="mt-5 border-t border-horizon-outline/15 pt-4">
-              <p className="text-horizon-meta font-bold uppercase tracking-[0.14em] text-horizon-muted">One factual source</p>
-              <p className="mt-2 text-horizon-body leading-6 text-horizon-muted">Tailoring never changes the original document you control.</p>
-            </div>
-          </HorizonSurface>
         </div>
+
+        <p className="mt-5 flex items-start justify-center gap-2 text-center text-horizon-body leading-6 text-horizon-muted"><ShieldCheck aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-horizon-secondary" />Only your master résumé is saved. Job descriptions and tailored files stay temporary.</p>
 
         <div aria-atomic="true" aria-live="polite" className="mt-4">
           {isSavedRecently ? <p className="inline-flex items-center gap-2 text-sm font-bold text-green-700"><CheckCircle2 aria-hidden="true" className="size-4" />Changes saved</p> : null}

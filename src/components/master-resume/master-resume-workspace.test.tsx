@@ -30,7 +30,7 @@ describe("MasterResumeWorkspace", () => {
 
     expect(html).toContain("Set up your master résumé");
     expect(html).toContain("Add master résumé");
-    expect(html).toContain("Your source document is stored privately on your account.");
+    expect(html).toContain("Only your master résumé is saved.");
     expect(html).not.toContain("master-resume-editor");
   });
 
@@ -46,10 +46,12 @@ describe("MasterResumeWorkspace", () => {
 
     expect(html).toContain("Your master résumé");
     expect(html).toContain("Tailor for a role");
+    expect(html).toContain("Create a focused version without changing your source.");
     expect(html).toContain('href="/dashboard/generator"');
     expect(html).toContain("Edit master résumé");
     expect(html).toContain("Updated 10:30 AM");
     expect(html).toContain("44 characters");
+    expect(html).toContain("Only your master résumé is saved.");
     expect(html).not.toContain(content);
     expect(html).not.toContain("master-resume-editor");
   });
