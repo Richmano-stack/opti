@@ -23,20 +23,18 @@ const mockUser = {
 };
 
 describe("MasterResumeWorkspace", () => {
-  it("renders first-time setup state when no resume content exists", () => {
+  it("renders setup as an intentional entry point instead of an exposed editor", () => {
     const html = renderToStaticMarkup(
       <MasterResumeWorkspace user={mockUser} initialContent="" />,
     );
 
-    expect(html).toContain("Set up your source resume");
-    expect(html).toContain("Your factual source of truth");
-    expect(html).toContain("Save master resume");
-    expect(html).toContain("Save it once. Update it whenever your experience changes.");
-    expect(html).toContain("Generated resumes, job descriptions, and PDFs are not stored.");
-    expect(html).toContain("0 / 50,000 characters");
+    expect(html).toContain("Set up your master résumé");
+    expect(html).toContain("Add master résumé");
+    expect(html).toContain("Only your master résumé is saved.");
+    expect(html).not.toContain("master-resume-editor");
   });
 
-  it("renders existing master resume view with content and tailor CTA", () => {
+  it("renders a compact saved overview with tailoring primary and content hidden", () => {
     const content = "5+ years of software engineering experience.";
     const html = renderToStaticMarkup(
       <MasterResumeWorkspace
@@ -46,14 +44,16 @@ describe("MasterResumeWorkspace", () => {
       />,
     );
 
-    expect(html).toContain("Source resume ready");
-    expect(html).toContain("Your master resume");
-    expect(html).toContain("Continue to tailoring");
+    expect(html).toContain("Your master résumé");
+    expect(html).toContain("Tailor for a role");
+    expect(html).toContain("Create a focused version without changing your source.");
     expect(html).toContain('href="/dashboard/generator"');
-    expect(html).toContain("Save changes");
-    expect(html).toContain("Last saved at 10:30 AM");
-    expect(html).toContain("Generated resumes, job descriptions, and PDFs are not stored.");
-    expect(html).toContain(content);
+    expect(html).toContain("Edit master résumé");
+    expect(html).toContain("Updated 10:30 AM");
+    expect(html).toContain("44 characters");
+    expect(html).toContain("Only your master résumé is saved.");
+    expect(html).not.toContain(content);
+    expect(html).not.toContain("master-resume-editor");
   });
 });
 

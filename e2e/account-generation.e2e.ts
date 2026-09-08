@@ -67,20 +67,23 @@ test("an account user tailors from only a saved master resume", async ({ page })
     await expect(page).toHaveURL(/\/dashboard$/);
 
     await page.goto("/dashboard/generator");
-    await expect(page.getByRole("heading", { name: "Save your master résumé first" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Your source comes first" })).toBeVisible();
     await page.getByRole("link", { name: "Go to master résumé" }).click();
 
-    await page.getByLabel("Full, unedited career experience").fill(syntheticResume);
-    await page.getByRole("button", { name: "Save master resume" }).click();
-    await expect(page.getByText("Saved", { exact: true })).toBeVisible();
+    await page.getByRole("button", { name: "Add master résumé" }).click();
+    const masterResumeDialog = page.getByRole("dialog", { name: "Add your master résumé" });
+    await masterResumeDialog.getByLabel("Full, unedited career experience").fill(syntheticResume);
+    await masterResumeDialog.getByRole("button", { name: "Save changes" }).click();
+    await expect(masterResumeDialog).toHaveCount(0);
     await page.getByRole("link", { name: "Tailor for a role" }).click();
 
     await expect(page).toHaveURL(/\/dashboard\/generator$/);
     await expect(page.getByText("Using your saved master résumé")).toBeVisible();
-    await expect(page.getByLabel("Job description")).toBeVisible();
+    const jobDescription = page.getByRole("textbox", { name: "Job description" });
+    await expect(jobDescription).toBeVisible();
     await expect(page.getByLabel("Full, unedited career experience")).toHaveCount(0);
 
-    await page.getByLabel("Job description").fill(syntheticJobDescription);
+    await jobDescription.fill(syntheticJobDescription);
     await page.getByRole("button", { name: "Tailor my résumé" }).click();
     await expect(page.getByRole("heading", { name: "Complete your contact details" })).toBeVisible();
     await page.getByRole("button", { name: "Continue without them" }).click();
