@@ -12,5 +12,9 @@ describe("AuthenticatedAppShell", () => {
     expect(html).toContain("Mobile workspace navigation");
     expect(html).toContain("Workspace navigation");
     expect(html).toContain("Tailor");
+    expect(html).toContain('aria-label="Desktop workspace sidebar"');
+    expect(html).toContain('aria-expanded="false"');
+    expect(html).toContain("lg:h-dvh");
+    expect(html).toContain("lg:overflow-y-auto");
   });
 });

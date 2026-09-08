@@ -28,5 +28,9 @@ describe("Horizon page composition", () => {
     expect(html).toContain('aria-modal="true"');
     expect(html).toContain('aria-label="Close dialog"');
     expect(html).toContain("Save changes");
+    expect(html).toContain("h-dvh");
+    expect(html).toContain("sm:h-auto");
+    expect(html).toContain("overflow-auto");
+    expect(html).toContain("[overflow-wrap:anywhere]");
   });
 });

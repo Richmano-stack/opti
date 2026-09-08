@@ -19,7 +19,7 @@ export function ContentContainer({ className, size = "default", ...props }: Cont
     wide: "max-w-7xl",
   };
 
-  return <div className={cn("mx-auto w-full px-4 sm:px-6 lg:px-8", sizes[size], className)} {...props} />;
+  return <div className={cn("mx-auto w-full min-w-0 px-4 sm:px-6 lg:px-8", sizes[size], className)} {...props} />;
 }
 
 type PageHeaderProps = HTMLAttributes<HTMLElement> & {
@@ -63,7 +63,7 @@ export function SectionHeader({ title, description, action, className, ...props 
 }
 
 export function ActionGroup({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("flex flex-col gap-3 sm:flex-row sm:items-center", className)} {...props} />;
+  return <div className={cn("flex min-w-0 flex-col gap-3 [&>*]:min-h-11 [&>*]:w-full sm:flex-row sm:items-center sm:[&>*]:w-auto", className)} {...props} />;
 }
 
 type FormSectionProps = HTMLAttributes<HTMLElement> & {
@@ -94,7 +94,7 @@ type DocumentPreviewCardProps = HTMLAttributes<HTMLDivElement> & {
 export function DocumentPreviewCard({ title, summary, metadata, action, preview, className, ...props }: DocumentPreviewCardProps) {
   return (
     <HorizonSurface className={cn("overflow-hidden", className)} {...props}>
-      <div className="flex items-start justify-between gap-4 p-5 sm:p-6">
+      <div className="flex min-w-0 flex-col items-start gap-4 p-5 sm:flex-row sm:justify-between sm:p-6">
         <div className="flex min-w-0 items-start gap-3">
           <span aria-hidden="true" className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-horizon-primary/10 text-horizon-primary">
             <FileText className="size-5" />
@@ -105,7 +105,7 @@ export function DocumentPreviewCard({ title, summary, metadata, action, preview,
             {metadata ? <div className="pt-1 text-horizon-meta font-medium text-horizon-muted">{metadata}</div> : null}
           </div>
         </div>
-        {action ? <div className="shrink-0">{action}</div> : null}
+        {action ? <div className="w-full shrink-0 [&>*]:min-h-11 [&>*]:w-full sm:w-auto sm:[&>*]:w-auto">{action}</div> : null}
       </div>
       <HorizonDivider />
       <div className="bg-horizon-canvas/60 p-5 sm:p-6">{preview ?? <DocumentPreviewPlaceholder />}</div>
@@ -127,7 +127,7 @@ export function DocumentPreviewPlaceholder() {
 }
 
 export function ScrollRegion({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("min-h-0 overflow-auto overscroll-contain", className)} {...props} />;
+  return <div className={cn("min-h-0 min-w-0 overflow-auto overscroll-contain [overflow-wrap:anywhere]", className)} {...props} />;
 }
 
 type HorizonDialogProps = {
@@ -187,7 +187,7 @@ export function HorizonDialog({ isOpen, onClose, title, description, children, f
 
   return (
     <div className="fixed inset-0 z-50 flex items-end bg-horizon-ink/40 p-0 sm:items-center sm:justify-center sm:p-6" onMouseDown={onClose}>
-      <section ref={dialogRef} aria-describedby={description ? descriptionId : undefined} aria-labelledby={titleId} aria-modal="true" className={cn("flex max-h-[calc(100dvh-1rem)] w-full flex-col bg-horizon-canvas shadow-2xl", isSheet ? "rounded-t-[var(--horizon-radius-card)] sm:max-w-xl sm:rounded-[var(--horizon-radius-card)]" : "rounded-t-[var(--horizon-radius-card)] sm:max-w-2xl sm:rounded-[var(--horizon-radius-card)]")} onMouseDown={(event) => event.stopPropagation()} role="dialog">
+      <section ref={dialogRef} aria-describedby={description ? descriptionId : undefined} aria-labelledby={titleId} aria-modal="true" className={cn("flex h-dvh max-h-dvh min-w-0 w-full flex-col overflow-hidden bg-horizon-canvas shadow-2xl sm:h-auto sm:max-h-[calc(100dvh-3rem)] sm:rounded-[var(--horizon-radius-card)]", isSheet ? "sm:max-w-xl" : "sm:max-w-2xl")} onMouseDown={(event) => event.stopPropagation()} role="dialog">
         <div className="flex items-start justify-between gap-4 border-b border-horizon-outline/15 px-5 py-4 sm:px-6">
           <div className="space-y-1">
             <h2 id={titleId} className="text-horizon-heading font-bold text-horizon-ink">{title}</h2>
