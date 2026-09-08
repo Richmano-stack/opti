@@ -20,6 +20,7 @@ describe("AuthLayout", () => {
     const html = renderToStaticMarkup(result);
 
     expect(html).toContain("Log in");
+    expect(html).not.toContain("`r`n");
     expect(html).not.toContain("Authentication navigation");
     expect(redirect).not.toHaveBeenCalled();
   });
