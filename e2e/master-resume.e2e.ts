@@ -28,23 +28,42 @@ test("an account user can create, reload, and edit a master resume", async ({ pa
     await page.getByRole("button", { name: "Create Account" }).click();
 
     await expect(page).toHaveURL(/\/dashboard$/);
-    await expect(page.getByText("First-time setup")).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Set up your master résumé" })).toBeVisible();
+    await expect(page.getByLabel("Full, unedited career experience")).toHaveCount(0);
 
-    const editor = page.getByLabel("Full, unedited career experience");
+    const addTrigger = page.getByRole("button", { name: "Add master résumé" });
+    await addTrigger.click();
+    const dialog = page.getByRole("dialog", { name: "Add your master résumé" });
+    await expect(dialog).toBeVisible();
+    const editor = dialog.getByLabel("Full, unedited career experience");
     await editor.fill("E2E first resume version");
-    await page.getByRole("button", { name: "Save master resume" }).click();
-    await expect(page.getByText("Saved", { exact: true })).toBeVisible();
+    await dialog.getByRole("button", { name: "Save changes" }).click();
+    await expect(dialog).toHaveCount(0);
+    await expect(page.getByText("Changes saved", { exact: true })).toBeVisible();
 
     await page.reload();
-    await expect(editor).toHaveValue("E2E first resume version");
-    await expect(page.getByText("Master resume active")).toBeVisible();
+    await expect(page.getByLabel("Full, unedited career experience")).toHaveCount(0);
+    await expect(page.getByText("E2E first resume version")).toHaveCount(0);
 
-    await editor.fill("E2E updated resume version");
-    await page.getByRole("button", { name: "Save changes" }).click();
-    await expect(page.getByText("Saved", { exact: true })).toBeVisible();
+    const editTrigger = page.getByRole("button", { name: "Edit master résumé" });
+    await editTrigger.click();
+    const editDialog = page.getByRole("dialog", { name: "Edit master résumé" });
+    const editEditor = editDialog.getByLabel("Full, unedited career experience");
+    await expect(editEditor).toHaveValue("E2E first resume version");
+    await editEditor.fill("Unsaved resume version");
+    await editDialog.getByRole("button", { name: "Cancel" }).click();
+    await expect(editDialog).toHaveCount(0);
+    await expect(editTrigger).toBeFocused();
+
+    await editTrigger.click();
+    const saveDialog = page.getByRole("dialog", { name: "Edit master résumé" });
+    await saveDialog.getByLabel("Full, unedited career experience").fill("E2E updated resume version");
+    await saveDialog.getByRole("button", { name: "Save changes" }).click();
+    await expect(saveDialog).toHaveCount(0);
 
     await page.reload();
-    await expect(editor).toHaveValue("E2E updated resume version");
+    await page.getByRole("button", { name: "Edit master résumé" }).click();
+    await expect(page.getByRole("dialog", { name: "Edit master résumé" }).getByLabel("Full, unedited career experience")).toHaveValue("E2E updated resume version");
     expect(browserErrors).toEqual([]);
   } finally {
     await sql`delete from users where email = ${email}`;
