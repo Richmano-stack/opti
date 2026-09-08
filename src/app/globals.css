@@ -38,9 +38,9 @@
   --color-horizon-tertiary: var(--horizon-tertiary);
   --color-horizon-inverse-primary: var(--horizon-inverse-primary);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Segoe UI", ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
-  --font-heading: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Segoe UI", ui-sans-serif, system-ui, sans-serif;
   --text-horizon-display: var(--horizon-display);
   --text-horizon-title: var(--horizon-title);
   --text-horizon-heading: var(--horizon-heading);
