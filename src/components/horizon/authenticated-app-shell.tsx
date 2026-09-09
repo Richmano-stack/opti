@@ -17,7 +17,14 @@ const navigation = [
   { href: "/dashboard/generator", label: "Tailor", icon: PenLine },
 ];
 
-export function AuthenticatedAppShell({ children, user, title }: { children: ReactNode; user: AuthUser; title: string }) {
+interface AuthenticatedAppShellProps {
+  children: ReactNode;
+  user: AuthUser;
+  title: string;
+  sidebarUtility?: ReactNode;
+}
+
+export function AuthenticatedAppShell({ children, user, title, sidebarUtility }: AuthenticatedAppShellProps) {
   const pathname = usePathname();
   const router = useRouter();
   const drawerId = useId();
@@ -63,7 +70,8 @@ export function AuthenticatedAppShell({ children, user, title }: { children: Rea
         <Link href="/dashboard" aria-label="Opti dashboard"><BrandMark /></Link>
         <p className="mt-10 px-3 text-[10px] font-bold uppercase tracking-[0.15em] text-horizon-muted">Workspace</p>
         <nav aria-label="Workspace navigation" className="mt-3 grid gap-1">{links()}</nav>
-        <button type="button" onClick={signOut} className="mt-auto flex min-h-11 items-center gap-3 rounded-[var(--horizon-radius-control)] px-3 py-2.5 text-left text-sm font-bold text-horizon-muted hover:bg-horizon-primary/5 hover:text-horizon-ink">
+        {sidebarUtility ? <div className="mt-auto">{sidebarUtility}</div> : null}
+        <button type="button" onClick={signOut} className={`${sidebarUtility ? "mt-4" : "mt-auto"} flex min-h-11 items-center gap-3 rounded-[var(--horizon-radius-control)] px-3 py-2.5 text-left text-sm font-bold text-horizon-muted hover:bg-horizon-primary/5 hover:text-horizon-ink`}>
           <LogOut aria-hidden className="size-4" />Sign out
         </button>
       </aside>
