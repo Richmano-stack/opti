@@ -55,5 +55,27 @@ describe("MasterResumeWorkspace", () => {
     expect(html).toContain("Generated resumes, job descriptions, and PDFs are not stored.");
     expect(html).toContain(content);
   });
+
+  it("presents the resume as a document editor with actions above the page", () => {
+    const html = renderToStaticMarkup(
+      <MasterResumeWorkspace
+        user={mockUser}
+        initialContent="Product designer with seven years of experience."
+        initialUpdatedAt="10:30 AM"
+      />,
+    );
+
+    const guidancePosition = html.indexOf('aria-label="How Opti handles your resume"');
+    const editorPosition = html.indexOf('aria-labelledby="editor-title"');
+    const toolbarPosition = html.indexOf('aria-label="Document toolbar"');
+    const savePosition = html.indexOf("Save changes");
+    const textAreaPosition = html.indexOf("<textarea");
+
+    expect(guidancePosition).toBeGreaterThanOrEqual(0);
+    expect(editorPosition).toBeGreaterThan(guidancePosition);
+    expect(toolbarPosition).toBeGreaterThan(editorPosition);
+    expect(savePosition).toBeGreaterThan(toolbarPosition);
+    expect(textAreaPosition).toBeGreaterThan(savePosition);
+  });
 });
 

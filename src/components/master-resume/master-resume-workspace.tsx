@@ -41,62 +41,19 @@ export function MasterResumeWorkspace({ user, initialContent = "", initialUpdate
 
   return (
     <AuthenticatedAppShell user={user} title="Master résumé">
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-8 lg:px-12">
-        <section aria-labelledby="dashboard-title" className="max-w-4xl">
+      <main className="mx-auto max-w-[94rem] px-4 py-6 sm:px-8 sm:py-8 lg:px-10">
+        <section aria-labelledby="dashboard-title" className="max-w-3xl">
           <span className="horizon-eyebrow">{isSetup ? "Source resume ready" : "Set up your source resume"}</span>
-          <h1 id="dashboard-title" className="mt-5 max-w-3xl text-4xl font-extrabold leading-[1.08] tracking-[-0.035em] sm:text-5xl lg:text-6xl">
+          <h1 id="dashboard-title" className="mt-3 text-3xl font-extrabold leading-tight tracking-[-0.03em] sm:text-4xl">
             {isSetup ? "Your master resume" : "Your factual source of truth"}
           </h1>
-          <p className="mt-5 max-w-2xl text-base leading-7 text-horizon-muted sm:text-lg sm:leading-8">
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-horizon-muted sm:text-base">
             Save it once. Update it whenever your experience changes. Opti uses only this source to ground every tailored resume in facts you control.
           </p>
         </section>
 
-        <div className="mt-10 grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_19rem] lg:gap-8">
-          <section aria-labelledby="editor-title" className="horizon-glass overflow-hidden rounded-2xl">
-            <div className="flex flex-col gap-3 border-b border-white/70 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-8">
-              <div className="flex items-center gap-3">
-                <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-horizon-primary/10 text-horizon-primary"><FileText aria-hidden="true" className="size-5" /></span>
-                <div>
-                  <h2 id="editor-title" className="text-base font-bold tracking-[-0.01em]">Master resume document</h2>
-                  <p className="text-xs text-horizon-muted">Plain text · up to 50,000 characters</p>
-                </div>
-              </div>
-              {lastSavedAt ? <p className="flex items-center gap-1.5 text-xs font-semibold text-horizon-muted"><CheckCircle2 aria-hidden="true" className="size-3.5 text-[#16872a]" />Last saved at {lastSavedAt}</p> : null}
-            </div>
-
-            <div className="p-4 sm:p-6">
-              <label htmlFor="master-resume-editor" className="sr-only">Full, unedited career experience</label>
-              <textarea
-                id="master-resume-editor"
-                value={content}
-                onChange={(event) => setContent(event.target.value)}
-                placeholder="Paste your complete resume here — work history, education, skills, projects, and measurable achievements."
-                maxLength={50_000}
-                disabled={isPending}
-                aria-describedby="resume-counter resume-storage-note"
-                className="min-h-[28rem] w-full resize-y rounded-2xl border border-white/80 bg-white/55 p-5 text-sm leading-7 text-horizon-ink shadow-inner shadow-black/[0.02] outline-none transition placeholder:text-horizon-muted/65 focus:border-horizon-secondary/45 focus:ring-2 focus:ring-horizon-secondary/20 disabled:cursor-wait disabled:opacity-70 sm:min-h-[32rem] sm:p-6 sm:text-base"
-              />
-              <div className="mt-3 flex items-center justify-between gap-4 text-[11px] font-semibold text-horizon-muted">
-                <span>Keep the original detail. Tailoring happens later.</span>
-                <span id="resume-counter" className="shrink-0 font-mono">{content.length.toLocaleString()} / 50,000 characters</span>
-              </div>
-
-              <div aria-live="polite" aria-atomic="true">
-                {isSavedRecently ? <p className="mt-4 flex items-center gap-2 rounded-xl border border-[#27c93f]/20 bg-[#27c93f]/10 px-4 py-3 text-sm font-bold text-[#116f20]"><Check aria-hidden="true" className="size-4" />Your master resume is saved.</p> : null}
-              </div>
-              {error ? <p role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-800">{error}</p> : null}
-
-              <div className="mt-6 flex flex-col gap-4 border-t border-white/70 pt-5 sm:flex-row sm:items-center sm:justify-between">
-                <p className="flex items-center gap-2 text-xs leading-5 text-horizon-muted"><LockKeyhole aria-hidden="true" className="size-4 shrink-0 text-horizon-secondary" />Stored privately on your authenticated account.</p>
-                <button type="button" onClick={handleSave} disabled={isPending || !content.trim() || (!isDirty && isSetup)} className="horizon-button-primary h-11 w-full px-6 text-sm disabled:pointer-events-none disabled:opacity-45 sm:w-auto">
-                  {isPending ? <><LoaderCircle aria-hidden="true" className="size-4 animate-spin" />Saving…</> : <><Save aria-hidden="true" className="size-4" />{isSetup ? "Save changes" : "Save master resume"}</>}
-                </button>
-              </div>
-            </div>
-          </section>
-
-          <aside aria-label="How Opti handles your resume" className="space-y-4 lg:sticky lg:top-28">
+        <div className="mt-7 grid items-start gap-6 lg:grid-cols-[18rem_minmax(0,1fr)] lg:gap-7">
+          <aside aria-label="How Opti handles your resume" className="order-2 space-y-4 lg:order-1 lg:sticky lg:top-24">
             <div className="horizon-glass rounded-2xl p-6">
               <ShieldCheck aria-hidden="true" className="size-6 text-horizon-secondary" />
               <h2 className="mt-4 text-lg font-bold tracking-[-0.02em]">A focused workspace</h2>
@@ -122,6 +79,49 @@ export function MasterResumeWorkspace({ user, initialContent = "", initialUpdate
               </div>
             )}
           </aside>
+
+          <section aria-labelledby="editor-title" className="order-1 overflow-hidden rounded-2xl border border-horizon-outline/15 bg-white shadow-sm lg:order-2">
+            <div aria-label="Document toolbar" role="toolbar" className="flex flex-col gap-3 border-b border-horizon-outline/15 bg-white px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+              <div className="flex min-w-0 items-center gap-3">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-horizon-primary/10 text-horizon-primary"><FileText aria-hidden="true" className="size-4" /></span>
+                <div className="min-w-0">
+                  <h2 id="editor-title" className="truncate text-sm font-bold tracking-[-0.01em]">Master resume document</h2>
+                  <p className="text-xs text-horizon-muted">Plain text · up to 50,000 characters</p>
+                </div>
+              </div>
+              <div className="flex items-center justify-between gap-3 sm:justify-end">
+                {lastSavedAt ? <p className="flex items-center gap-1.5 text-xs font-semibold text-horizon-muted"><CheckCircle2 aria-hidden="true" className="size-3.5 text-[#16872a]" />Last saved at {lastSavedAt}</p> : null}
+                <button type="button" onClick={handleSave} disabled={isPending || !content.trim() || (!isDirty && isSetup)} className="horizon-button-primary h-10 shrink-0 px-5 text-sm disabled:pointer-events-none disabled:opacity-45">
+                  {isPending ? <><LoaderCircle aria-hidden="true" className="size-4 animate-spin" />Saving…</> : <><Save aria-hidden="true" className="size-4" />{isSetup ? "Save changes" : "Save master resume"}</>}
+                </button>
+              </div>
+            </div>
+
+            <div className="bg-horizon-canvas/70 p-3 sm:p-6 lg:p-8">
+              <div aria-live="polite" aria-atomic="true">
+                {isSavedRecently ? <p className="mx-auto mb-4 flex max-w-[52rem] items-center gap-2 rounded-xl border border-[#27c93f]/20 bg-[#27c93f]/10 px-4 py-3 text-sm font-bold text-[#116f20]"><Check aria-hidden="true" className="size-4" />Your master resume is saved.</p> : null}
+              </div>
+              {error ? <p role="alert" className="mx-auto mb-4 max-w-[52rem] rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-800">{error}</p> : null}
+
+              <label htmlFor="master-resume-editor" className="sr-only">Full, unedited career experience</label>
+              <textarea
+                id="master-resume-editor"
+                value={content}
+                onChange={(event) => setContent(event.target.value)}
+                placeholder="Start your master resume here…\n\nPROFESSIONAL SUMMARY\nWrite a concise overview of your experience.\n\nEXPERIENCE\nRole | Company | Dates\nDescribe your work and measurable achievements.\n\nSKILLS\nList your relevant tools and capabilities."
+                maxLength={50_000}
+                disabled={isPending}
+                aria-describedby="resume-counter resume-storage-note"
+                className="mx-auto block min-h-[42rem] w-full max-w-[52rem] resize-y rounded-sm border border-horizon-outline/20 bg-white px-6 py-8 text-sm leading-7 text-horizon-ink shadow-[0_2px_12px_rgba(31,25,22,0.08)] outline-none transition placeholder:text-horizon-muted/55 focus:border-horizon-secondary/50 focus:ring-2 focus:ring-horizon-secondary/20 disabled:cursor-wait disabled:opacity-70 sm:min-h-[52rem] sm:px-12 sm:py-12 sm:text-base"
+              />
+
+              <div className="mx-auto mt-3 flex max-w-[52rem] flex-col gap-2 text-[11px] font-semibold text-horizon-muted sm:flex-row sm:items-center sm:justify-between">
+                <span>Keep the original detail. Tailoring happens later.</span>
+                <span id="resume-counter" className="shrink-0 font-mono">{content.length.toLocaleString()} / 50,000 characters</span>
+              </div>
+              <p className="mx-auto mt-4 flex max-w-[52rem] items-center gap-2 text-xs leading-5 text-horizon-muted"><LockKeyhole aria-hidden="true" className="size-4 shrink-0 text-horizon-secondary" />Stored privately on your authenticated account.</p>
+            </div>
+          </section>
         </div>
       </main>
     </AuthenticatedAppShell>
