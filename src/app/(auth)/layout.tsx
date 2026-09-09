@@ -17,10 +17,10 @@ export default async function AuthLayout({ children }: Readonly<{ children: Reac
         <div className="horizon-orb horizon-orb-secondary" />
         <div className="horizon-orb horizon-orb-tertiary" />
       </div>
-`r`n
+
       {children}
 
-      <footer className="relative z-10 px-6 pb-6 text-center text-[11px] text-horizon-muted">
+      <footer className="relative z-10 hidden px-6 pb-6 text-center text-[11px] text-horizon-muted lg:block">
         Your master resume is saved to your account. Guest sessions are temporary.
       </footer>
 

@@ -55,7 +55,7 @@ export function LoginForm({
 
   return (
     <div className={cn("w-full", className)} {...props}>
-      <div className="horizon-glass rounded-[2rem] p-6 sm:p-10">
+      <div className="horizon-glass rounded-3xl p-5 sm:rounded-[2rem] sm:p-10">
         <div className="mb-7">
           <p className="text-[10px] font-bold uppercase tracking-[0.17em] text-horizon-primary">Sign in</p>
           <h2 className="mt-3 text-2xl font-bold tracking-[-0.02em] text-horizon-ink sm:text-3xl">

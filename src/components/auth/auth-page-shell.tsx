@@ -1,6 +1,8 @@
 import { Check, FileText, Sparkles } from "lucide-react";
 import Link from "next/link";
 
+import { BrandMark } from "@/components/landing/brand-mark";
+
 type AuthPageShellProps = {
   children: React.ReactNode;
   variant: "login" | "signup";
@@ -25,10 +27,33 @@ export function AuthPageShell({ children, variant }: AuthPageShellProps) {
   const page = content[variant];
 
   return (
-    <main className="relative z-10 mx-auto grid w-full max-w-[112rem] flex-1 items-center gap-6 px-6 pb-8 pt-28 sm:px-8 lg:grid-cols-[minmax(0,1.08fr)_minmax(25rem,0.92fr)] lg:gap-8 lg:px-16 lg:py-32">
+    <main className="relative z-10 mx-auto grid w-full max-w-[112rem] flex-1 content-start gap-5 px-4 pb-6 pt-4 sm:px-8 sm:pt-8 lg:grid-cols-[minmax(0,1.08fr)_minmax(25rem,0.92fr)] lg:content-center lg:items-center lg:gap-8 lg:px-16 lg:py-32">
+      <nav
+        aria-label="Authentication navigation"
+        className="horizon-glass flex h-14 items-center justify-between rounded-full px-4 lg:hidden"
+      >
+        <Link
+          href="/"
+          aria-label="Opti home"
+          className="rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-secondary focus-visible:ring-offset-2"
+        >
+          <BrandMark className="scale-90" />
+        </Link>
+        <Link
+          href="/try"
+          className="rounded-full px-3 py-2 text-xs font-bold text-horizon-ink hover:bg-white/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-secondary"
+        >
+          Continue as guest
+        </Link>
+      </nav>
+
+      <h1 className="sr-only lg:hidden">
+        {variant === "login" ? "Sign in to Opti" : "Create your Opti account"}
+      </h1>
+
       <section
         aria-labelledby="auth-context-title"
-        className="horizon-glass relative overflow-hidden rounded-[2rem] px-6 py-8 sm:px-10 sm:py-10 lg:min-h-[37rem] lg:px-14 lg:py-14"
+        className="horizon-glass relative hidden overflow-hidden rounded-[2rem] px-6 py-8 sm:px-10 sm:py-10 lg:block lg:min-h-[37rem] lg:px-14 lg:py-14"
       >
         <div aria-hidden="true" className="absolute -right-20 -top-24 size-72 rounded-full bg-horizon-secondary/12 blur-3xl" />
         <div className="relative flex h-full flex-col justify-between gap-10">

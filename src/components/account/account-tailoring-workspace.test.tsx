@@ -5,6 +5,15 @@ vi.mock("@/app/actions/generate-account-resume", () => ({
   submitAccountResume: vi.fn(),
 }));
 
+vi.mock("next/navigation", () => ({
+  usePathname: () => "/dashboard/generator",
+  useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }),
+}));
+
+vi.mock("@/server/auth/client", () => ({
+  authClient: { signOut: vi.fn() },
+}));
+
 import { AccountGeneratorSetupRequired } from "./account-generator-setup-required";
 import {
   AccountGeneratorReview,
@@ -33,6 +42,17 @@ describe("AccountTailoringWorkspace", () => {
     expect(html).not.toContain('name="resume"');
     expect(html).toContain("Job descriptions and generated résumés are not saved");
     expect(html).not.toContain("Your tailored résumé will appear here");
+  });
+
+  it("uses a viewport-bound desktop workspace with an internally flexible composer", () => {
+    const html = renderToStaticMarkup(
+      <AccountTailoringWorkspace user={user} masterResumeUpdatedAt="10:30 AM" />,
+    );
+
+    expect(html).toContain('aria-label="Tailoring workspace"');
+    expect(html).toContain("lg:h-full");
+    expect(html).toContain("lg:overflow-hidden");
+    expect(html).toContain("lg:min-h-0 lg:flex-1");
   });
 
   it("guides users without a master resume back to setup", () => {
