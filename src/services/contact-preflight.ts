@@ -31,8 +31,10 @@ export function prepareContactPreflight(
   const updatedResume = appendContactDetails(resume, review.additions);
   const stillMissing = detectMissingContactFields(updatedResume);
 
-  if (stillMissing.length > 0) {
-    return { status: "missing", fields: stillMissing };
+  const invalidFields = stillMissing.filter((field) => !!review.additions[field]?.trim());
+
+  if (invalidFields.length > 0) {
+    return { status: "missing", fields: invalidFields };
   }
 
   return {

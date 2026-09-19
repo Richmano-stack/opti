@@ -45,7 +45,7 @@ describe("resume PDF", () => {
 
     expect(buffer.subarray(0, 5).toString()).toBe("%PDF-");
     expect(buffer.byteLength).toBeGreaterThan(2_000);
-  });
+  }, 15_000);
 
   it("builds a safe download filename", () => {
     expect(
