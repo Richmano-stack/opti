@@ -23,18 +23,21 @@ const mockUser = {
 };
 
 describe("MasterResumeWorkspace", () => {
-  it("renders first-time setup state when no resume content exists", () => {
+  it("hides the editor until a first résumé is added", () => {
     const html = renderToStaticMarkup(
       <MasterResumeWorkspace user={mockUser} initialContent="" />,
     );
 
-    expect(html).toContain("Set up your source resume");
-    expect(html).toContain("Save master resume");
-    expect(html).toContain("Generated resumes, job descriptions, and PDFs are not stored.");
+    expect(html).toContain("Add master résumé");
+    expect(html).toContain("Not saved");
     expect(html).toContain("0 / 50,000 characters");
+    expect(html).toContain("Save one source résumé");
+    expect(html).not.toContain("Tailor for a role");
+    expect(html).not.toContain("<textarea");
+    expect(html).not.toContain('role="dialog"');
   });
 
-  it("renders existing master resume view with content and tailor CTA", () => {
+  it("shows a saved overview with tailoring primary and editing secondary", () => {
     const content = "5+ years of software engineering experience.";
     const html = renderToStaticMarkup(
       <MasterResumeWorkspace
@@ -44,35 +47,19 @@ describe("MasterResumeWorkspace", () => {
       />,
     );
 
-    expect(html).toContain("Your source document");
-    expect(html).toContain("Continue to tailoring");
+    const tailorPosition = html.indexOf("Tailor for a role");
+    const editPosition = html.indexOf("Edit master résumé");
+
     expect(html).toContain('href="/dashboard/generator"');
-    expect(html).toContain("Save changes");
+    expect(html).toContain("Saved · Last saved at 10:30 AM");
+    expect(html).not.toContain("Not saved");
     expect(html).toContain("Last saved at 10:30 AM");
-    expect(html).toContain("Generated resumes, job descriptions, and PDFs are not stored.");
-    expect(html).toContain(content);
-  });
-
-  it("presents the resume editor as the primary workspace beneath the app header", () => {
-    const html = renderToStaticMarkup(
-      <MasterResumeWorkspace
-        user={mockUser}
-        initialContent="Product designer with seven years of experience."
-        initialUpdatedAt="10:30 AM"
-      />,
-    );
-
-    const editorPosition = html.indexOf('aria-labelledby="editor-title"');
-    const toolbarPosition = html.indexOf('aria-label="Document toolbar"');
-    const savePosition = html.indexOf("Save changes");
-    const textAreaPosition = html.indexOf("<textarea");
-
-    expect(html).not.toContain('id="dashboard-title"');
-    expect(html).toContain('aria-label="Document canvas"');
-    expect(html).toContain('aria-label="Resume next step"');
-    expect(toolbarPosition).toBeGreaterThan(editorPosition);
-    expect(savePosition).toBeGreaterThan(toolbarPosition);
-    expect(textAreaPosition).toBeGreaterThan(savePosition);
+    expect(html).toContain(`${content.length} / 50,000 characters`);
+    expect(html).toContain('aria-label="Document preview"');
+    expect(tailorPosition).toBeGreaterThan(-1);
+    expect(editPosition).toBeGreaterThan(tailorPosition);
+    expect(html).not.toContain(content);
+    expect(html).not.toContain("<textarea");
+    expect(html).not.toContain('role="dialog"');
   });
 });
-

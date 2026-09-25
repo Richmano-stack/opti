@@ -70,9 +70,10 @@ test("an account user tailors from only a saved master resume", async ({ page })
     await expect(page.getByRole("heading", { name: "Save your master résumé first" })).toBeVisible();
     await page.getByRole("link", { name: "Go to master résumé" }).click();
 
+    await page.getByRole("button", { name: "Add master résumé" }).click();
     await page.getByLabel("Full, unedited career experience").fill(syntheticResume);
     await page.getByRole("button", { name: "Save master resume" }).click();
-    await expect(page.getByText("Saved", { exact: true })).toBeVisible();
+    await expect(page.getByText("Your master résumé is saved.")).toBeVisible();
     await page.getByRole("link", { name: "Tailor for a role" }).click();
 
     await expect(page).toHaveURL(/\/dashboard\/generator$/);

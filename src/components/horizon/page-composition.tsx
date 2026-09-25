@@ -138,9 +138,10 @@ type HorizonDialogProps = {
   children: ReactNode;
   footer?: ReactNode;
   variant?: "dialog" | "sheet";
+  size?: "default" | "wide";
 };
 
-export function HorizonDialog({ isOpen, onClose, title, description, children, footer, variant = "dialog" }: HorizonDialogProps) {
+export function HorizonDialog({ isOpen, onClose, title, description, children, footer, variant = "dialog", size = "default" }: HorizonDialogProps) {
   const dialogRef = useRef<HTMLElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const lastFocusedElementRef = useRef<HTMLElement | null>(null);
@@ -187,7 +188,7 @@ export function HorizonDialog({ isOpen, onClose, title, description, children, f
 
   return (
     <div className="fixed inset-0 z-50 flex items-end bg-horizon-ink/40 p-0 sm:items-center sm:justify-center sm:p-6" onMouseDown={onClose}>
-      <section ref={dialogRef} aria-describedby={description ? descriptionId : undefined} aria-labelledby={titleId} aria-modal="true" className={cn("flex h-dvh max-h-dvh min-w-0 w-full flex-col overflow-hidden bg-horizon-canvas shadow-2xl sm:h-auto sm:max-h-[calc(100dvh-3rem)] sm:rounded-[var(--horizon-radius-card)]", isSheet ? "sm:max-w-xl" : "sm:max-w-2xl")} onMouseDown={(event) => event.stopPropagation()} role="dialog">
+      <section ref={dialogRef} aria-describedby={description ? descriptionId : undefined} aria-labelledby={titleId} aria-modal="true" className={cn("flex h-dvh max-h-dvh min-w-0 w-full flex-col overflow-hidden bg-horizon-canvas shadow-2xl sm:h-auto sm:max-h-[calc(100dvh-3rem)] sm:rounded-[var(--horizon-radius-card)]", size === "wide" ? "sm:max-w-4xl" : isSheet ? "sm:max-w-xl" : "sm:max-w-2xl")} onMouseDown={(event) => event.stopPropagation()} role="dialog">
         <div className="flex items-start justify-between gap-4 border-b border-horizon-outline/15 px-5 py-4 sm:px-6">
           <div className="space-y-1">
             <h2 id={titleId} className="text-horizon-heading font-bold text-horizon-ink">{title}</h2>
