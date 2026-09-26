@@ -17,4 +17,23 @@ describe("AuthenticatedAppShell", () => {
     expect(html).toContain("lg:h-dvh");
     expect(html).toContain("lg:overflow-y-auto");
   });
+
+  it("places an optional workspace utility above desktop sign out", () => {
+    const html = renderToStaticMarkup(
+      <AuthenticatedAppShell
+        title="Master résumé"
+        user={{ id: "u1", email: "a@example.com", name: "Alex" }}
+        sidebarUtility={<aside aria-label="Resume next step">Ready for a role?</aside>}
+      >
+        <p>Workspace</p>
+      </AuthenticatedAppShell>,
+    );
+
+    expect(html.indexOf('aria-label="Resume next step"')).toBeGreaterThan(
+      html.indexOf('aria-label="Desktop workspace sidebar"'),
+    );
+    expect(html.indexOf("Sign out")).toBeGreaterThan(
+      html.indexOf('aria-label="Resume next step"'),
+    );
+  });
 });

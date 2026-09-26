@@ -1,0 +1,48 @@
+$ infisical run --env=dev --path=/ -- pnpm dev:next
+A new release of infisical is available: 0.43.130 -> 0.43.133
+
+To update, run: winget upgrade Infisical.Infisical
+
+{"level":"info","time":"2026-09-19T19:18:26+03:00","message":"Injecting 7 Infisical secrets into your application process"}
+$ next dev
+▲ Next.js 16.3.4 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://172.23.192.1:3000
+✓ Ready in 2.2s
+✓ Running next.config.ts took 160ms
+
+○ Compiling /login ...
+ GET /login 200 in 14.0s (next.js: 11.2s, application-code: 2.7s)
+ GET /login 200 in 316ms (next.js: 16ms, application-code: 299ms)
+ GET /login 200 in 434ms (next.js: 28ms, application-code: 406ms)
+ POST /api/auth/sign-in/email 200 in 5.4s (next.js: 4.3s, application-code: 1167ms)
+ GET /dashboard 200 in 1938ms (next.js: 511ms, application-code: 1428ms)
+ GET /dashboard 200 in 2.7s (next.js: 81ms, application-code: 2.6s)
+ GET /dashboard 200 in 3.9s (next.js: 499ms, application-code: 3.4s)
+○ Compiling /dashboard/generator ...
+ GET /dashboard/generator 200 in 8.7s (next.js: 7.9s, application-code: 857ms)
+ GET /dashboard/generator 200 in 787ms (next.js: 56ms, application-code: 732ms)
+✓ Finished filesystem cache database compaction in 14.2s
+ POST /dashboard/generator 200 in 283ms (next.js: 48ms, application-code: 234ms)
+  └─ ƒ submitAccountResume({"status":"idle"}, {}) in 73ms src/app/actions/generate-account-resume.ts
+[resume-generation] Generation failed {"name":"ResumeValidationError","code":"RESUME_VALIDATION_ERROR","message":"OpenRouter returned an invalid response."}
+ POST /dashboard/generator 200 in 1749ms (next.js: 19ms, application-code: 1730ms)
+  └─ ƒ submitAccountResume({"missingFields":["phone","linkedin","portfolio"],"status":"missing_contact_info"}, {}) in 1655ms src/app/actions/generate-account-resume.ts
+[browser] [resume-generation] Request failed {
+  code: [32m'SERVICE_UNAVAILABLE'[39m,
+  message: [32m'Résumé generation failed. Please try again.'[39m
+} 
+    at AccountTailoringWorkspace.useEffect (src/components/account/account-tailoring-workspace.tsx:23:43)
+  21 |   useEffect(() => {
+  22 |     if (state.status === "success") resultHeading.current?.focus();
+> 23 |     if (state.status === "error") console.error("[resume-generation] Request failed", state.error);
+     |                                           ^
+  24 |   }, [state]);
+  25 |
+  26 |   return ( (src/components/account/account-tailoring-workspace.tsx:23:43)
+ POST /dashboard/generator 200 in 137ms (next.js: 13ms, application-code: 124ms)
+  └─ ƒ submitAccountResume({"error":{"code":"SERVICE_UNAVAILABLE","message":"Résumé generation failed. Please try again."},"status":"error"}, {}) in 67ms src/app/actions/generate-account-resume.ts
+[?25h
+[ELIFECYCLE] Command failed with exit code 1.
+failed to wait for command termination: exit status 1
+[ELIFECYCLE] Command failed with exit code 1.

@@ -12,11 +12,10 @@ import {
   GuestResultPanel,
   GuestTextAreaField,
   GuestTrustRow,
-
+  GuestWorkspaceFooter,
   GuestWorkspaceHeader,
 } from "@/components/guest/guest-workspace-ui";
 import { Button } from "@/components/ui/button";
-import { AuthenticatedFooter } from "@/components/account/authenticated-footer";
 
 const initialState: GuestGenerationState = { status: "idle" };
 
@@ -139,7 +138,7 @@ export function GuestTailoringWorkspace() {
 
         <GuestTrustRow />
       </main>
-      <AuthenticatedFooter />
+      <GuestWorkspaceFooter />
     </div>
   );
 }

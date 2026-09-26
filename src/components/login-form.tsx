@@ -6,6 +6,7 @@ import { useCallback, useState } from "react";
 import { toast } from "sonner";
 import { ArrowRight, LoaderCircle, Lock } from "lucide-react";
 
+import { GoogleContinueButton, OrDivider, PasswordField, authInputClassName } from "@/components/auth/auth-fields";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { getSafeCallbackUrl } from "@/lib/auth/callback-url";
@@ -54,24 +55,28 @@ export function LoginForm({
       : `/signup?callbackUrl=${encodeURIComponent(callbackUrl)}`;
 
   return (
-    <div className={cn("w-full", className)} {...props}>
-      <div className="horizon-glass rounded-[2rem] p-6 sm:p-10">
-        <div className="mb-7">
+    <div className={cn("flex h-full min-h-0 w-full flex-col", className)} {...props}>
+      <div className="horizon-glass flex h-full min-h-0 flex-col overflow-hidden rounded-[1.75rem] p-4 sm:p-6">
+        <div className="mb-3 shrink-0">
           <p className="text-[10px] font-bold uppercase tracking-[0.17em] text-horizon-primary">Sign in</p>
-          <h2 className="mt-3 text-2xl font-bold tracking-[-0.02em] text-horizon-ink sm:text-3xl">
+          <h2 className="mt-1.5 text-lg font-bold tracking-[-0.02em] text-horizon-ink sm:text-xl">
             Pick up where you left off.
           </h2>
-          <p className="mt-2 text-sm leading-6 text-horizon-muted">
+          <p className="mt-1 text-sm leading-5 text-neutral-800">
             Enter your account details to continue.
           </p>
         </div>
 
-        <form onSubmit={handleSignIn} className="space-y-5" aria-busy={isSubmitting}>
+        <div className="shrink-0">
+          <GoogleContinueButton callbackUrl={callbackUrl} disabled={isSubmitting} />
+          <div className="my-3">
+            <OrDivider />
+          </div>
+        </div>
+
+        <form onSubmit={handleSignIn} className="flex min-h-0 flex-1 flex-col gap-2.5" aria-busy={isSubmitting}>
           <div>
-            <label
-              htmlFor="email"
-              className="mb-2 block text-xs font-bold text-horizon-ink"
-            >
+            <label htmlFor="email" className="mb-1 block text-xs font-bold text-neutral-950">
               Email address
             </label>
             <input
@@ -82,37 +87,26 @@ export function LoginForm({
               required
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              className="w-full rounded-full border border-white/80 bg-white/55 px-5 py-3.5 text-sm text-horizon-ink placeholder:text-horizon-muted/55 transition-all hover:bg-white/70 focus:border-horizon-secondary/40 focus:bg-white/80 focus:outline-none focus:ring-2 focus:ring-horizon-secondary/25"
+              className={authInputClassName}
             />
           </div>
 
-          <div>
-            <div className="mb-2 flex items-center justify-between">
-              <label
-                htmlFor="password"
-                className="block text-xs font-bold text-horizon-ink"
-              >
-                Password
-              </label>
-            </div>
-            <input
-              id="password"
-              type="password"
-              autoComplete="current-password"
-              placeholder=""
-              required
-              minLength={8}
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              className="w-full rounded-full border border-white/80 bg-white/55 px-5 py-3.5 text-sm text-horizon-ink transition-all hover:bg-white/70 focus:border-horizon-secondary/40 focus:bg-white/80 focus:outline-none focus:ring-2 focus:ring-horizon-secondary/25"
-            />
-          </div>
+          <PasswordField
+            id="password"
+            label="Password"
+            autoComplete="current-password"
+            required
+            minLength={8}
+            disabled={isSubmitting}
+            value={password}
+            onChange={setPassword}
+          />
 
-          <div className="pt-1">
+          <div className="mt-1">
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="h-12 w-full rounded-full bg-horizon-primary text-sm font-bold text-white transition-all hover:-translate-y-0.5 hover:bg-[#8b1a00] focus-visible:ring-horizon-primary active:scale-[0.98] disabled:pointer-events-none disabled:opacity-55"
+              className="h-10 w-full rounded-full bg-horizon-primary text-sm font-bold text-white transition-all hover:bg-[#8b1a00] focus-visible:ring-horizon-primary active:scale-[0.98] disabled:pointer-events-none disabled:opacity-55"
             >
               {isSubmitting ? (
                 <>
@@ -128,18 +122,15 @@ export function LoginForm({
             </Button>
           </div>
 
-          <p className="pt-1 text-center text-xs text-horizon-muted">
+          <p className="text-center text-sm text-neutral-800">
             Don&apos;t have an account?{" "}
-            <Link
-              href={signupHref}
-              className="font-bold text-horizon-primary underline underline-offset-4"
-            >
+            <Link href={signupHref} className="font-bold text-horizon-primary underline underline-offset-4">
               Sign up
             </Link>
           </p>
 
-          <p className="mt-4 flex items-center justify-center gap-1.5 border-t border-white/70 pt-4 text-[11px] text-horizon-muted">
-            <Lock className="size-3" aria-hidden="true" />
+          <p className="mt-auto flex items-center justify-center gap-1.5 border-t border-neutral-200 pt-3 text-center text-xs text-neutral-800">
+            <Lock className="size-3 shrink-0" aria-hidden="true" />
             Your sign-in details are never shown publicly
           </p>
         </form>
@@ -147,4 +138,3 @@ export function LoginForm({
     </div>
   );
 }
-

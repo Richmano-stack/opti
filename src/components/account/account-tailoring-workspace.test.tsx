@@ -44,6 +44,17 @@ describe("AccountTailoringWorkspace", () => {
     expect(html).not.toContain("Your tailored résumé will appear here");
   });
 
+  it("uses a viewport-bound desktop workspace with an internally flexible composer", () => {
+    const html = renderToStaticMarkup(
+      <AccountTailoringWorkspace user={user} masterResumeUpdatedAt="10:30 AM" />,
+    );
+
+    expect(html).toContain('aria-label="Tailoring workspace"');
+    expect(html).toContain("lg:h-full");
+    expect(html).toContain("lg:overflow-hidden");
+    expect(html).toContain("lg:min-h-0 lg:flex-1");
+  });
+
   it("guides users without a master resume back to setup", () => {
     const html = renderToStaticMarkup(<AccountGeneratorSetupRequired user={user} />);
 

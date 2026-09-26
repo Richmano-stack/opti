@@ -51,6 +51,10 @@ describe("guest tailoring components", () => {
     expect(html).toContain('placeholder="Paste your complete résumé here"');
     expect(html).toContain('placeholder="Paste the complete job posting here"');
     expect(html).not.toContain('type="file"');
+    expect(html).toContain("Create your workspace");
+    expect(html).toContain("Guest inputs and generated results are not saved.");
+    expect(html).not.toContain("Master resume");
+    expect(html).not.toContain('href="/dashboard/generator"');
   });
 
   it("renders validated resume sections for review", () => {
