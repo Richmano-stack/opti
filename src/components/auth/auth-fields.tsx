@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Eye, EyeOff, LoaderCircle } from "lucide-react";
 import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { authClient } from "@/server/auth/client";
 
@@ -109,16 +108,15 @@ export function GoogleContinueButton({
   };
 
   return (
-    <Button
+    <button
       type="button"
-      variant="outline"
       disabled={disabled || isPending}
       onClick={continueWithGoogle}
-      className="h-10 w-full rounded-full border border-neutral-200 bg-white text-sm font-bold text-neutral-950 hover:bg-neutral-50 focus-visible:ring-horizon-secondary dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-50"
+      className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-full border border-neutral-200 bg-white text-sm font-bold text-neutral-950 transition hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-secondary disabled:pointer-events-none disabled:opacity-55 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-50"
     >
       {isPending ? <LoaderCircle aria-hidden="true" className="size-4 animate-spin" /> : <GoogleMark />}
       Continue with Google
-    </Button>
+    </button>
   );
 }
 

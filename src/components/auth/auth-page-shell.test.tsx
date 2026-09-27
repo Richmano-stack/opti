@@ -32,18 +32,17 @@ describe("AuthPageShell", () => {
     expect(html).not.toContain("PDFs are saved");
   });
 
-  it("locks navigation and guest actions into a no-scroll auth frame", () => {
+  it("uses a compact mobile header while preserving desktop context", () => {
     const html = renderToStaticMarkup(
       <AuthPageShell variant="login"><div>Form</div></AuthPageShell>,
     );
 
     expect(html).toContain('aria-label="Authentication navigation"');
-    expect(html).toContain("overflow-hidden");
     expect(html).toContain("lg:hidden");
     expect(html).toContain("relative hidden");
-    expect(html).toContain("lg:flex");
-    expect(html).toContain("Back to Home");
+    expect(html).toContain("lg:block");
     expect(html).toContain("Continue as guest");
+    expect(html).toContain("Back to Home");
     expect(html).toContain("Sign in to Opti");
   });
 });

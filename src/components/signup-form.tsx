@@ -6,8 +6,12 @@ import { useCallback, useState } from "react";
 import { toast } from "sonner";
 import { ArrowRight, LoaderCircle, Lock } from "lucide-react";
 
-import { GoogleContinueButton, OrDivider, PasswordField, authInputClassName } from "@/components/auth/auth-fields";
-import { Button } from "@/components/ui/button";
+import {
+  GoogleContinueButton,
+  OrDivider,
+  PasswordField,
+  authInputClassName,
+} from "@/components/auth/auth-fields";
 import { cn } from "@/lib/utils";
 import { getSafeCallbackUrl } from "@/lib/auth/callback-url";
 import { authClient } from "@/server/auth/client";
@@ -64,27 +68,29 @@ export function SignupForm({
       : `/login?callbackUrl=${encodeURIComponent(callbackUrl)}`;
 
   return (
-    <div className={cn("flex h-full min-h-0 w-full flex-col", className)} {...props}>
-      <div className="horizon-glass flex h-full min-h-0 flex-col overflow-hidden rounded-[1.75rem] p-4 sm:p-5">
-        <div className="mb-2.5 shrink-0">
-          <p className="text-[10px] font-bold uppercase tracking-[0.17em] text-horizon-primary">Create an account</p>
-          <h2 className="mt-1 text-lg font-bold tracking-[-0.02em] text-horizon-ink sm:text-xl">
+    <div className={cn("w-full", className)} {...props}>
+      <div className="horizon-glass rounded-[2rem] p-6 sm:p-10">
+        <div className="mb-5">
+          <p className="text-[10px] font-bold uppercase tracking-[0.17em] text-horizon-primary">
+            Create an account
+          </p>
+          <h2 className="mt-3 text-2xl font-bold tracking-[-0.02em] text-horizon-ink sm:text-3xl">
             Make your best starting point reusable.
           </h2>
-          <p className="mt-1 hidden text-sm leading-5 text-neutral-800 sm:block">
+          <p className="mt-2 text-sm leading-6 text-horizon-muted">
             Save one master resume to your account and return to it later.
           </p>
         </div>
 
-        <div className="shrink-0">
+        <div className="mb-4">
           <GoogleContinueButton callbackUrl={callbackUrl} disabled={isSubmitting} />
-          <div className="my-2.5">
+          <div className="my-3">
             <OrDivider />
           </div>
         </div>
 
-        <form onSubmit={handleSignUp} className="flex min-h-0 flex-1 flex-col gap-2" aria-busy={isSubmitting}>
-          <div className="grid gap-2 sm:grid-cols-2">
+        <form onSubmit={handleSignUp} className="space-y-3" aria-busy={isSubmitting}>
+          <div className="grid gap-3 sm:grid-cols-2">
             <div>
               <label htmlFor="name" className="mb-1 block text-xs font-bold text-neutral-950">
                 Full name
@@ -117,7 +123,7 @@ export function SignupForm({
             </div>
           </div>
 
-          <div className="grid gap-2 sm:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-2">
             <PasswordField
               id="password"
               label="Password"
@@ -157,11 +163,11 @@ export function SignupForm({
             </div>
           </div>
 
-          <div>
-            <Button
+          <div className="pt-1">
+            <button
               type="submit"
               disabled={isSubmitting}
-              className="h-10 w-full rounded-full bg-horizon-primary text-sm font-bold text-white transition-all hover:bg-[#8b1a00] focus-visible:ring-horizon-primary active:scale-[0.98] disabled:pointer-events-none disabled:opacity-55"
+              className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-horizon-primary text-sm font-bold text-white transition-all hover:-translate-y-0.5 hover:bg-[#8b1a00] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-primary active:scale-[0.98] disabled:pointer-events-none disabled:opacity-55"
             >
               {isSubmitting ? (
                 <>
@@ -174,17 +180,20 @@ export function SignupForm({
                   <ArrowRight className="size-4" aria-hidden="true" />
                 </>
               )}
-            </Button>
+            </button>
           </div>
 
-          <p className="text-center text-sm text-neutral-800">
+          <p className="pt-1 text-center text-sm text-neutral-800">
             Already have an account?{" "}
-            <Link href={loginHref} className="font-bold text-horizon-primary underline underline-offset-4">
+            <Link
+              href={loginHref}
+              className="font-bold text-horizon-primary underline underline-offset-4"
+            >
               Sign in
             </Link>
           </p>
 
-          <p className="mt-auto flex items-center justify-center gap-1.5 border-t border-neutral-200 pt-2.5 text-center text-xs text-neutral-800">
+          <p className="mt-2 flex items-center justify-center gap-1.5 border-t border-white/70 pt-4 text-center text-xs text-neutral-800">
             <Lock className="size-3 shrink-0" aria-hidden="true" />
             Your credentials and saved master resume stay private
           </p>
