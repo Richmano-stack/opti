@@ -1,5 +1,7 @@
 import { Download, FileCheck2, RefreshCw, ShieldCheck } from "lucide-react";
 
+import { Reveal } from "./reveal";
+
 const BENEFITS = [
   {
     icon: FileCheck2,
@@ -41,34 +43,37 @@ export function BenefitsSection() {
   return (
     <section className="px-4 py-20 sm:px-6 sm:py-28 lg:px-8" aria-labelledby="benefits-title">
       <div className="mx-auto max-w-[1120px]">
-        <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-end">
-          <div>
-            <span className="horizon-eyebrow">Why Opti</span>
-            <h2 id="benefits-title" className="mt-5 text-3xl font-bold leading-tight tracking-[-0.03em] text-horizon-ink sm:text-4xl">
-              A sharper application starts with what is already true.
-            </h2>
+        <Reveal>
+          <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-end">
+            <div>
+              <span className="horizon-eyebrow">Why Opti</span>
+              <h2 id="benefits-title" className="mt-5 text-3xl font-bold leading-tight tracking-[-0.03em] text-horizon-ink sm:text-4xl">
+                A sharper application starts with what is already true.
+              </h2>
+            </div>
+            <p className="max-w-2xl text-base leading-7 text-horizon-muted lg:justify-self-end">
+              Opti is designed around restraint: preserve your facts, reduce repetitive work, and give every opportunity the most relevant version of your experience.
+            </p>
           </div>
-          <p className="max-w-2xl text-base leading-7 text-horizon-muted lg:justify-self-end">
-            Opti is designed around restraint: preserve your facts, reduce repetitive work, and give every opportunity the most relevant version of your experience.
-          </p>
-        </div>
+        </Reveal>
 
         <div className="mt-12 grid gap-4 md:grid-cols-2">
           {BENEFITS.map(({ icon: Icon, label, title, description, tone }, index) => (
-            <article
-              key={title}
-              className={`horizon-glass group rounded-[1.5rem] p-7 transition-transform duration-300 hover:-translate-y-1 sm:p-9 ${index === 0 || index === 3 ? "md:col-span-1" : ""}`}
-            >
-              <div className="flex items-start justify-between gap-6">
-                <span className={`flex size-11 items-center justify-center rounded-2xl ${toneClasses[tone]}`}>
-                  <Icon className="size-5" aria-hidden="true" />
-                </span>
-                <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-horizon-muted">0{index + 1}</span>
-              </div>
-              <p className="mt-8 text-[10px] font-bold uppercase tracking-[0.16em] text-horizon-muted">{label}</p>
-              <h3 className="mt-2 max-w-md text-xl font-bold tracking-[-0.02em] text-horizon-ink sm:text-2xl">{title}</h3>
-              <p className="mt-3 max-w-lg text-sm leading-6 text-horizon-muted">{description}</p>
-            </article>
+            <Reveal key={title} delayMs={index * 90}>
+              <article
+                className={`horizon-glass group rounded-[1.5rem] border border-white/70 p-7 transition-all duration-300 hover:-translate-y-1 hover:border-white hover:shadow-[0_18px_48px_rgba(47,49,49,0.08)] sm:p-9 ${index === 0 || index === 3 ? "md:col-span-1" : ""}`}
+              >
+                <div className="flex items-start justify-between gap-6">
+                  <span className={`flex size-11 items-center justify-center rounded-2xl transition-transform duration-300 group-hover:scale-105 ${toneClasses[tone]}`}>
+                    <Icon className="size-5" aria-hidden="true" />
+                  </span>
+                  <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-horizon-muted">0{index + 1}</span>
+                </div>
+                <p className="mt-8 text-[10px] font-bold uppercase tracking-[0.16em] text-horizon-muted">{label}</p>
+                <h3 className="mt-2 max-w-md text-xl font-bold tracking-[-0.02em] text-horizon-ink sm:text-2xl">{title}</h3>
+                <p className="mt-3 max-w-lg text-sm leading-6 text-horizon-muted">{description}</p>
+              </article>
+            </Reveal>
           ))}
         </div>
       </div>

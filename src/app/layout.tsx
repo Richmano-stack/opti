@@ -5,6 +5,10 @@ export const metadata: Metadata = {
   title: "Opti — AI Resume Optimizer",
   description:
     "Tailor your resume to any job description with ATS-friendly formatting.",
+  icons: {
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+  },
 };
 
 export default function RootLayout({

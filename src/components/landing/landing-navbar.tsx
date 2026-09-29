@@ -1,10 +1,6 @@
 import Link from "next/link";
 
 import { BrandMark } from "./brand-mark";
-import { getServerSession } from "@/server/auth/session";
-
-const navLinkClass =
-  "rounded-full px-3 py-2 text-xs font-semibold text-horizon-muted transition-colors hover:text-horizon-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-primary focus-visible:ring-offset-2";
 
 export async function LandingNavbar() {
   return (
@@ -16,15 +12,15 @@ export async function LandingNavbar() {
         <Link
           href="/"
           aria-label="Opti home"
-          className="rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-primary focus-visible:ring-offset-2"
+          className="rounded-full transition-transform duration-200 hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-primary focus-visible:ring-offset-2"
         >
           <BrandMark />
         </Link>
 
         <div className="hidden items-center gap-1 md:flex">
-          <a href="#benefits" className={navLinkClass}>Why Opti</a>
-          <a href="#how-it-works" className={navLinkClass}>How it works</a>
-          <a href="#privacy" className={navLinkClass}>Privacy</a>
+          <a href="#benefits" className="horizon-nav-link">Why Opti</a>
+          <a href="#how-it-works" className="horizon-nav-link">How it works</a>
+          <a href="#privacy" className="horizon-nav-link">Privacy</a>
         </div>
 
         <div className="flex items-center gap-2">
@@ -39,4 +35,3 @@ export async function LandingNavbar() {
     </header>
   );
 }
-

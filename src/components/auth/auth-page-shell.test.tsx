@@ -42,6 +42,7 @@ describe("AuthPageShell", () => {
     expect(html).toContain("relative hidden");
     expect(html).toContain("lg:block");
     expect(html).toContain("Continue as guest");
+    expect(html).toContain("Back to Home");
     expect(html).toContain("Sign in to Opti");
   });
 });
