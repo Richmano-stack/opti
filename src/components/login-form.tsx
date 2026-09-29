@@ -53,9 +53,9 @@ export function LoginForm({
       : `/signup?callbackUrl=${encodeURIComponent(callbackUrl)}`;
 
   return (
-    <div className={cn("w-full", className)} {...props}>
-      <div className="horizon-glass rounded-3xl p-5 sm:rounded-[2rem] sm:p-10">
-        <div className="mb-7">
+    <div className={cn("flex h-full w-full flex-col", className)} {...props}>
+      <div className="horizon-glass flex h-full flex-col justify-center gap-6 rounded-3xl p-6 sm:rounded-[2rem] sm:p-8 lg:p-10">
+        <div>
           <p className="text-[10px] font-bold uppercase tracking-[0.17em] text-horizon-primary">Sign in</p>
           <h2 className="mt-3 text-2xl font-bold tracking-[-0.02em] text-horizon-ink sm:text-3xl">
             Pick up where you left off.
@@ -65,7 +65,7 @@ export function LoginForm({
           </p>
         </div>
 
-        <form onSubmit={handleSignIn} className="space-y-5" aria-busy={isSubmitting}>
+        <form onSubmit={handleSignIn} className="flex flex-col gap-4" aria-busy={isSubmitting}>
           <div>
             <label
               htmlFor="email"
@@ -107,7 +107,7 @@ export function LoginForm({
             />
           </div>
 
-          <div className="pt-1">
+          <div className="pt-2">
             <button
               type="submit"
               disabled={isSubmitting}
@@ -137,7 +137,7 @@ export function LoginForm({
             </Link>
           </p>
 
-          <p className="mt-4 flex items-center justify-center gap-1.5 border-t border-white/70 pt-4 text-[11px] text-horizon-muted">
+          <p className="mt-2 flex items-center justify-center gap-1.5 border-t border-white/70 pt-4 text-[11px] text-horizon-muted">
             <Lock className="size-3" aria-hidden="true" />
             Your sign-in details are never shown publicly
           </p>

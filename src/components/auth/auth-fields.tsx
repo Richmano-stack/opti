@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { authClient } from "@/server/auth/client";
 
 export const authInputClassName =
-  "h-10 w-full rounded-full border border-neutral-200 bg-white px-4 text-sm text-neutral-950 placeholder:text-neutral-600 transition-colors hover:border-neutral-300 focus:border-horizon-secondary focus:bg-white focus:outline-none focus:ring-2 focus:ring-horizon-secondary/25 disabled:cursor-wait disabled:opacity-70 aria-invalid:border-red-600 aria-invalid:ring-2 aria-invalid:ring-red-600/20 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-50 dark:placeholder:text-neutral-400";
+  "w-full rounded-full border border-white/80 bg-white/55 px-5 py-3.5 text-sm text-horizon-ink placeholder:text-horizon-muted/55 transition-all hover:bg-white/70 focus:border-horizon-secondary/40 focus:bg-white/80 focus:outline-none focus:ring-2 focus:ring-horizon-secondary/25 disabled:cursor-wait disabled:opacity-70 aria-invalid:border-red-600 aria-invalid:ring-2 aria-invalid:ring-red-600/20";
 
 type PasswordFieldProps = {
   id: string;
@@ -42,7 +42,7 @@ export function PasswordField({
 
   return (
     <div>
-      <label htmlFor={id} className="mb-1 block text-xs font-bold text-neutral-950">
+      <label htmlFor={id} className="mb-2 block text-xs font-bold text-horizon-ink">
         {label}
       </label>
       <div className="relative">
@@ -58,7 +58,7 @@ export function PasswordField({
           aria-describedby={describedBy}
           value={value}
           onChange={(event) => onChange(event.target.value)}
-          className={cn(authInputClassName, "pr-11")}
+          className={cn(authInputClassName, "pr-12")}
         />
         <button
           type="button"
@@ -66,7 +66,7 @@ export function PasswordField({
           aria-pressed={visible}
           disabled={disabled}
           onClick={() => setVisible((current) => !current)}
-          className="absolute top-1/2 right-1.5 inline-flex size-8 -translate-y-1/2 items-center justify-center rounded-full text-neutral-800 hover:bg-neutral-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-secondary disabled:pointer-events-none"
+          className="absolute top-1/2 right-2 inline-flex size-8 -translate-y-1/2 items-center justify-center rounded-full text-horizon-muted hover:bg-white/80 hover:text-horizon-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-secondary disabled:pointer-events-none"
         >
           {visible ? <EyeOff aria-hidden="true" className="size-4" /> : <Eye aria-hidden="true" className="size-4" />}
         </button>

@@ -57,23 +57,23 @@ export function AuthPageShell({ children, variant }: AuthPageShellProps) {
         </div>
       </nav>
 
-      <div className="grid content-start gap-5 lg:grid-cols-[minmax(0,1.08fr)_minmax(25rem,0.92fr)] lg:items-center lg:gap-8">
+      <div className="grid content-start gap-5 lg:grid-cols-[minmax(0,1.08fr)_minmax(25rem,0.92fr)] lg:items-stretch lg:gap-8">
         <h1 className="sr-only lg:hidden">
           {variant === "login" ? "Sign in to Opti" : "Create your Opti account"}
         </h1>
 
         <section
           aria-labelledby="auth-context-title"
-          className="horizon-glass relative hidden overflow-hidden rounded-[2rem] px-6 py-8 sm:px-10 sm:py-10 lg:block lg:min-h-[37rem] lg:px-14 lg:py-14"
+          className="horizon-glass relative hidden h-full overflow-hidden rounded-[2rem] px-8 py-8 sm:px-10 sm:py-10 lg:block lg:px-12 lg:py-10"
         >
         <div aria-hidden="true" className="absolute -right-20 -top-24 size-72 rounded-full bg-horizon-secondary/12 blur-3xl" />
-        <div className="relative flex h-full flex-col justify-between gap-10">
+        <div className="relative flex h-full flex-col justify-center gap-8">
           <div className="max-w-2xl">
             <span className="horizon-eyebrow">{page.eyebrow}</span>
-            <h1 id="auth-context-title" className="mt-5 max-w-xl text-3xl font-extrabold leading-[1.12] tracking-[-0.035em] text-horizon-ink sm:text-4xl lg:text-5xl">
+            <h1 id="auth-context-title" className="mt-4 max-w-xl text-3xl font-extrabold leading-[1.12] tracking-[-0.035em] text-horizon-ink sm:text-4xl lg:text-[2.75rem]">
               {page.title}
             </h1>
-            <p className="mt-4 max-w-xl text-sm leading-7 text-horizon-muted sm:text-base">{page.description}</p>
+            <p className="mt-3 max-w-xl text-sm leading-6 text-horizon-muted sm:text-base sm:leading-7">{page.description}</p>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-3 lg:max-w-2xl">
@@ -82,7 +82,7 @@ export function AuthPageShell({ children, variant }: AuthPageShellProps) {
             <ContextStep icon={<Check />} label="Review" text="before you use it" />
           </div>
 
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-white/70 pt-6 text-sm">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-white/70 pt-5 text-sm">
             <Link href="/try" className="font-semibold text-horizon-ink underline-offset-4 hover:underline focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-secondary">
               Continue as guest
             </Link>
@@ -91,7 +91,7 @@ export function AuthPageShell({ children, variant }: AuthPageShellProps) {
         </div>
       </section>
 
-      <section aria-label={variant === "login" ? "Sign in" : "Create an account"} className="mx-auto w-full max-w-[31rem]">
+      <section aria-label={variant === "login" ? "Sign in" : "Create an account"} className="mx-auto flex h-full w-full max-w-[31rem] flex-col">
         {children}
       </section>
       </div>
