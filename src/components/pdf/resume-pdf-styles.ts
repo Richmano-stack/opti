@@ -25,6 +25,11 @@ export const resumePdfStyles = StyleSheet.create({
     color: "#444444",
     textAlign: "center",
   },
+  headline: {
+    fontSize: 11,
+    marginBottom: 4,
+    textAlign: "center",
+  },
   divider: {
     borderBottomWidth: 1,
     borderBottomColor: "#cccccc",
@@ -52,21 +57,43 @@ export const resumePdfStyles = StyleSheet.create({
   experienceEntry: {
     marginBottom: 10,
   },
-  jobTitle: {
-    fontFamily: "Helvetica-Bold",
-    fontSize: 10,
-    marginBottom: 2,
+  roleHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    gap: 12,
   },
-  jobMeta: {
+  roleTitle: {
+    fontFamily: "Helvetica-Bold",
+    fontSize: 11,
+    flexGrow: 1,
+  },
+  roleDates: {
     fontSize: 9,
     color: "#444444",
+  },
+  company: {
+    fontSize: 10,
+    color: "#333333",
+    marginTop: 1,
     marginBottom: 4,
   },
-  bullet: {
-    fontSize: 10,
+  bulletRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
     marginBottom: 3,
-    paddingLeft: 10,
-    textIndent: -7,
+  },
+  bulletMark: {
+    width: 3,
+    height: 3,
+    borderRadius: 1.5,
+    backgroundColor: "#111111",
+    marginTop: 4,
+    marginRight: 6,
+  },
+  bulletText: {
+    flexGrow: 1,
+    fontSize: 10,
   },
   educationEntry: {
     marginBottom: 6,

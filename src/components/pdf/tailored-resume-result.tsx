@@ -27,6 +27,25 @@ export function TailoredResumeResult({ resume }: { resume: OptimizedResume }) {
 
   return (
     <div className="space-y-4">
+      {resume.matchNote ? (
+        <aside
+          aria-label="Match note"
+          className="rounded-2xl border border-horizon-tertiary/15 bg-horizon-tertiary/7 p-4"
+        >
+          <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-horizon-tertiary">
+            Match note
+          </p>
+          <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm leading-6 text-horizon-ink">
+            <li>
+              <span className="font-semibold">Core strengths:</span> {resume.matchNote.strengths}
+            </li>
+            <li>
+              <span className="font-semibold">Potential gaps:</span> {resume.matchNote.gaps}
+            </li>
+          </ul>
+          <p className="mt-2 text-[11px] text-horizon-muted">For you only. This note is not in your PDF.</p>
+        </aside>
+      ) : null}
       <div className="flex flex-col gap-4 rounded-2xl border border-horizon-secondary/15 bg-horizon-secondary/7 p-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-xs leading-relaxed text-horizon-muted">
           Your PDF is generated in this browser and is not saved by Opti.

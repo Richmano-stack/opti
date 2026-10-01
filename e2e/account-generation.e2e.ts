@@ -5,7 +5,15 @@ import { expect, test } from "@playwright/test";
 import postgres from "postgres";
 
 const connectionString = process.env.DATABASE_URL;
-const providerConfigured = Boolean(process.env.OPENROUTER_API_KEY);
+const providerKeys: Record<string, string | undefined> = {
+  gemini: process.env.GEMINI_API_KEY,
+  groq: process.env.GROQ_API_KEY,
+  openrouter: process.env.OPENROUTER_API_KEY,
+};
+const provider = process.env.AI_PROVIDER?.trim().toLowerCase();
+const providerConfigured = provider
+  ? Boolean(providerKeys[provider]?.trim())
+  : Object.values(providerKeys).some((key) => Boolean(key?.trim()));
 const syntheticResume = `Alex Example
 alex@example.invalid | Example City
 
@@ -43,7 +51,7 @@ Requirements
 
 test("an account user tailors from only a saved master resume", async ({ page }) => {
   test.skip(!connectionString, "DATABASE_URL is required for account E2E tests");
-  test.skip(!providerConfigured, "OPENROUTER_API_KEY is required for generation E2E tests");
+  test.skip(!providerConfigured, "GEMINI_API_KEY, GROQ_API_KEY, or OPENROUTER_API_KEY is required for generation E2E tests");
   test.setTimeout(180_000);
 
   const testId = randomUUID();

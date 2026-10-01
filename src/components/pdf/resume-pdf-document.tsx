@@ -20,6 +20,10 @@ function shouldKeepExperienceTogether(bullets: string[]): boolean {
   return bullets.reduce((length, bullet) => length + bullet.length, 0) <= 2_400;
 }
 
+function hasEntries<T>(entries: T[] | undefined): entries is T[] {
+  return Boolean(entries && entries.length > 0);
+}
+
 function buildContactLine(resume: OptimizedResume): string {
   return [
     resume.contact.email,
@@ -33,15 +37,32 @@ function buildContactLine(resume: OptimizedResume): string {
     .join(" | ");
 }
 
+function BulletList({ bullets }: { bullets: string[] }) {
+  return (
+    <>
+      {bullets.map((bullet, index) => (
+        <View key={`${index}-${bullet}`} style={styles.bulletRow} wrap={false}>
+          <View style={styles.bulletMark} />
+          <Text style={styles.bulletText} orphans={2} widows={2}>
+            {pdfText(bullet)}
+          </Text>
+        </View>
+      ))}
+    </>
+  );
+}
+
 export function createResumePdfDocument(resume: OptimizedResume): PdfDocumentElement {
   const contactLine = buildContactLine(resume);
   const documentTitle = `${pdfText(resume.contact.name)} - Resume`;
+  const headline = resume.headline ?? resume.experience[0]?.title;
 
   return (
     <Document title={documentTitle} author={pdfText(resume.contact.name)}>
       <Page size="LETTER" style={styles.page} wrap>
         <View style={styles.header}>
           <Text style={styles.name}>{pdfText(resume.contact.name)}</Text>
+          {headline ? <Text style={styles.headline}>{pdfText(headline)}</Text> : null}
           {contactLine ? <Text style={styles.contactLine}>{contactLine}</Text> : null}
         </View>
 
@@ -57,13 +78,6 @@ export function createResumePdfDocument(resume: OptimizedResume): PdfDocumentEle
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle} minPresenceAhead={24}>Skills</Text>
-          <Text style={styles.skillsText} orphans={2} widows={2}>
-            {resume.skills.map(pdfText).join(", ")}
-          </Text>
-        </View>
-
-        <View style={styles.section}>
           <Text style={styles.sectionTitle} minPresenceAhead={36}>Experience</Text>
           {resume.experience.map((entry) => (
             <View
@@ -72,35 +86,73 @@ export function createResumePdfDocument(resume: OptimizedResume): PdfDocumentEle
               minPresenceAhead={64}
               wrap={!shouldKeepExperienceTogether(entry.bullets)}
             >
-              <Text style={styles.jobTitle}>{pdfText(entry.title)}</Text>
-              <Text style={styles.jobMeta}>
-                {pdfText(entry.company)} | {pdfText(entry.dates)}
-              </Text>
-              {entry.bullets.map((bullet, index) => (
-                <Text key={`${index}-${bullet}`} style={styles.bullet} orphans={2} widows={2}>
-                  - {pdfText(bullet)}
-                </Text>
-              ))}
+              <View style={styles.roleHeader}>
+                <Text style={styles.roleTitle}>{pdfText(entry.title)}</Text>
+                <Text style={styles.roleDates}>{pdfText(entry.dates)}</Text>
+              </View>
+              <Text style={styles.company}>{pdfText(entry.company)}</Text>
+              <BulletList bullets={entry.bullets} />
             </View>
           ))}
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle} minPresenceAhead={36}>Education</Text>
-          {resume.education.map((entry) => (
-            <View
-              key={`${entry.institution}-${entry.degree}`}
-              style={styles.educationEntry}
-              wrap={false}
-            >
-              <Text style={styles.degree}>{pdfText(entry.degree)}</Text>
-              <Text style={styles.educationMeta}>
-                {pdfText(entry.institution)}
-                {entry.dates ? ` | ${pdfText(entry.dates)}` : ""}
-              </Text>
-            </View>
-          ))}
-        </View>
+        {hasEntries(resume.skills) ? (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle} minPresenceAhead={24}>Skills</Text>
+            <Text style={styles.skillsText} orphans={2} widows={2}>
+              {resume.skills.map(pdfText).join("  ·  ")}
+            </Text>
+          </View>
+        ) : null}
+
+        {hasEntries(resume.education) ? (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle} minPresenceAhead={36}>Education</Text>
+            {resume.education.map((entry) => (
+              <View
+                key={`${entry.institution}-${entry.degree}`}
+                style={styles.educationEntry}
+                wrap={false}
+              >
+                <View style={styles.roleHeader}>
+                  <Text style={styles.degree}>{pdfText(entry.degree)}</Text>
+                  {entry.dates ? <Text style={styles.roleDates}>{pdfText(entry.dates)}</Text> : null}
+                </View>
+                <Text style={styles.educationMeta}>{pdfText(entry.institution)}</Text>
+              </View>
+            ))}
+          </View>
+        ) : null}
+
+        {hasEntries(resume.certifications) ? (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle} minPresenceAhead={36}>Certifications</Text>
+            {resume.certifications.map((entry) => (
+              <View key={`${entry.name}-${entry.issuer ?? ""}`} style={styles.educationEntry} wrap={false}>
+                <View style={styles.roleHeader}>
+                  <Text style={styles.degree}>{pdfText(entry.name)}</Text>
+                  {entry.dates ? <Text style={styles.roleDates}>{pdfText(entry.dates)}</Text> : null}
+                </View>
+                {entry.issuer ? <Text style={styles.educationMeta}>{pdfText(entry.issuer)}</Text> : null}
+              </View>
+            ))}
+          </View>
+        ) : null}
+
+        {hasEntries(resume.projects) ? (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle} minPresenceAhead={36}>Projects</Text>
+            {resume.projects.map((entry) => (
+              <View key={`${entry.name}-${entry.dates ?? ""}`} style={styles.experienceEntry} wrap={false}>
+                <View style={styles.roleHeader}>
+                  <Text style={styles.roleTitle}>{pdfText(entry.name)}</Text>
+                  {entry.dates ? <Text style={styles.roleDates}>{pdfText(entry.dates)}</Text> : null}
+                </View>
+                <BulletList bullets={entry.bullets} />
+              </View>
+            ))}
+          </View>
+        ) : null}
       </Page>
     </Document>
   );

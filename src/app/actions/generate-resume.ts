@@ -84,6 +84,22 @@ const providerErrors: Record<
   },
 };
 
+function providerErrorResult(error: OpenRouterServiceError): GenerateResumeResult & { ok: false } {
+  const result = providerErrors[error.code];
+  const seconds = error.rateLimit?.retryAfterSeconds;
+  if (error.code !== "OPENROUTER_RATE_LIMITED" || !seconds) return result;
+
+  const minutes = Math.ceil(seconds / 60);
+  const wait = seconds < 60 ? `${seconds} second${seconds === 1 ? "" : "s"}` : `${minutes} minute${minutes === 1 ? "" : "s"}`;
+  return {
+    ok: false,
+    error: {
+      code: "RATE_LIMITED",
+      message: `The résumé service is busy. Please try again in about ${wait}.`,
+    },
+  };
+}
+
 export async function generateResume(
   input: OptimizeResumeInput,
 ): Promise<GenerateResumeResult> {
@@ -105,7 +121,7 @@ export async function generateResume(
     logGenerationError(error);
 
     if (error instanceof OpenRouterServiceError) {
-      return providerErrors[error.code];
+      return providerErrorResult(error);
     }
 
     return {
