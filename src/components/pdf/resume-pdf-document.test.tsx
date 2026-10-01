@@ -36,10 +36,19 @@ const longResume: OptimizedResume = {
   })),
 };
 
+const documentedResume: OptimizedResume = {
+  ...sparseResume,
+  headline: "Customer Operations Leader",
+  matchNote: { strengths: "Supervision.", gaps: "No right to work stated." },
+  certifications: [{ name: "AWS Cloud Practitioner", issuer: "Amazon", dates: "2024" }],
+  projects: [{ name: "Billing API", dates: "2023", bullets: ["Shipped invoice exports."] }],
+};
+
 describe("resume PDF", () => {
   it.each([
     ["sparse", sparseResume],
     ["long", longResume],
+    ["documented", documentedResume],
   ])("renders a valid %s resume PDF", async (_name, resume) => {
     const buffer = await renderToBuffer(createResumePdfDocument(resume));
 

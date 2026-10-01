@@ -1,7 +1,8 @@
 import type { ZodError } from "zod";
 export type OpenRouterErrorCode = "OPENROUTER_CONFIGURATION_ERROR" | "OPENROUTER_CREDITS_EXHAUSTED" | "OPENROUTER_UNAUTHORIZED" | "OPENROUTER_RATE_LIMITED" | "OPENROUTER_TIMEOUT" | "OPENROUTER_UNAVAILABLE";
+export type RateLimitDetails = { limit?: "tokens" | "requests"; retryAfterSeconds?: number };
 export class OpenRouterServiceError extends Error {
-  constructor(readonly code: OpenRouterErrorCode, message: string, readonly cause?: unknown) { super(message); this.name = "OpenRouterServiceError"; }
+  constructor(readonly code: OpenRouterErrorCode, message: string, readonly cause?: unknown, readonly rateLimit?: RateLimitDetails) { super(message); this.name = "OpenRouterServiceError"; }
 }
 export class ResumeValidationError extends Error {
   readonly code = "RESUME_VALIDATION_ERROR" as const;

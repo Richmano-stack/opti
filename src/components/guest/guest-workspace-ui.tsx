@@ -3,37 +3,7 @@ import type { ReactNode, RefObject } from "react";
 import { CheckCircle2, Eye, FileText, LoaderCircle, LockKeyhole, Shield } from "lucide-react";
 
 import type { GuestGenerationState } from "@/app/actions/generate-resume";
-import { BrandMark } from "@/components/landing/brand-mark";
 import { TailoredResumeResult } from "@/components/pdf";
-
-export function GuestWorkspaceHeader() {
-  return (
-    <header className="sticky top-0 z-20 px-4 pt-4 sm:px-6 sm:pt-6">
-      <nav
-        aria-label="Primary navigation"
-        className="horizon-glass mx-auto flex h-16 max-w-[1120px] items-center justify-between rounded-full px-4 sm:px-6"
-      >
-        <div className="flex min-w-0 items-center gap-3 sm:gap-5">
-          <Link
-            href="/"
-            aria-label="Opti home"
-            className="rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-secondary focus-visible:ring-offset-4"
-          >
-            <BrandMark className="scale-90 sm:scale-100" />
-          </Link>
-          <span aria-hidden className="h-5 w-px bg-horizon-outline/30" />
-          <span className="truncate text-xs font-bold uppercase tracking-[0.12em] text-horizon-muted sm:text-sm">Guest workspace</span>
-        </div>
-        <Link
-          href="/login"
-          className="horizon-button-ghost px-5 py-2.5 text-sm"
-        >
-          Log in
-        </Link>
-      </nav>
-    </header>
-  );
-}
 
 export function GuestTextAreaField({
   id,
@@ -58,7 +28,7 @@ export function GuestTextAreaField({
 
   return (
     <div className="group">
-      <label htmlFor={id} className="text-sm font-bold text-horizon-ink">
+      <label htmlFor={id} className="text-sm font-semibold text-horizon-ink">
         {label}
       </label>
       <textarea
@@ -71,11 +41,11 @@ export function GuestTextAreaField({
         disabled={disabled}
         placeholder={placeholder}
         aria-describedby={descriptionId}
-        className="mt-2 min-h-48 w-full resize-y rounded-3xl border border-white/80 bg-white/55 p-5 text-sm leading-6 text-horizon-ink shadow-[inset_0_1px_0_rgb(255_255_255/0.8)] outline-none backdrop-blur-sm transition-[border-color,background-color,box-shadow] placeholder:text-horizon-muted/55 focus:border-horizon-secondary/45 focus:bg-white/75 focus:ring-4 focus:ring-horizon-secondary/10 disabled:cursor-not-allowed disabled:bg-white/30 disabled:text-horizon-muted sm:min-h-52"
+        className="mt-1.5 min-h-36 w-full resize-y rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-3 text-sm leading-6 text-horizon-ink outline-none transition-colors placeholder:text-neutral-500 hover:border-neutral-300 focus:border-horizon-secondary focus:bg-white focus:ring-2 focus:ring-horizon-secondary/20 disabled:cursor-not-allowed disabled:bg-neutral-100 disabled:text-neutral-500"
       />
       <div
         id={descriptionId}
-        className="mt-2 flex items-center justify-between px-1 text-[11px] font-medium text-horizon-muted/75"
+        className="mt-1.5 flex items-center justify-between px-0.5 text-[11px] font-medium text-neutral-600"
       >
         <span>Plain text only</span>
         <span>{value.length.toLocaleString()} / {maxChars.toLocaleString()}</span>
@@ -126,11 +96,11 @@ export function GuestResultPanel({
   } else {
     content = (
       <div className="flex flex-1 flex-col items-center justify-center px-6 py-16 text-center">
-        <span className="flex size-16 items-center justify-center rounded-full border border-horizon-secondary/15 bg-horizon-secondary/8 text-horizon-secondary">
-          <FileText aria-hidden className="size-7 stroke-[1.5]" />
+        <span className="flex size-12 items-center justify-center rounded-full bg-neutral-100 text-neutral-700">
+          <FileText aria-hidden className="size-5 stroke-[1.75]" />
         </span>
-        <h3 className="mt-6 text-lg font-semibold text-horizon-ink">Your tailored résumé will appear here</h3>
-        <p className="mt-2 max-w-sm text-sm leading-6 text-horizon-muted">
+        <h3 className="mt-4 text-base font-semibold text-horizon-ink">Your tailored résumé will appear here</h3>
+        <p className="mt-1 max-w-xs text-sm leading-6 text-neutral-700">
           Review it here before you download.
         </p>
       </div>
@@ -142,11 +112,11 @@ export function GuestResultPanel({
       aria-labelledby="guest-result-heading"
       aria-live="polite"
       aria-busy={isPending}
-      className="horizon-glass flex min-h-[36rem] flex-col rounded-3xl p-5 sm:p-8 lg:p-10 xl:sticky xl:top-28"
+      className="flex min-h-[32rem] flex-col rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm sm:p-6 lg:sticky lg:top-20"
     >
-      <div className="border-b border-horizon-outline/15 pb-5">
-        <p className="text-xs font-bold uppercase tracking-[0.16em] text-horizon-tertiary">Review &amp; download</p>
-        <h2 id="guest-result-heading" ref={headingRef} tabIndex={-1} className="mt-2 text-2xl font-semibold tracking-[-0.01em] text-horizon-ink outline-none focus-visible:ring-2 focus-visible:ring-horizon-secondary">
+      <div className="border-b border-neutral-200 pb-4">
+        <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-horizon-tertiary">Review &amp; download</p>
+        <h2 id="guest-result-heading" ref={headingRef} tabIndex={-1} className="mt-1.5 text-xl font-semibold tracking-[-0.02em] text-horizon-ink outline-none focus-visible:ring-2 focus-visible:ring-horizon-secondary">
           Your tailored résumé
         </h2>
         {state.status === "success" ? <p className="mt-2 text-sm text-horizon-muted">Review every detail before downloading your PDF.</p> : null}
@@ -164,11 +134,11 @@ const trustItems = [
 
 export function GuestTrustRow() {
   return (
-    <aside aria-label="Guest workspace information" className="mt-6 rounded-3xl border border-white/60 bg-white/25 px-5 py-4 backdrop-blur-md sm:px-8">
-      <div className="grid gap-3 text-xs font-medium text-horizon-muted sm:grid-cols-3">
+    <aside aria-label="Guest workspace information" className="mt-4 rounded-xl border border-neutral-200 bg-white px-4 py-3">
+      <div className="grid gap-2 text-xs font-medium text-neutral-700 sm:grid-cols-3">
         {trustItems.map(({ icon: Icon, text }) => (
           <div key={text} className="flex items-center gap-2 sm:justify-center">
-            <Icon aria-hidden className="size-4 shrink-0 text-horizon-secondary" />
+            <Icon aria-hidden className="size-3.5 shrink-0 text-horizon-secondary" />
             <span>{text}</span>
           </div>
         ))}
@@ -180,14 +150,24 @@ export function GuestTrustRow() {
 
 export function GuestWorkspaceFooter() {
   return (
-    <footer className="mt-16 bg-horizon-ink px-6 pb-8 pt-12 text-white sm:px-8 lg:px-16">
-      <div className="mx-auto max-w-[1120px]">
-        <div className="flex flex-col gap-5 border-b border-white/15 pb-8 sm:flex-row sm:items-end sm:justify-between">
-          <div><p className="text-[10px] font-bold uppercase tracking-[0.17em] text-horizon-inverse-primary">Guest mode</p><h2 className="mt-3 text-2xl font-bold tracking-[-0.03em] sm:text-3xl">Try the flow. Keep your privacy.</h2></div>
-          <Link href="/signup" className="horizon-button-primary h-11 shrink-0 bg-white px-5 text-xs !text-horizon-ink hover:bg-horizon-inverse-primary">Create your workspace <span aria-hidden>→</span></Link>
+    <footer className="mt-8 border-t border-neutral-800 bg-horizon-ink px-4 py-6 text-white sm:px-6">
+      <div className="mx-auto flex max-w-6xl flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-horizon-inverse-primary">Guest mode</p>
+          <p className="mt-1 text-sm font-semibold">Try the flow. Keep your privacy.</p>
+          <p className="mt-1 text-xs text-white/60">Guest inputs and generated results are not saved.</p>
         </div>
-        <div className="flex flex-col gap-5 py-8 sm:flex-row sm:items-center sm:justify-between"><div><BrandMark /><p className="mt-3 text-xs text-white/50">Guest inputs and generated results are not saved.</p></div><nav aria-label="Footer navigation" className="flex flex-wrap gap-x-5 gap-y-2 text-xs font-semibold text-white/65"><Link href="/" className="hover:text-white">Opti home</Link><Link href="/login" className="hover:text-white">Log in</Link><Link href="/signup" className="hover:text-white">Create account</Link></nav></div>
-        <div className="border-t border-white/15 pt-5 text-xs text-white/40">© {new Date().getFullYear()} Opti. Built for focused applications.</div>
+        <div className="flex flex-col items-start gap-3 sm:items-end">
+          <Link href="/signup" className="horizon-button-primary h-10 px-4 text-xs">
+            Create your workspace <span aria-hidden>→</span>
+          </Link>
+          <nav aria-label="Footer navigation" className="flex flex-wrap gap-x-4 text-xs font-semibold text-white/70">
+            <Link href="/" className="hover:text-white">Opti home</Link>
+            <Link href="/login" className="hover:text-white">Log in</Link>
+            <Link href="/signup" className="hover:text-white">Create account</Link>
+          </nav>
+          <p className="text-[11px] text-white/45">© {new Date().getFullYear()} Opti. Built for focused applications.</p>
+        </div>
       </div>
     </footer>
   );

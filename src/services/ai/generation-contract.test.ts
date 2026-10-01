@@ -114,6 +114,79 @@ describe("optimizedResumeSchema", () => {
     assert.equal(result.education[0]?.dates, undefined);
   });
 
+  it("accepts an empty education list and optional supporting sections", () => {
+    const result = optimizedResumeSchema.parse({
+      ...validResume,
+      education: [],
+      certifications: [
+        { name: "AWS Cloud Practitioner", issuer: "Amazon", dates: null },
+      ],
+      projects: [
+        {
+          name: "Billing API",
+          dates: "2023",
+          bullets: ["Shipped invoice exports for finance."],
+        },
+      ],
+    });
+
+    assert.equal(result.education.length, 0);
+    assert.equal(result.certifications?.[0]?.issuer, "Amazon");
+    assert.equal(result.projects?.[0]?.name, "Billing API");
+  });
+
+  it("ends experience and project bullets with a period", () => {
+    const result = optimizedResumeSchema.parse({
+      ...validResume,
+      experience: [
+        {
+          ...validResume.experience[0],
+          bullets: ["Supervised a team of 12 agents", "Resolved escalations;", "Trained new hires!"],
+        },
+      ],
+      projects: [{ name: "Rota tool", dates: null, bullets: ["Built shift rotas"] }],
+    });
+
+    assert.deepEqual(result.experience[0]?.bullets, [
+      "Supervised a team of 12 agents.",
+      "Resolved escalations.",
+      "Trained new hires!",
+    ]);
+    assert.deepEqual(result.projects?.[0]?.bullets, ["Built shift rotas."]);
+  });
+
+  it("accepts a headline and a strengths-and-gaps match note", () => {
+    const matchNote = {
+      strengths: "Team supervision and escalation handling.",
+      gaps: "The résumé does not show right to work in the UK.",
+    };
+    const result = optimizedResumeSchema.parse({
+      ...validResume,
+      headline: "Customer Operations Leader",
+      matchNote,
+    });
+
+    assert.equal(result.headline, "Customer Operations Leader");
+    assert.deepEqual(result.matchNote, matchNote);
+    assert.equal(optimizedResumeSchema.parse({ ...validResume, matchNote: null }).matchNote, undefined);
+    assert.equal(optimizedResumeSchema.parse({ ...validResume, headline: null }).headline, undefined);
+  });
+
+  it("rejects an incomplete or oversized match note and headline", () => {
+    assert.equal(
+      optimizedResumeSchema.safeParse({ ...validResume, matchNote: { strengths: "Supervision." } }).success,
+      false,
+    );
+    assert.equal(
+      optimizedResumeSchema.safeParse({
+        ...validResume,
+        matchNote: { strengths: "s".repeat(401), gaps: "None." },
+      }).success,
+      false,
+    );
+    assert.equal(optimizedResumeSchema.safeParse({ ...validResume, headline: "h".repeat(121) }).success, false);
+  });
+
   it("rejects structurally incomplete model output", () => {
     assert.equal(
       optimizedResumeSchema.safeParse({

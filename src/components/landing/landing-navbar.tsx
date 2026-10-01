@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { BrandMark } from "./brand-mark";
 
-export async function LandingNavbar() {
+export function LandingNavbar() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 px-4 pt-4 sm:px-6 sm:pt-6">
       <nav
@@ -18,9 +18,9 @@ export async function LandingNavbar() {
         </Link>
 
         <div className="hidden items-center gap-1 md:flex">
-          <a href="#benefits" className="horizon-nav-link">Why Opti</a>
-          <a href="#how-it-works" className="horizon-nav-link">How it works</a>
-          <a href="#privacy" className="horizon-nav-link">Privacy</a>
+          <a href="/#benefits" className="horizon-nav-link">Why Opti</a>
+          <a href="/#how-it-works" className="horizon-nav-link">How it works</a>
+          <a href="/#privacy" className="horizon-nav-link">Privacy</a>
         </div>
 
         <div className="flex items-center gap-2">

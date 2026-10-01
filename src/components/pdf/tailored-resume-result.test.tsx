@@ -25,5 +25,20 @@ describe("TailoredResumeResult", () => {
     expect(html).toContain("Alex Example");
     expect(html).toContain("Download PDF");
     expect(html).toContain("Your PDF is generated in this browser and is not saved by Opti.");
+    expect(html).not.toContain("Match note");
+  });
+
+  it("shows the match note before the résumé and marks it as not printed", () => {
+    const matchNote = {
+      strengths: "Accessible React interfaces and TypeScript.",
+      gaps: "The résumé does not show right to work in the UK.",
+    };
+    const html = renderToStaticMarkup(<TailoredResumeResult resume={{ ...resume, matchNote }} />);
+
+    expect(html).toContain("Match note");
+    expect(html).toContain("Core strengths:");
+    expect(html).toContain("Potential gaps:");
+    expect(html).toContain("This note is not in your PDF.");
+    expect(html.indexOf(matchNote.gaps)).toBeLessThan(html.indexOf("Alex Example"));
   });
 });

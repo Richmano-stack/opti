@@ -41,7 +41,28 @@ describe("optimizedResumeSchema limits", () => {
     assert.equal(
       optimizedResumeSchema.safeParse({
         ...minimalValidResume,
-        skills: Array.from({ length: 51 }, (_, index) => `Skill ${index}`),
+        skills: Array.from({ length: 13 }, (_, index) => `Skill ${index}`),
+      }).success,
+      false,
+    );
+
+    assert.equal(
+      optimizedResumeSchema.safeParse({
+        ...minimalValidResume,
+        skills: Array.from({ length: 12 }, (_, index) => `Skill ${index}`),
+      }).success,
+      true,
+    );
+
+    assert.equal(
+      optimizedResumeSchema.safeParse({
+        ...minimalValidResume,
+        experience: [
+          {
+            ...minimalValidResume.experience[0],
+            bullets: Array.from({ length: 7 }, () => "Built reliable services."),
+          },
+        ],
       }).success,
       false,
     );

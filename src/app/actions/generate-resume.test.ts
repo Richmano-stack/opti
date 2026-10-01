@@ -70,6 +70,25 @@ describe("generateResume", () => {
       },
     });
   });
+  it("tells the user how long to wait when the provider sends a retry time", async () => {
+    optimizeResume.mockRejectedValue(
+      new OpenRouterServiceError(
+        "OPENROUTER_RATE_LIMITED",
+        "private upstream details",
+        undefined,
+        { limit: "tokens", retryAfterSeconds: 8 },
+      ),
+    );
+
+    await expect(generateResume(validInput)).resolves.toEqual({
+      ok: false,
+      error: {
+        code: "RATE_LIMITED",
+        message: "The résumé service is busy. Please try again in about 8 seconds.",
+      },
+    });
+  });
+
   it("maps exhausted provider credits to a safe configuration error", async () => {
     optimizeResume.mockRejectedValue(
       new OpenRouterServiceError(

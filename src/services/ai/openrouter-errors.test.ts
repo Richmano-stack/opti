@@ -6,6 +6,7 @@ const input = { resume: "Engineer at Acme.", jobDescription: "Build APIs." };
 afterEach(() => { vi.unstubAllGlobals(); vi.unstubAllEnvs(); });
 
 function configure() {
+  vi.stubEnv("AI_PROVIDER", "openrouter");
   vi.stubEnv("OPENROUTER_API_KEY", "test-key");
   vi.stubEnv("OPENROUTER_MODEL", "test/model");
 }
