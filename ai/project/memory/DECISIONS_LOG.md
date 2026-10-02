@@ -39,7 +39,7 @@ The decisions log records **significant architectural and technical decisions** 
 ```markdown
 # Decisions Log
 
-**Last updated:** 2026-10-01
+**Last updated:** 2026-10-02
 
 ---
 
@@ -250,3 +250,43 @@ The model returns an optional `headline` aligned with the target job's domain, l
 ### References
 
 - ai/project/features/tailored-resume/tickets/TICKET-006-domain-aware-prompt.md
+
+## DEC-004: Fall back across configured generation providers
+
+**Date:** 2026-10-02
+**Status:** accepted
+**Deciders:** Product owner
+**Supersedes:** N/A
+**Superseded by:** N/A
+
+### Context
+
+Gemini, Groq, and OpenRouter can each fail independently through rate limits, timeouts, or malformed JSON. A failure from the first provider ended the request even when another configured key could answer.
+
+### Decision
+
+`optimizeResume` tries each configured provider at most once. `AI_PROVIDER` is tried first when its key is set; otherwise the order is Gemini, Groq, then OpenRouter. Rate limits, timeouts, transport failures, credential and credit errors, and invalid JSON move to the next provider. A rate limit is remembered in process memory until its retry time, or 60 seconds when the provider gives none. The request budget is 75 seconds, and each attempt is capped at 30 seconds. Invalid input is rejected before any provider is called.
+
+### Alternatives Considered
+
+| Option | Pros | Cons |
+|--------|------|------|
+| Retry the same provider | Simple | Repeats a failure the model is likely to repeat, and waits out a rate limit |
+| Fail over immediately | Uses the keys the user already configured | A request can take longer, and wording varies by model |
+| Queue until the rate limit lifts | One model stays consistent | The user waits while another key is idle |
+
+### Consequences
+
+**Positive:**
+
+- One busy or broken key no longer stops generation
+- Later requests skip a provider until its retry window passes
+
+**Negative:**
+
+- The cooldown is per server process, so another instance can still call a limited provider
+- A fallback résumé can read differently from the preferred model's wording
+
+### References
+
+- ai/project/features/ai-provider/tickets/TICKET-002-provider-fallback.md

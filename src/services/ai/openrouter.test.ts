@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { OpenRouterServiceError, optimizeResume } from "./index";
+import { resetProviderAvailability } from "./optimizeResume";
 
 const input = { resume: "Software engineer at Acme.", jobDescription: "Build APIs." };
 const output = {
@@ -12,11 +13,19 @@ const output = {
 };
 
 afterEach(() => {
+  resetProviderAvailability();
   vi.unstubAllGlobals();
   vi.unstubAllEnvs();
 });
 
+function isolateProviders() {
+  vi.stubEnv("GEMINI_API_KEY", "");
+  vi.stubEnv("GROQ_API_KEY", "");
+  vi.stubEnv("OPENROUTER_API_KEY", "");
+}
+
 function useOpenRouter() {
+  isolateProviders();
   vi.stubEnv("AI_PROVIDER", "openrouter");
   vi.stubEnv("OPENROUTER_API_KEY", "test-key");
   vi.stubEnv("OPENROUTER_MODEL", "test/model");
@@ -38,8 +47,8 @@ describe("optimizeResume with OpenRouter", () => {
   });
 
   it("fails before fetch when configuration is missing", async () => {
+    isolateProviders();
     vi.stubEnv("AI_PROVIDER", "openrouter");
-    vi.stubEnv("OPENROUTER_API_KEY", "");
     vi.stubEnv("OPENROUTER_MODEL", "");
     const fetchMock = vi.fn();
     vi.stubGlobal("fetch", fetchMock);
@@ -73,6 +82,7 @@ describe("optimizeResume with OpenRouter", () => {
 
 describe("optimizeResume with Gemini", () => {
   it("calls the Gemini endpoint with the default model and a compatible schema", async () => {
+    isolateProviders();
     vi.stubEnv("AI_PROVIDER", "gemini");
     vi.stubEnv("GEMINI_API_KEY", "gemini-key");
     const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({

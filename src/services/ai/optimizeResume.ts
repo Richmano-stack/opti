@@ -8,6 +8,10 @@ const OPENROUTER_ENDPOINT = "https://openrouter.ai/api/v1/chat/completions";
 const GEMINI_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
 const GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
 const DEFAULT_GEMINI_MODEL = "gemini-3.5-flash";
+const ATTEMPT_TIMEOUT_MS = 30_000;
+const REQUEST_BUDGET_MS = 75_000;
+const MIN_ATTEMPT_MS = 15_000;
+const DEFAULT_COOLDOWN_SECONDS = 60;
 export const GROQ_MODELS = ["openai/gpt-oss-120b"] as const;
 export const AI_PROVIDERS = ["gemini", "groq", "openrouter"] as const;
 export type AiProvider = (typeof AI_PROVIDERS)[number];
@@ -44,12 +48,29 @@ function bearerHeaders(apiKey: string): Record<string, string> {
   return { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" };
 }
 
+const unavailableUntil = new Map<AiProvider, number>();
+
+export function resetProviderAvailability(): void {
+  unavailableUntil.clear();
+}
+
 export function configuredProviders(): AiProvider[] {
   return AI_PROVIDERS.filter((provider) => Boolean(process.env[providerKeys[provider]]?.trim()));
 }
 
-function activeProvider(): string {
-  return process.env.AI_PROVIDER?.trim().toLowerCase() || configuredProviders()[0] || "gemini";
+function providerOrder(now = Date.now()): AiProvider[] {
+  const configured = configuredProviders();
+  const preferred = process.env.AI_PROVIDER?.trim().toLowerCase() ?? "";
+  const first = AI_PROVIDERS.find((provider) => provider === preferred && configured.includes(provider));
+  const ordered = first ? [first, ...configured.filter((provider) => provider !== first)] : configured;
+  return ordered.filter((provider) => (unavailableUntil.get(provider) ?? 0) <= now);
+}
+
+function soonestCooldownSeconds(now = Date.now()): number | undefined {
+  const waits = [...unavailableUntil.values()]
+    .filter((until) => until > now)
+    .map((until) => Math.ceil((until - now) / 1000));
+  return waits.length > 0 ? Math.min(...waits) : undefined;
 }
 
 function groqSystemPrompt(): string {
@@ -59,9 +80,7 @@ Return a JSON object that matches this JSON schema exactly. Use null for unavail
 ${JSON.stringify(openRouterResumeJsonSchema)}`;
 }
 
-function providerConfig(): ProviderConfig {
-  const provider = activeProvider();
-
+function providerConfig(provider: AiProvider): ProviderConfig {
   if (provider === "openrouter") {
     const apiKey = requireValue(process.env.OPENROUTER_API_KEY, "OpenRouter is not configured.");
     const model = requireValue(process.env.OPENROUTER_MODEL, "OpenRouter is not configured.");
@@ -112,21 +131,19 @@ async function rateLimitDetails(response: Response): Promise<(RateLimitDetails &
   };
 }
 
-export async function optimizeResume(input: OptimizeResumeInput): Promise<OptimizedResume> {
-  const parsedInput = generationInputSchema.safeParse(input);
-  if (!parsedInput.success) throw new InvalidInputError(parsedInput.error.issues[0]?.message ?? "Invalid generation input.");
-  const { model, endpoint, headers, systemPrompt, responseFormat } = providerConfig();
+async function requestResume(provider: AiProvider, input: OptimizeResumeInput, timeoutMs: number): Promise<OptimizedResume> {
+  const { model, endpoint, headers, systemPrompt, responseFormat } = providerConfig(provider);
   let response: Response;
   try {
     response = await fetch(endpoint, {
       method: "POST",
       headers,
-      signal: AbortSignal.timeout(60_000),
+      signal: AbortSignal.timeout(timeoutMs),
       body: JSON.stringify({
         model,
         messages: [
           { role: "system", content: systemPrompt },
-          { role: "user", content: buildUserPrompt(parsedInput.data) },
+          { role: "user", content: buildUserPrompt(input) },
         ],
         temperature: 0.3,
         max_completion_tokens: 4_000,
@@ -164,4 +181,49 @@ export async function optimizeResume(input: OptimizeResumeInput): Promise<Optimi
   const result = optimizedResumeSchema.safeParse(content);
   if (!result.success) throw new ResumeValidationError("Generation output failed validation.", result.error);
   return result.data;
+}
+
+function rememberRateLimit(provider: AiProvider, error: OpenRouterServiceError): number {
+  const seconds = error.rateLimit?.retryAfterSeconds ?? DEFAULT_COOLDOWN_SECONDS;
+  unavailableUntil.set(provider, Date.now() + seconds * 1000);
+  return seconds;
+}
+
+export async function optimizeResume(input: OptimizeResumeInput): Promise<OptimizedResume> {
+  const parsedInput = generationInputSchema.safeParse(input);
+  if (!parsedInput.success) throw new InvalidInputError(parsedInput.error.issues[0]?.message ?? "Invalid generation input.");
+
+  const deadline = Date.now() + REQUEST_BUDGET_MS;
+  const rateLimitWaits: number[] = [];
+  let lastError: OpenRouterServiceError | ResumeValidationError | undefined;
+
+  for (const provider of providerOrder()) {
+    const remaining = deadline - Date.now();
+    if (remaining < MIN_ATTEMPT_MS) break;
+
+    try {
+      const resume = await requestResume(provider, parsedInput.data, Math.min(ATTEMPT_TIMEOUT_MS, remaining));
+      console.info(`[resume-generation] ${provider} completed`);
+      return resume;
+    } catch (error) {
+      if (!(error instanceof OpenRouterServiceError || error instanceof ResumeValidationError)) throw error;
+      console.error(`[resume-generation] ${provider} failed: ${error.code}`);
+      lastError = error;
+      if (error instanceof OpenRouterServiceError && error.code === "OPENROUTER_RATE_LIMITED") {
+        rateLimitWaits.push(rememberRateLimit(provider, error));
+      }
+    }
+  }
+
+  if (lastError instanceof OpenRouterServiceError && lastError.code === "OPENROUTER_RATE_LIMITED" && rateLimitWaits.length > 1) {
+    const retryAfterSeconds = Math.min(...rateLimitWaits);
+    throw new OpenRouterServiceError("OPENROUTER_RATE_LIMITED", "Generation provider rate limit reached.", lastError.cause, { retryAfterSeconds });
+  }
+  if (lastError) throw lastError;
+
+  const retryAfterSeconds = soonestCooldownSeconds();
+  if (retryAfterSeconds) {
+    throw new OpenRouterServiceError("OPENROUTER_RATE_LIMITED", "Generation provider rate limit reached.", undefined, { retryAfterSeconds });
+  }
+  throw new OpenRouterServiceError("OPENROUTER_CONFIGURATION_ERROR", "AI provider is not configured.");
 }
