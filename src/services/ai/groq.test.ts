@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { configuredProviders, optimizeResume } from "./index";
+import { resetProviderAvailability } from "./optimizeResume";
 
 const input = { resume: "Software engineer at Acme.", jobDescription: "Build APIs." };
 const output = {
@@ -24,6 +25,7 @@ type GroqRequest = {
 };
 
 afterEach(() => {
+  resetProviderAvailability();
   vi.unstubAllGlobals();
   vi.unstubAllEnvs();
 });

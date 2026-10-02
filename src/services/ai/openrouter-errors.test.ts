@@ -1,11 +1,18 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { optimizeResume } from "./index";
+import { resetProviderAvailability } from "./optimizeResume";
 
 const input = { resume: "Engineer at Acme.", jobDescription: "Build APIs." };
 
-afterEach(() => { vi.unstubAllGlobals(); vi.unstubAllEnvs(); });
+afterEach(() => {
+  resetProviderAvailability();
+  vi.unstubAllGlobals();
+  vi.unstubAllEnvs();
+});
 
 function configure() {
+  vi.stubEnv("GEMINI_API_KEY", "");
+  vi.stubEnv("GROQ_API_KEY", "");
   vi.stubEnv("AI_PROVIDER", "openrouter");
   vi.stubEnv("OPENROUTER_API_KEY", "test-key");
   vi.stubEnv("OPENROUTER_MODEL", "test/model");
