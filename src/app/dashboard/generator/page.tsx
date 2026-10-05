@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation";
 
-import { AccountGeneratorSetupRequired } from "@/components/account/account-generator-setup-required";
-import { AccountTailoringWorkspace } from "@/components/account/account-tailoring-workspace";
+import { AccountGeneratorSetupRequired } from "@/features/tailoring/components/account-generator-setup-required";
+import { AccountTailoringWorkspace } from "@/features/tailoring/components/account-tailoring-workspace";
 import { getServerSession } from "@/server/auth/session";
-import { findMasterResumeByUserId } from "@/services/master-resume";
+import { findMasterResumeByUserId } from "@/features/master-resume/lib";
 
 export const dynamic = "force-dynamic";
 

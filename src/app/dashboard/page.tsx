@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
 
 import { getServerSession } from "@/server/auth/session";
-import { findMasterResumeByUserId } from "@/services/master-resume";
-import { MasterResumeWorkspace } from "@/components/master-resume/master-resume-workspace";
+import { MasterResumeWorkspace } from "@/features/master-resume/components/master-resume-workspace";
+import { findMasterResumeByUserId } from "@/features/master-resume/lib";
 
 export const dynamic = "force-dynamic";
 

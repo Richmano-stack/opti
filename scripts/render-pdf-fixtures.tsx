@@ -3,8 +3,8 @@ import path from "node:path";
 
 import { renderToFile } from "@react-pdf/renderer";
 
-import { createResumePdfDocument } from "../src/components/pdf/resume-pdf-document";
-import type { OptimizedResume } from "../src/services/ai/types";
+import { createResumePdfDocument } from "../src/features/tailoring/pdf/resume-pdf-document";
+import type { OptimizedResume } from "../src/features/tailoring/lib/types";
 
 const sparseResume: OptimizedResume = {
   contact: {

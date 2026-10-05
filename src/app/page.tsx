@@ -1,4 +1,4 @@
-import { LandingPage } from "@/components/landing";
+import { LandingPage } from "@/features/marketing/components";
 
 export const dynamic = "force-dynamic";
 
