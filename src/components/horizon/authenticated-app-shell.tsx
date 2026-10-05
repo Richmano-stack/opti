@@ -7,7 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { FileText, LogOut, Menu, PenLine, UserRound, X } from "lucide-react";
 import { useEffect, useId, useState } from "react";
 
-import { BrandMark } from "@/components/landing/brand-mark";
+import { BrandMark } from "@/components/brand-mark";
 import { cn } from "@/lib/utils";
 import { authClient } from "@/server/auth/client";
 import type { AuthUser } from "@/server/auth/types";

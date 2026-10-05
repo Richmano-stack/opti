@@ -2,7 +2,7 @@ import { eq } from "drizzle-orm";
 
 import { db, session, users } from "@/db";
 import { auth } from "@/server/auth/auth";
-import { upsertMasterResume } from "@/services/master-resume/repository";
+import { upsertMasterResume } from "@/features/master-resume/lib/repository";
 
 import { assertLocalDatabaseUrl, seedUsers, type SeedUser } from "./dev-user-seed";
 

@@ -1,0 +1,50 @@
+# RICHMANO NASY
+Toamasina, Madagascar | +261 32 45 252 76 | nasyrichmano@gmail.com | richmano.bytrai.com
+
+--------------------------------------------------------------------------------
+
+### PROFESSIONAL SUMMARY
+Versatile Full-Stack Software Engineer, Technical Operations Lead, and Expert Team Leader with over 5 years of experience building scalable web applications, optimizing data pipelines, and managing high-performing operational teams. Co-Founder at Trai Agency and proven leader at Concentrix with a strong track record in Next.js/TypeScript architecture, PostgreSQL database design, Power Query analytics automation, and workflow process optimization. Strong bilingual communicator (English & French) skilled at bridging technical implementation with business objectives.
+
+--------------------------------------------------------------------------------
+
+### CORE TECHNICAL STACK & COMPETENCIES
+* **Frontend & Web Development:** TypeScript, React, Next.js, HTML5/CSS3, UI/UX Design, Vercel
+* **Backend, Databases & APIs:** Node.js, PostgreSQL, Drizzle ORM, RESTful APIs, SQL Server, Docker, Odoo ERP
+* **Data Analytics & Automation:** Microsoft Excel, Power Query (M Language), Automated Workflow Scripting, PULSE Extension Development
+* **Security & Testing:** OWASP ZAP Vulnerability Scanning, API Security Testing, Algorithmic Optimization (LeetCode)
+* **Leadership & Operations:** Technical Escalations, KPI Performance Analysis, Quality Assurance, Coaching & Mentorship, Shift Logistics
+* **Languages:** English (Fluent), French (Fluent), Malagasy (Native)
+
+--------------------------------------------------------------------------------
+
+### PROFESSIONAL EXPERIENCE
+
+**TRAI AGENCY** | Madagascar
+*Co-Founder & Lead Engineer* | Late 2025 – Present
+* **Platform Architecture:** Lead software engineer and system architect behind *Traitool*, driving full-stack application development using Next.js, TypeScript, PostgreSQL, and Drizzle ORM.
+* **Automation & AI Tools:** Design and deploy custom client automation workflows, operational dashboards, and AI-assisted productivity tools.
+* **Technical Quality Control:** Enforce strict code review standards, database security checks, and continuous deployment pipelines on Vercel.
+
+**CONCENTRIX** | Toamasina, Madagascar
+*Expert Team Leader & Data Analyst* | Dec 2021 – Present
+* **Shift & Team Management:** Promoted to Team Leader (Dec 2021) and Expert Team Leader; supervise front-line staff, manage daily shift logistics, and drive overall operational performance.
+* **Analytics & Tooling:** Engineered custom Power Query M scripts and dynamic Excel 365 reporting dashboards to automate call center KPI analytics and performance tracking.
+* **Process Automation:** Developed a custom browser extension to automate batch data insertion of coaching records into internal management platforms (PULSE), significantly reducing manual overhead.
+* **Performance Coaching:** Conduct regular 1-on-1 performance evaluations, monitor team KPIs, resolve technical escalations, and deliver targeted coaching.
+
+*Customer Advisor* | Aug 2021 – Dec 2021
+* Maintained high standards of service quality and system navigation in a fast-paced environment; consistently exceeded performance metrics leading to rapid promotion.
+
+**FREELANCE SOFTWARE ENGINEER & CONSULTANT**
+*Full-Stack Engineer & IT Specialist* | 2021 – Present
+* **Custom Web Solutions:** Develop full-stack web applications, landing pages, and internal tools for local and international clients.
+* **Database & SQL Optimization:** Perform query optimization, schema design, database migrations, and data extraction workflows for business systems.
+* **System Debugging & Security:** Conduct manual security testing and OWASP ZAP vulnerability assessments on web application endpoints.
+
+--------------------------------------------------------------------------------
+
+### EDUCATION & COURSEWORK
+* **Computer Science Coursework (Online)** – BYU-Idaho (2022 – 2023)
+* **L1 Mathematics & Computer Science** – Université de Toamasina (2020 – 2021)
+* **Secondary Education Diploma** – Completed

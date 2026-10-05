@@ -290,3 +290,41 @@ Gemini, Groq, and OpenRouter can each fail independently through rate limits, ti
 ### References
 
 - ai/project/features/ai-provider/tickets/TICKET-002-provider-fallback.md
+
+## DEC-005: One ink-on-paper résumé layout
+
+**Date:** 2026-10-02
+**Status:** accepted
+**Deciders:** Product owner
+**Supersedes:** N/A
+**Superseded by:** N/A
+
+### Context
+
+The preview used the app's brand color for section labels, so the document read as part of the interface. Extra templates and plan gating are not in scope yet.
+
+### Decision
+
+There is one résumé design, shared by the preview and the PDF. It is a single column: centered name, headline, and contact line, then sections with a full-width rule under a small uppercase label. Text is ink on white. The match note stays outside the page. A template registry waits until a second design is needed.
+
+### Alternatives Considered
+
+| Option | Pros | Cons |
+|--------|------|------|
+| Restyle the current page | One design to judge | Preview and PDF styles are written twice |
+| Template registry now | Ready for more designs | Extra structure before the first design is settled |
+
+### Consequences
+
+**Positive:**
+
+- The downloaded PDF matches the page on screen
+- The résumé is not colored like the app
+
+**Negative:**
+
+- A second design will need a registry that does not exist yet
+
+### References
+
+- ai/project/features/tailored-resume/tickets/TICKET-007-simple-resume-design.md

@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 
-import { AuthPageShell } from "@/components/auth/auth-page-shell";
-import { LoginForm } from "@/components/login-form";
+import { AuthPageShell } from "@/features/auth/components/auth-page-shell";
+import { LoginForm } from "@/features/auth/components/login-form";
 import { Skeleton } from "@/components/ui/skeleton";
 
 function LoginFormFallback() {

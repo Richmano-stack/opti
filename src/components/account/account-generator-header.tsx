@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { BrandMark } from "@/components/landing/brand-mark";
+import { BrandMark } from "@/components/brand-mark";
 import type { AuthUser } from "@/server/auth/types";
 import { AccountSignOutButton } from "@/components/account/account-sign-out-button";
 

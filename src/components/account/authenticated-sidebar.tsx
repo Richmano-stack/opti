@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { FileText, Menu, PenLine, ShieldCheck, UserRound, X } from "lucide-react";
 import { useState } from "react";
 
-import { BrandMark } from "@/components/landing/brand-mark";
+import { BrandMark } from "@/components/brand-mark";
 import { authClient } from "@/server/auth/client";
 
 const links = [

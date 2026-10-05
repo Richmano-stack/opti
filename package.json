@@ -22,7 +22,7 @@
     "db:studio": "drizzle-kit studio",
     "db:studio:infisical": "infisical run --env=dev --path=/ -- pnpm db:studio",
     "test": "vitest run",
-    "test:integration": "infisical run --env=dev --path=/ -- vitest run src/services/master-resume/repository.integration.test.ts src/app/actions/master-resume.integration.test.ts",
+    "test:integration": "infisical run --env=dev --path=/ -- vitest run src/features/master-resume/lib/repository.integration.test.ts src/features/master-resume/actions/save-master-resume.integration.test.ts",
     "test:e2e": "infisical run --env=dev --path=/ -- playwright test",
     "pdf:fixtures": "tsx scripts/render-pdf-fixtures.tsx"
   },
