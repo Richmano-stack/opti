@@ -2,13 +2,15 @@ import Link from "next/link";
 
 import { BrandMark } from "@/components/brand-mark";
 
+export type LandingNavbarProps = {
+  guest?: boolean;
+  floating?: boolean;
+};
+
 export function LandingNavbar({
   guest = false,
   floating = true,
-}: {
-  guest?: boolean;
-  floating?: boolean;
-}) {
+}: LandingNavbarProps = {}) {
   return (
     <header className={floating ? "fixed inset-x-0 top-0 z-50 px-4 pt-4 sm:px-6 sm:pt-6" : "shrink-0 px-4 pt-4 sm:px-6 sm:pt-6"}>
       <nav

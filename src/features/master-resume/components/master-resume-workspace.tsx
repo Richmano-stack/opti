@@ -5,8 +5,8 @@ import Link from "next/link";
 import { ArrowRight, CheckCircle2, LoaderCircle, LockKeyhole } from "lucide-react";
 
 import { saveMasterResume } from "@/features/master-resume/actions/save-master-resume";
-import { AuthenticatedAppShell } from "@/components/horizon/authenticated-app-shell";
-import { ActionGroup, ContentContainer, DocumentPreviewCard, HorizonDialog, ScrollRegion } from "@/components/horizon/page-composition";
+import { AccountBar } from "@/components/horizon/account-bar";
+import { ActionGroup, HorizonDialog, ScrollRegion } from "@/components/horizon/page-composition";
 import { DevSampleFill } from "@/features/devtools/components/dev-sample-fill";
 import { HorizonButton, HorizonTextarea } from "@/components/horizon";
 import type { AuthUser } from "@/server/auth/types";
@@ -77,57 +77,54 @@ export function MasterResumeWorkspace({ user, initialContent = "", initialUpdate
 
   const editorTitle = isSetup ? "Edit master résumé" : "Add master résumé";
 
-  return (
-    <AuthenticatedAppShell user={user} title="Master résumé">
-      <ContentContainer className="py-6 sm:py-8">
-        <div className="flex flex-col gap-6">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div className="max-w-xl space-y-2">
-              <p className="text-horizon-meta font-bold uppercase tracking-[0.14em] text-horizon-primary">Workspace</p>
-              <h1 className="text-horizon-heading font-bold tracking-[-0.025em] text-horizon-ink sm:text-horizon-title">Master résumé</h1>
-              <p className="text-horizon-body leading-6 text-horizon-muted">
-                {isSetup
-                  ? "Your source document is saved. Tailor it for a role without editing the original."
-                  : "Save one source résumé. Tailoring stays locked until it exists."}
-              </p>
-            </div>
-            {isSetup ? (
-              <Link
-                href="/dashboard/generator"
-                className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-[var(--horizon-radius-control)] bg-horizon-primary px-4 text-sm font-bold text-white transition hover:bg-horizon-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-secondary focus-visible:ring-offset-2 sm:w-auto"
-              >
-                Tailor for a role <ArrowRight aria-hidden="true" className="size-4" />
-              </Link>
-            ) : null}
-          </div>
+  const savedLabel = `${isSetup ? "Saved" : "Not saved"}${lastSavedAt ? ` · Last saved at ${lastSavedAt}` : ""} · ${savedContent.length.toLocaleString()} / ${MAX_CHARACTERS.toLocaleString()} characters`;
 
+  return (
+    <div className="flex h-dvh flex-col overflow-hidden bg-white text-horizon-ink">
+      <AccountBar
+        user={user}
+        title="Master résumé"
+        actions={
+          isSetup ? (
+            <Link href="/dashboard/generator" className="horizon-button-primary h-9 px-4 text-xs">
+              Tailor for a role <ArrowRight aria-hidden="true" className="size-3.5" />
+            </Link>
+          ) : null
+        }
+      />
+      <div className="min-h-0 flex-1 overflow-y-auto bg-slate-100/70">
+        <div className="mx-auto flex w-full max-w-[816px] flex-col px-4 py-8 sm:px-0">
           <div aria-live="polite" aria-atomic="true">
             {isSavedRecently ? (
-              <p className="flex items-center gap-2 rounded-[var(--horizon-radius-control)] border border-[#27c93f]/20 bg-[#27c93f]/10 px-4 py-3 text-sm font-bold text-[#116f20]">
+              <p className="mb-4 flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-bold text-emerald-800">
                 <CheckCircle2 aria-hidden="true" className="size-4" />
                 Your master résumé is saved.
               </p>
             ) : null}
           </div>
-
-          <DocumentPreviewCard
-            action={
-              <HorizonButton onClick={openEditor} ref={editButtonRef} tone={isSetup ? "secondary" : "primary"} type="button">
-                {editorTitle}
-              </HorizonButton>
-            }
-            metadata={
-              <span>
-                {isSetup ? "Saved" : "Not saved"}
-                {lastSavedAt ? ` · Last saved at ${lastSavedAt}` : ""}
-                {` · ${savedContent.length.toLocaleString()} / ${MAX_CHARACTERS.toLocaleString()} characters`}
-              </span>
-            }
-            summary={isSetup ? "A compact preview of your saved source document." : "Add your experience before tailoring for a role."}
-            title="Source document"
-          />
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-xs font-medium text-slate-600">{savedLabel}</p>
+            <HorizonButton onClick={openEditor} ref={editButtonRef} tone={isSetup ? "secondary" : "primary"} type="button">
+              {editorTitle}
+            </HorizonButton>
+          </div>
+          <article
+            aria-label="Master résumé source"
+            className="min-h-[900px] rounded-sm border border-slate-200/80 bg-white px-8 py-10 text-sm leading-6 text-[#1c1c1c] shadow-md shadow-slate-300/50 sm:px-14 sm:py-12"
+          >
+            {isSetup ? (
+              <p className="whitespace-pre-wrap">{savedContent}</p>
+            ) : (
+              <div className="mx-auto flex max-w-md flex-col items-center pt-24 text-center">
+                <h2 className="text-lg font-bold tracking-tight text-slate-900">Save one source résumé</h2>
+                <p className="mt-2 text-xs leading-5 text-slate-600">
+                  Tailoring stays locked until it exists. Add your experience, then tailor it for a role.
+                </p>
+              </div>
+            )}
+          </article>
         </div>
-      </ContentContainer>
+      </div>
 
       <HorizonDialog
         description="This is the only résumé Opti stores. Job descriptions and generated results stay temporary."
@@ -190,6 +187,6 @@ export function MasterResumeWorkspace({ user, initialContent = "", initialUpdate
           </p>
         </div>
       </HorizonDialog>
-    </AuthenticatedAppShell>
+    </div>
   );
 }

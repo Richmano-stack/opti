@@ -29,7 +29,7 @@ const user = {
 };
 
 describe("AccountTailoringWorkspace", () => {
-  it("presents a focused job-description composer without an empty result panel", () => {
+  it("presents a focused studio workspace with the saved master résumé acknowledged", () => {
     const html = renderToStaticMarkup(
       <AccountTailoringWorkspace user={user} masterResumeUpdatedAt="10:30 AM" />,
     );
@@ -38,22 +38,12 @@ describe("AccountTailoringWorkspace", () => {
     expect(html).toContain("Using your saved master résumé");
     expect(html).toContain("Last updated 10:30 AM");
     expect(html).toContain('name="jobDescription"');
-    expect(html).toContain('placeholder="Paste the full job description here"');
+    expect(html).toContain('placeholder="Paste the complete job posting here"');
     expect(html).not.toContain('name="resume"');
-    expect(html).toContain("Job descriptions and generated résumés are not saved");
-    expect(html).not.toContain("Your tailored résumé will appear here");
+    expect(html).toContain("Job descriptions and generated résumés are not saved.");
+    expect(html).toContain('aria-label="Résumé canvas"');
+    expect(html).toContain("Strictly 1-page ATS formatted document");
     expect(html).not.toContain("Fill sample");
-  });
-
-  it("uses a viewport-bound desktop workspace with an internally flexible composer", () => {
-    const html = renderToStaticMarkup(
-      <AccountTailoringWorkspace user={user} masterResumeUpdatedAt="10:30 AM" />,
-    );
-
-    expect(html).toContain('aria-label="Tailoring workspace"');
-    expect(html).toContain("lg:h-full");
-    expect(html).toContain("lg:overflow-hidden");
-    expect(html).toContain("lg:min-h-0 lg:flex-1");
   });
 
   it("guides users without a master resume back to setup", () => {
@@ -62,6 +52,8 @@ describe("AccountTailoringWorkspace", () => {
     expect(html).toContain("Your source comes first");
     expect(html).toContain('href="/dashboard"');
     expect(html).toContain("Go to master résumé");
+    expect(html).toContain('aria-label="Sign out"');
+    expect(html).not.toContain("Workspace navigation");
   });
 
   it("communicates loading and provider failures accessibly", () => {
@@ -92,4 +84,3 @@ describe("AccountTailoringWorkspace", () => {
     expect(html).toContain("Tailor another");
   });
 });
-

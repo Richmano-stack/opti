@@ -56,10 +56,11 @@ describe("MasterResumeWorkspace", () => {
     expect(html).not.toContain("Not saved");
     expect(html).toContain("Last saved at 10:30 AM");
     expect(html).toContain(`${content.length} / 50,000 characters`);
-    expect(html).toContain('aria-label="Document preview"');
+    expect(html).toContain('aria-label="Master résumé source"');
+    expect(html).toContain(content);
+    expect(html).not.toContain("Workspace navigation");
     expect(tailorPosition).toBeGreaterThan(-1);
     expect(editPosition).toBeGreaterThan(tailorPosition);
-    expect(html).not.toContain(content);
     expect(html).not.toContain("<textarea");
     expect(html).not.toContain('role="dialog"');
   });

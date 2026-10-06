@@ -328,3 +328,127 @@ There is one résumé design, shared by the preview and the PDF. It is a single 
 ### References
 
 - ai/project/features/tailored-resume/tickets/TICKET-007-simple-resume-design.md
+
+## DEC-006: Unified Canva-style resume studio for guest and account tailoring
+
+**Date:** 2026-10-05
+**Status:** accepted
+**Deciders:** Product owner
+**Supersedes:** N/A
+**Superseded by:** N/A
+
+### Context
+
+Previously, `/try` (guest) and `/dashboard/generator` (account) had separate page flows. `/try` forced users through a 2-step marketing/form wizard before showing the preview, while `/dashboard/generator` lived in a dashboard shell. Both flows required a unified, editor-like experience reminiscent of Canva (tools on the left, central paper desk canvas, top app header).
+
+### Decision
+
+Unify guest and authenticated tailoring into a single `ResumeStudio` component. The studio delivers:
+1. Direct canvas landing on second 1 (no multi-step wizard screen-flipping).
+2. A top application header with target role label, status, and PDF export.
+3. A left sidebar containing source inputs (guest inputs both master résumé and job description; account recognizes the saved master résumé and requires only the job description). After generation, the sidebar presents match insights (skills pills, core strengths, and potential gaps).
+4. A central paper canvas desk hosting a strictly 1-page ATS ink-on-paper résumé sheet with zoom controls (80%–120%) and copy-to-clipboard.
+
+### Alternatives Considered
+
+| Option | Pros | Cons |
+|--------|------|------|
+| Separate guest and account editor implementations | Isolates auth from guest code | Code duplication, diverging UX and maintenance overhead |
+| Multi-step wizard before editor | Separates data entry from viewing | Feels like a form rather than a creative studio |
+| Multi-page canvas layout | Supports long resumes | Complex page breaks and ATS formatting regressions |
+
+### Consequences
+
+**Positive:**
+
+- Single unified studio codebase powers both `/try` and `/dashboard/generator`
+- Canva-like paper desk gives instant visual grounding and clear MVP focus
+- Strictly 1-page paper constraint ensures clean ATS layout without page break issues
+
+**Negative:**
+
+- Candidates with extensive career history must tailor content to fit the 1-page format
+
+### References
+
+- ai/project/features/tailoring/tickets/TICKET-002-unified-resume-studio.md
+
+## DEC-007: Segmented tabs and stacked preflight buttons in resume studio
+
+**Date:** 2026-10-05
+**Status:** accepted
+**Deciders:** Product owner
+**Supersedes:** N/A
+**Superseded by:** N/A
+
+### Context
+
+Stacking two 30k–50k character textareas in the left studio sidebar forced endless vertical scrolling and double-nested scrollbars. Furthermore, `ContactInformationPreflight` placed two buttons with long text labels side-by-side using `sm:grid-cols-2`, which caused text overlap and collision in narrow sidebar containers (~320px–380px).
+
+### Decision
+
+1. Use segmented tabs in the sidebar (`[ 🎯 Job Description ]  [ 📄 Master Résumé ]`) so only one document textarea is vertically active at a time, with live character count badges and document readiness status. Both inputs remain mounted in the DOM to preserve `FormData` serialization.
+2. In `ContactInformationPreflight`, stack action buttons vertically (`flex flex-col gap-2`) with full-width primary ("Add details and continue") using the official Opti `horizon-primary` brand color (`#b42907` terracotta) and outline secondary ("Continue without them") styles, completely removing the legacy `brand-action` sky-blue gradient. Input focus states align with `horizon-secondary`.
+3. Fix the sidebar width to a comfortable `380px` (laptop) / `400px` (desktop) to ensure ample breathing room for inputs and canvas centering.
+
+### Alternatives Considered
+
+| Option | Pros | Cons |
+|--------|------|------|
+| Accordion expand/collapse for both textareas | Keeps both accessible | Clicking accordions repeatedly adds friction |
+| Modal dialog for contact preflight | Complete visual separation | Disrupts Canva-like canvas flow with popup overlay |
+| Segmented tabs with stacked preflight buttons | Calm layout, zero collisions, zero scroll fatigue | Users switch tabs to review alternate document |
+
+### Consequences
+
+**Positive:**
+
+- Eliminates nested scrollbars and scroll fatigue
+- Eliminates button collision bug permanently
+- Clear document readiness indicators and character counts on tabs
+
+**Negative:**
+
+- User toggles tabs to switch between viewing résumé and job posting text
+
+### References
+
+- ai/project/features/tailoring/tickets/TICKET-003-studio-ux-refinement.md
+
+## DEC-008: Signed-in hub and studio share the try frame
+
+**Date:** 2026-10-06
+**Status:** accepted
+**Deciders:** Product owner
+**Supersedes:** N/A
+**Superseded by:** N/A
+
+### Context
+
+`/try` is a full-screen studio. `/dashboard` and the missing-source state of `/dashboard/generator` still mounted `AuthenticatedAppShell`, with a workspace sidebar and a second header. The signed-in product read as a different app from the guest studio.
+
+### Decision
+
+Both signed-in pages use a full-screen frame. `AccountBar` carries the Opti mark, the page title, optional actions, the user's initials, and sign out. `/dashboard` shows the saved master résumé on the same paper sheet as the studio, with Tailor for a role as the primary action and editing in the existing dialog. `/dashboard/generator` keeps `ResumeStudio`. Its account header adds a link back to the master résumé. A user with no saved source sees that same frame and one action back to the hub. `AuthenticatedAppShell` stays in the codebase and is no longer mounted by these routes.
+
+### Alternatives Considered
+
+| Option | Pros | Cons |
+|--------|------|------|
+| Keep the dashboard shell around the studio | Familiar app navigation | Two headers and a sidebar beside a full-screen editor |
+| Fold the master résumé editor into the studio sidebar | One URL | The source and the tailored draft compete for the same rail |
+
+### Consequences
+
+**Positive:**
+
+- Guest and signed-in tailoring share one studio
+- The hub is a source page in the same visual system
+
+**Negative:**
+
+- Moving between the hub and the studio is a page change, not a sidebar click
+
+### References
+
+- ai/project/features/tailoring/tickets/TICKET-004-aligned-account-pages.md
