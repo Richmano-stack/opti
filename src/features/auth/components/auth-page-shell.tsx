@@ -3,9 +3,11 @@ import Link from "next/link";
 
 import { BrandMark } from "@/components/brand-mark";
 
+type AuthPageVariant = "login" | "signup" | "recover";
+
 type AuthPageShellProps = {
   children: React.ReactNode;
-  variant: "login" | "signup";
+  variant: AuthPageVariant;
 };
 
 const content = {
@@ -14,12 +16,24 @@ const content = {
     title: "Your master resume, ready when you are.",
     description:
       "Sign in to return to the resume you keep in Opti, then tailor from a source you trust.",
+    mobileTitle: "Sign in to Opti",
+    panelLabel: "Sign in",
   },
   signup: {
     eyebrow: "A better starting point",
     title: "Save one master resume.",
     description:
       "Keep your experience in one dependable place. Return to it whenever you’re ready to tailor again—without rebuilding your story from scratch.",
+    mobileTitle: "Create your Opti account",
+    panelLabel: "Create an account",
+  },
+  recover: {
+    eyebrow: "Account access",
+    title: "The link in your email is the way in.",
+    description:
+      "Verification and password reset both arrive as a link. Open it on this device to finish.",
+    mobileTitle: "Recover your Opti account",
+    panelLabel: "Recover account",
   },
 } as const;
 
@@ -58,9 +72,7 @@ export function AuthPageShell({ children, variant }: AuthPageShellProps) {
       </nav>
 
       <div className="grid content-start gap-5 lg:grid-cols-[minmax(0,1.08fr)_minmax(25rem,0.92fr)] lg:items-stretch lg:gap-8">
-        <h1 className="sr-only lg:hidden">
-          {variant === "login" ? "Sign in to Opti" : "Create your Opti account"}
-        </h1>
+        <h1 className="sr-only lg:hidden">{page.mobileTitle}</h1>
 
         <section
           aria-labelledby="auth-context-title"
@@ -91,7 +103,7 @@ export function AuthPageShell({ children, variant }: AuthPageShellProps) {
         </div>
       </section>
 
-      <section aria-label={variant === "login" ? "Sign in" : "Create an account"} className="mx-auto flex h-full w-full max-w-[31rem] flex-col">
+      <section aria-label={page.panelLabel} className="mx-auto flex h-full w-full max-w-[31rem] flex-col">
         {children}
       </section>
       </div>

@@ -452,3 +452,45 @@ Both signed-in pages use a full-screen frame. `AccountBar` carries the Opti mark
 ### References
 
 - ai/project/features/tailoring/tickets/TICKET-004-aligned-account-pages.md
+
+## DEC-009: Verification and password reset use Resend links
+
+**Date:** 2026-10-06
+**Status:** accepted
+**Deciders:** Product owner
+**Supersedes:** N/A
+**Superseded by:** N/A
+
+### Context
+
+Email-and-password accounts were created without confirming the address, and there was no way to set a new password. Better Auth 1.6 already stores verification tokens and can require a verified email before a session. The product needed a sender for those links.
+
+### Decision
+
+Resend sends both messages through `POST https://api.resend.com/emails`, using `RESEND_API_KEY` and `RESEND_FROM`. Sign-up sends a verification link and does not create a session until that link is opened. Sign-in of an unverified account returns forbidden and the sign-in screen can send the verification link again. Forgot password calls Better Auth `requestPasswordReset` with an absolute `redirectTo` of `/reset-password`. The emailed URL is Better Auth's reset callback, which lands on that page with `?token=`. The same confirmation is shown whether or not the email has an account. Passwordless session sign-in is not part of this flow.
+
+### Alternatives Considered
+
+| Option | Pros | Cons |
+|--------|------|------|
+| Better Auth magic-link plugin as the session | No password | Replaces the password accounts already in use |
+| Resend SDK | Typed client | Extra dependency for one POST |
+| Await the Resend call inside the auth handler | Simpler control flow | Response time can reveal whether the address exists |
+
+### Consequences
+
+**Positive:**
+
+- A new account cannot open a session until the address is confirmed
+- A lost password is replaced from the link without a support step
+
+**Negative:**
+
+- Accounts created before this change have `emailVerified` false and must use a verification link before they can sign in
+- Production mail fails until `RESEND_API_KEY` and a verified `RESEND_FROM` are set
+
+### References
+
+- ai/project/features/auth/tickets/TICKET-002-resend-verification-and-reset.md
+- https://www.better-auth.com/docs/authentication/email-password
+- https://resend.com/docs/api-reference/emails/send-email
