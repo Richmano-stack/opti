@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
 import { AccountGeneratorSetupRequired } from "@/features/tailoring/components/account-generator-setup-required";
-import { AccountTailoringWorkspace } from "@/features/tailoring/components/account-tailoring-workspace";
+import { ResumeStudio } from "@/features/tailoring/components/studio/resume-studio";
 import { getServerSession } from "@/server/auth/session";
 import { findMasterResumeByUserId } from "@/features/master-resume/lib";
 
@@ -19,10 +19,10 @@ export default async function AccountGeneratorPage() {
   }
 
   return (
-    <AccountTailoringWorkspace
+    <ResumeStudio
+      mode="account"
       user={session.user}
       masterResumeUpdatedAt={new Date(masterResume.updatedAt).toLocaleTimeString()}
     />
   );
 }
-

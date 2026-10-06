@@ -1,5 +1,5 @@
-import { GuestTailoringWorkspace } from "@/features/tailoring/components/guest/guest-tailoring-workspace";
+import { ResumeStudio } from "@/features/tailoring/components/studio/resume-studio";
 
 export default function GuestTailoringPage() {
-  return <GuestTailoringWorkspace />;
+  return <ResumeStudio mode="guest" />;
 }

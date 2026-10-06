@@ -112,10 +112,9 @@ function LandingFooter() {
 }
 
 export async function LandingPage() {
-  const navbar = LandingNavbar();
   return (
     <div className="horizon-page min-h-screen text-horizon-ink">
-      {navbar}
+      <LandingNavbar />
       <main>
         <HeroSection />
         <div id="benefits" className="scroll-mt-28">

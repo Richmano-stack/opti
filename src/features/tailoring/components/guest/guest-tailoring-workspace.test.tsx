@@ -1,5 +1,13 @@
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+vi.mock("@/features/tailoring/actions/generate-resume", () => ({
+  submitGuestResume: vi.fn(),
+}));
+
+vi.mock("@/features/tailoring/actions/generate-account-resume", () => ({
+  submitAccountResume: vi.fn(),
+}));
 
 import { GuestResumePreview } from "./guest-resume-preview";
 import { GuestTailoringWorkspace } from "./guest-tailoring-workspace";
@@ -27,35 +35,20 @@ const resume = {
 };
 
 describe("guest tailoring components", () => {
-  it("renders the idle guest form and privacy message", () => {
+  it("renders the Canva studio workspace and privacy message for guests", () => {
     const html = renderToStaticMarkup(<GuestTailoringWorkspace />);
 
     expect(html).toContain("Master résumé");
     expect(html).toContain("Job description");
     expect(html).toContain("Tailor my résumé");
     expect(html).toContain("Nothing is saved after this session.");
-    expect(html).toContain("Processed only to generate this result");
-    expect(html).toContain("Private by design");
-    expect(html).toContain("Step 1 of 2");
-    expect(html).toContain("Paste your source material");
-    expect(html).not.toContain("Fill sample");
     expect(html).toContain('aria-label="Opti home"');
-    expect(html).not.toContain("Designed for ATS readability");
-    expect(html).not.toContain("never leaves your browser");
-    expect(html).not.toContain("passes ATS scans");
+    expect(html).toContain('aria-label="Résumé canvas"');
     expect(html).toContain("Your tailored résumé will appear here");
-    expect(html).toContain("Review it here before you download.");
-    expect(html).not.toContain("editable before download");
-    expect(html).toContain("Add both documents to continue.");
-    expect(html).toContain('aria-label="Primary navigation"');
-    expect(html).not.toContain("Opti will tailor your experience to match the role.");
+    expect(html).toContain("Strictly 1-page ATS formatted document");
     expect(html).toContain('placeholder="Paste your complete résumé here"');
     expect(html).toContain('placeholder="Paste the complete job posting here"');
-    expect(html).not.toContain('type="file"');
-    expect(html).toContain("Create your workspace");
-    expect(html).toContain("Guest inputs and generated results are not saved.");
-    expect(html).not.toContain("Master resume");
-    expect(html).not.toContain('href="/dashboard/generator"');
+    expect(html).not.toContain("Fill sample");
   });
 
   it("renders validated resume sections for review", () => {

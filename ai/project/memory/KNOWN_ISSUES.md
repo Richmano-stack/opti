@@ -47,25 +47,7 @@ KNOWN_ISSUES.md tracks **bugs, technical debt, and workarounds** that agents and
 
 ## Open Issues
 
-### ISSUE-<!-- FILL: 001 -->: <!-- FILL: Short title -->
-
-**Severity:** <!-- FILL: critical | high | medium | low -->
-**Status:** <!-- FILL: open | in_progress -->
-**Reported:** <!-- FILL: YYYY-MM-DD -->
-**Affected areas:** <!-- FILL: files, features, or flows -->
-**Ticket:** <!-- FILL: TICKET-xxx or none -->
-
-**Description:**
-
-<!-- FILL: What is wrong? Include steps to reproduce if applicable. -->
-
-**Impact:**
-
-<!-- FILL: What does this break or degrade? Who is affected? -->
-
-**Workaround:**
-
-<!-- FILL: Temporary mitigation. Write "None" if no workaround exists. -->
+*(No open issues)*
 
 ---
 
@@ -90,10 +72,10 @@ KNOWN_ISSUES.md tracks **bugs, technical debt, and workarounds** that agents and
 
 ## Resolved Issues
 
-### ISSUE-<!-- FILL: 000 -->: <!-- FILL: Short title -->
+### ISSUE-001: LandingNavbar called with no arguments crashes in LandingPage
 
-**Resolved:** <!-- FILL: YYYY-MM-DD -->
-**Resolution:** <!-- FILL: How it was fixed. Link to PR/ticket. -->
+**Resolved:** 2026-10-05
+**Resolution:** Added default argument `= {}` to `LandingNavbar({ guest = false, floating = true }: LandingNavbarProps = {})` and converted call site in `LandingPage` to `<LandingNavbar />`. Fixed in `TICKET-003-landing-navbar-default-props.md`.
 ```
 
 ---
