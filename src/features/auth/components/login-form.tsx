@@ -21,11 +21,13 @@ export function LoginForm({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [needsVerification, setNeedsVerification] = useState(false);
 
   const handleSignIn = useCallback(
     async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       setIsSubmitting(true);
+      setNeedsVerification(false);
 
       const { error } = await authClient.signIn.email({
         email,
@@ -36,6 +38,11 @@ export function LoginForm({
       setIsSubmitting(false);
 
       if (error) {
+        if (error.status === 403) {
+          setNeedsVerification(true);
+          toast.error("Verify your email before signing in.");
+          return;
+        }
         toast.error(error.message ?? "Sign in failed");
         return;
       }
@@ -93,6 +100,9 @@ export function LoginForm({
               >
                 Password
               </label>
+              <Link href="/forgot-password" className="text-xs font-bold text-horizon-primary underline-offset-4 hover:underline">
+                Forgot password
+              </Link>
             </div>
             <input
               id="password"
@@ -126,6 +136,29 @@ export function LoginForm({
               )}
             </button>
           </div>
+
+          {needsVerification ? (
+            <button
+              type="button"
+              disabled={isSubmitting}
+              onClick={async () => {
+                setIsSubmitting(true);
+                const { error } = await authClient.sendVerificationEmail({
+                  email,
+                  callbackURL: callbackUrl,
+                });
+                setIsSubmitting(false);
+                if (error) {
+                  toast.error(error.message ?? "The verification email could not be sent.");
+                  return;
+                }
+                toast.success("Verification email sent.");
+              }}
+              className="text-xs font-bold text-horizon-primary underline underline-offset-4 disabled:opacity-55"
+            >
+              Resend verification email
+            </button>
+          ) : null}
 
           <p className="pt-1 text-center text-xs text-horizon-muted">
             Don&apos;t have an account?{" "}

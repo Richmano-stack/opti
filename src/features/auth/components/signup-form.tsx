@@ -24,6 +24,7 @@ export function SignupForm({
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordMismatch, setPasswordMismatch] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [verificationSent, setVerificationSent] = useState(false);
 
   const handleSignUp = useCallback(
     async (event: React.FormEvent<HTMLFormElement>) => {
@@ -51,8 +52,7 @@ export function SignupForm({
         return;
       }
 
-      toast.success("Account created  welcome!");
-      window.location.assign(callbackUrl);
+      setVerificationSent(true);
     },
     [callbackUrl, confirmPassword, email, name, password],
   );
@@ -77,7 +77,35 @@ export function SignupForm({
           </p>
         </div>
 
-        <form onSubmit={handleSignUp} className="flex flex-col gap-5" aria-busy={isSubmitting}>
+        {verificationSent ? (
+          <div className="flex flex-col gap-4" role="status">
+            <h3 className="text-lg font-bold text-horizon-ink">Check your email</h3>
+            <p className="text-sm leading-6 text-horizon-muted">
+              We sent a verification link to {email}. Open it to finish creating your account.
+            </p>
+            <button
+              type="button"
+              disabled={isSubmitting}
+              onClick={async () => {
+                setIsSubmitting(true);
+                const { error } = await authClient.sendVerificationEmail({
+                  email,
+                  callbackURL: callbackUrl,
+                });
+                setIsSubmitting(false);
+                if (error) {
+                  toast.error(error.message ?? "The verification email could not be sent.");
+                  return;
+                }
+                toast.success("Verification email sent.");
+              }}
+              className="inline-flex h-12 w-full items-center justify-center rounded-full border border-white/80 bg-white/70 text-sm font-bold text-horizon-ink hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-secondary disabled:opacity-55"
+            >
+              {isSubmitting ? "Sending…" : "Resend verification email"}
+            </button>
+          </div>
+        ) : null}
+        <form onSubmit={handleSignUp} className={verificationSent ? "hidden" : "flex flex-col gap-5"} aria-busy={isSubmitting}>
           <div className="grid gap-5 sm:grid-cols-2 sm:gap-4">
             <div>
               <label htmlFor="name" className="mb-2 block text-xs font-bold text-horizon-ink">
