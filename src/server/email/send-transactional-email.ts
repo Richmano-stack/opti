@@ -42,8 +42,8 @@ export function authLinkEmail(input: {
 
 export async function sendTransactionalEmail(input: TransactionalEmail): Promise<void> {
   const env = emailEnvSchema.parse({
-    RESEND_API_KEY: process.env.RESEND_API_KEY,
-    RESEND_FROM: process.env.RESEND_FROM,
+    RESEND_API_KEY: process.env.RESEND_API_KEY?.trim(),
+    RESEND_FROM: process.env.RESEND_FROM?.trim(),
   });
 
   const response = await fetch("https://api.resend.com/emails", {

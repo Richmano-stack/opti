@@ -64,6 +64,30 @@ describe("sendTransactionalEmail", () => {
     expect(body.subject).toBe("Verify your Opti email");
   });
 
+  it("trims a trailing newline from the Resend key and from address", async () => {
+    process.env.RESEND_API_KEY = "re_test_key\n";
+    process.env.RESEND_FROM = "Opti <mail@opti.example>\r\n";
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => ({ id: "email_123" }),
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    await sendTransactionalEmail({
+      to: "person@example.com",
+      subject: "Verify",
+      text: "text",
+      html: "<p>html</p>",
+    });
+
+    const init = fetchMock.mock.calls[0]?.[1] as RequestInit;
+    const headers = new Headers(init.headers);
+    expect(headers.get("authorization")).toBe("Bearer re_test_key");
+    const body = JSON.parse(String(init.body)) as { from: string };
+    expect(body.from).toBe("Opti <mail@opti.example>");
+  });
+
   it("rejects a failed send without logging the API key", async () => {
     process.env.RESEND_API_KEY = "re_secret_key";
     process.env.RESEND_FROM = "Opti <mail@opti.example>";

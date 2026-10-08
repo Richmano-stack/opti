@@ -40,14 +40,22 @@ function message(input: AuthEmail) {
   };
 }
 
+function failureDetails(error: unknown): { name: string; message: string; cause?: string } {
+  if (!(error instanceof Error)) return { name: "UnknownError", message: "Unknown" };
+  const cause = error.cause;
+  const causeCode =
+    cause && typeof cause === "object" && "code" in cause && typeof cause.code === "string" ? cause.code : undefined;
+  return { name: error.name, message: error.message, ...(causeCode ? { cause: causeCode } : {}) };
+}
+
 export function scheduleAuthEmail(input: AuthEmail): void {
   const email = message(input);
-  after(() => {
-    sendTransactionalEmail({ to: input.to, ...email }).catch((error: unknown) => {
-      console.error("[email] Failed to send auth email", {
-        kind: input.kind,
-        name: error instanceof Error ? error.name : "UnknownError",
-      });
-    });
+  after(async () => {
+    try {
+      await sendTransactionalEmail({ to: input.to, ...email });
+      console.info("[email] Auth email accepted", { kind: input.kind });
+    } catch (error: unknown) {
+      console.error("[email] Failed to send auth email", { kind: input.kind, ...failureDetails(error) });
+    }
   });
 }
