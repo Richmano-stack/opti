@@ -62,9 +62,12 @@ describe("ResumeStudio", () => {
     expect(html).not.toContain('aria-label="Sign out"');
     expect(html).toContain('aria-label="Résumé canvas"');
     expect(html).toContain("Your tailored résumé will appear here");
-    expect(html).toContain("Strictly 1-page ATS formatted document");
+    expect(html).toContain("ATS-friendly Letter layout");
     expect(html).toContain("Zoom");
     expect(html).toContain("100%");
+    expect(html).toContain('aria-label="Template"');
+    expect(html).toContain("Minimal");
+    expect(html).toContain("Modern");
   });
 
   it("renders the Canva-style studio workspace for authenticated users with saved master résumé", () => {
@@ -80,7 +83,7 @@ describe("ResumeStudio", () => {
     expect(html).not.toContain('name="resume"');
     expect(html).toContain("Job descriptions and generated résumés are not saved.");
     expect(html).toContain('aria-label="Résumé canvas"');
-    expect(html).toContain("Strictly 1-page ATS formatted document");
+    expect(html).toContain("ATS-friendly Letter layout");
     expect(html).toContain("Master résumé");
     expect(html).toContain('aria-label="Sign out"');
     expect(html).toContain("TU");
@@ -90,14 +93,21 @@ describe("ResumeStudio", () => {
 
   it("renders completed tailored résumé with zoom toolbar on the paper canvas", () => {
     const html = renderToStaticMarkup(
-      <ResumeStudioCanvas resume={mockResume} isPending={false} isReady={true} />,
+      <ResumeStudioCanvas
+        resume={mockResume}
+        isPending={false}
+        isReady={true}
+        templateId="minimal"
+        onTemplateChange={() => undefined}
+      />,
     );
 
     expect(html).toContain("Taylor Doe");
     expect(html).toContain("Senior Full Stack Engineer");
     expect(html).toContain("Senior Software Engineer");
     expect(html).toContain("Acme Corp");
-    expect(html).toContain("TypeScript · Next.js · Tailwind CSS");
+    expect(html).toContain("TypeScript, Next.js, Tailwind CSS");
+    expect(html).toContain('aria-checked="true"');
     expect(html).toContain("Copy text");
     expect(html).toContain("Refine with AI");
     expect(html).toContain("100%");

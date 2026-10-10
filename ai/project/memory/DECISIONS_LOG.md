@@ -297,7 +297,7 @@ Gemini, Groq, and OpenRouter can each fail independently through rate limits, ti
 **Status:** accepted
 **Deciders:** Product owner
 **Supersedes:** N/A
-**Superseded by:** N/A
+**Superseded by:** DEC-010 (PDF rendering only)
 
 ### Context
 
@@ -494,3 +494,130 @@ Resend sends both messages through `POST https://api.resend.com/emails`, using `
 - ai/project/features/auth/tickets/TICKET-002-resend-verification-and-reset.md
 - https://www.better-auth.com/docs/authentication/email-password
 - https://resend.com/docs/api-reference/emails/send-email
+
+## DEC-010: The HTML template is the PDF
+
+**Date:** 2026-10-09
+**Status:** accepted
+**Deciders:** Product owner
+**Supersedes:** DEC-005 (PDF rendering only)
+**Superseded by:** N/A
+
+### Context
+
+The studio paper is a Tailwind template from the registry. The download was a separate `@react-pdf/renderer` document, so Modern on screen was two columns and the file was a single column with a colored header. That library cannot use the template's CSS. The résumé is already limited to one Letter page.
+
+### Decision
+
+The registry template is the only layout. Download POSTs the résumé and template id to `/api/resume-pdf`. The route stores them under a random token in process memory for 30 seconds, opens `/print/resume?token=…` in headless Chromium, and returns `page.pdf()` for a Letter page with backgrounds and no margin. The browser saves that blob with the existing filename helper. Callers that omit a template id download Minimal. `@react-pdf/renderer` is removed once that file matches the studio paper.
+
+### Alternatives Considered
+
+| Option | Pros | Cons |
+|--------|------|------|
+| Preview the react-pdf blob in the studio | Screen and file are the same bytes | Design stays inside the react-pdf flex subset |
+| Rasterize the HTML in the browser | No server browser | Text is not selectable, which breaks an ATS read |
+| Keep both layout engines | No new runtime | The two pages drift again |
+
+### Consequences
+
+**Positive:**
+
+- A new template is drawn once, in the registry component
+- The downloaded text stays selectable
+
+**Negative:**
+
+- The Node server that runs `next start` must be able to launch Chromium
+- The token map is local to one process
+- Georgia and Segoe UI may be missing on Linux, so the file can use fallback fonts
+- Content past 11 inches is clipped
+
+### References
+
+- ai/project/features/tailoring/tickets/TICKET-007-html-resume-pdf.md
+- ai/project/features/tailoring/PLAN-html-pdf.md
+
+---
+
+## DEC-011: The studio shows the Letter sheet the PDF prints
+
+**Date:** 2026-10-09
+**Status:** accepted
+**Deciders:** Product owner
+**Supersedes:** N/A
+**Superseded by:** N/A
+
+### Context
+
+The registry template is the only résumé layout (DEC-010). The studio still drew that template at its natural height, and the PDF then shrank the sheet to fit one Letter page. The type on screen was larger than the file. A per-template font tweak would drift again as soon as another template was added.
+
+### Decision
+
+Preview and download both render the template inside `ResumeSheet`. That sheet is a fixed Letter page. It measures the template once, applies `resumeFitScale`, and centers the result. Chromium waits until that fit has finished, then prints the page at scale 1. The canvas zoom control scales the finished page visually and does not change the layout. Templates take their column and type size from the sheet container, not from the browser window.
+
+### Alternatives Considered
+
+| Option | Pros | Cons |
+|--------|------|------|
+| Shrink only the current template's type | Matches this one file | The next template repeats the mismatch |
+| Leave the preview unscaled and stop fitting the PDF | Screen type stays large | Long résumés spill off the Letter page |
+| Screenshot the preview | Bytes match the screen | The PDF text is no longer selectable |
+
+### Consequences
+
+**Positive:**
+
+- A new registry template is shown and downloaded from the same sheet
+- The type size on screen is the type size in the file
+
+**Negative:**
+
+- A résumé taller than Letter is drawn smaller on screen as well as in the file, so the whole page stays visible
+- Georgia and Segoe UI may still be missing on Linux, so a server without those fonts can differ from the designer's screen
+
+### References
+
+- src/templates/resume-sheet.tsx
+- src/templates/letter-page.ts
+
+---
+
+## DEC-012: A résumé may continue onto the next Letter page
+
+**Date:** 2026-10-09
+**Status:** accepted
+**Deciders:** Product owner
+**Supersedes:** DEC-011 (fit-to-one-page scaling only)
+**Superseded by:** N/A
+
+### Context
+
+DEC-011 put the preview and the PDF on one shared Letter sheet, then shrank that sheet until it fit on a single page. The type on screen and in the file matched, and both were smaller than the template's real size. The product owner accepts more than one page.
+
+### Decision
+
+The shared sheet keeps the template's real type size and the Letter width. It does not scale down. Chromium paginates the same sheet onto as many Letter pages as the content needs. The studio shows that full-size sheet. Jobs, education entries, and list lines stay together across a page break.
+
+### Alternatives Considered
+
+| Option | Pros | Cons |
+|--------|------|------|
+| Keep shrinking to one page | Every file is a single page | The type is smaller than the template |
+| Clip anything past 11 inches | One page, full type | The rest of the résumé is missing |
+
+### Consequences
+
+**Positive:**
+
+- Preview and download keep the template's type size
+- A long résumé stays complete
+
+**Negative:**
+
+- Some downloads are more than one page
+- A page break can still fall between sections
+
+### References
+
+- src/templates/resume-sheet.tsx
