@@ -9,6 +9,7 @@ import { ResumeStudioHeader } from "./resume-studio-header";
 import { ResumeStudioSidebar } from "./resume-studio-sidebar";
 import type { DevSampleInput } from "@/features/devtools/lib/sample-inputs";
 import type { AuthUser } from "@/server/auth/types";
+import type { TemplateId } from "@/templates/registry";
 
 export type ResumeStudioProps =
   | {
@@ -25,6 +26,7 @@ function GuestStudio() {
   const [resumeText, setResumeText] = useState("");
   const [jobDescription, setJobDescription] = useState("");
   const [editingSources, setEditingSources] = useState(false);
+  const [templateId, setTemplateId] = useState<TemplateId>("minimal");
   const headingRef = useRef<HTMLHeadingElement>(null);
 
   const isReady = Boolean(resumeText.trim() && jobDescription.trim());
@@ -56,6 +58,7 @@ function GuestStudio() {
           isReady={isReady}
           headingRef={headingRef}
           mode="guest"
+          templateId={templateId}
         />
         <div className="flex min-h-0 flex-1 flex-col overflow-hidden md:flex-row">
           <ResumeStudioSidebar
@@ -77,6 +80,8 @@ function GuestStudio() {
             resume={resume}
             isPending={isPending}
             isReady={isReady}
+            templateId={templateId}
+            onTemplateChange={setTemplateId}
           />
         </div>
       </form>
@@ -94,6 +99,7 @@ function AccountStudio({
   const [state, formAction, isPending] = useActionState(submitAccountResume, { status: "idle" });
   const [jobDescription, setJobDescription] = useState("");
   const [editingSources, setEditingSources] = useState(false);
+  const [templateId, setTemplateId] = useState<TemplateId>("minimal");
   const headingRef = useRef<HTMLHeadingElement>(null);
 
   const isReady = Boolean(jobDescription.trim());
@@ -125,6 +131,7 @@ function AccountStudio({
           headingRef={headingRef}
           mode="account"
           user={user}
+          templateId={templateId}
         />
         <div className="flex min-h-0 flex-1 flex-col overflow-hidden md:flex-row">
           <ResumeStudioSidebar
@@ -147,6 +154,8 @@ function AccountStudio({
             resume={resume}
             isPending={isPending}
             isReady={isReady}
+            templateId={templateId}
+            onTemplateChange={setTemplateId}
           />
         </div>
       </form>

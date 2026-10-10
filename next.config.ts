@@ -17,6 +17,7 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   agentRules: false,
   devIndicators: false,
+  serverExternalPackages: ["playwright"],
   async headers() {
     return [
       {
