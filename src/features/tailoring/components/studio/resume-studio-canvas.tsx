@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { Check, Copy, FileText, LoaderCircle, Minus, Plus, Sparkles } from "lucide-react";
 
-import { GuestResumePreview } from "@/features/tailoring/components/guest/guest-resume-preview";
 import type { OptimizedResume } from "@/features/tailoring/lib/types";
+import { LETTER_WIDTH_PX } from "@/templates/letter-page";
+import { getTemplate, listTemplates, type TemplateId } from "@/templates/registry";
+import { ResumeSheet } from "@/templates/resume-sheet";
 
 const zoomSteps = [80, 90, 100, 110, 120] as const;
 
@@ -57,14 +59,33 @@ export function ResumeStudioCanvas({
   resume,
   isPending,
   isReady,
+  templateId,
+  onTemplateChange,
 }: {
   resume?: OptimizedResume;
   isPending: boolean;
   isReady: boolean;
+  templateId: TemplateId;
+  onTemplateChange: (templateId: TemplateId) => void;
 }) {
   const [zoom, setZoom] = useState<(typeof zoomSteps)[number]>(100);
   const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle");
+  const [sheetHeight, setSheetHeight] = useState(0);
+  const sheetFrameRef = useRef<HTMLDivElement>(null);
   const zoomIndex = zoomSteps.indexOf(zoom);
+  const templates = listTemplates();
+  const SelectedTemplate = getTemplate(templateId).Component;
+
+  useLayoutEffect(() => {
+    const frame = sheetFrameRef.current;
+    const page = frame?.querySelector("[data-resume-page]");
+    if (!(page instanceof HTMLElement)) return;
+    const measure = () => setSheetHeight(page.offsetHeight);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(page);
+    return () => observer.disconnect();
+  }, [resume, templateId]);
 
   const handleCopy = async () => {
     if (!resume) return;
@@ -84,7 +105,7 @@ export function ResumeStudioCanvas({
       <div className="flex min-h-0 flex-1 items-start justify-center overflow-y-auto p-4 sm:p-8">
         <div className="flex w-full max-w-[816px] flex-col items-center">
           {/* Floating Canvas Toolbar */}
-          <div className="sticky top-0 z-10 mb-4 inline-flex items-center gap-1 rounded-full border border-slate-200/80 bg-white px-1.5 py-1 shadow-sm">
+          <div className="sticky top-0 z-10 mb-4 inline-flex max-w-full flex-wrap items-center justify-center gap-1 rounded-full border border-slate-200/80 bg-white px-1.5 py-1 shadow-sm">
             <div className="inline-flex items-center" role="group" aria-label="Zoom">
               <button
                 type="button"
@@ -105,6 +126,30 @@ export function ResumeStudioCanvas({
               >
                 <Plus aria-hidden className="size-3.5" />
               </button>
+            </div>
+
+            <span aria-hidden className="h-4 w-px bg-slate-200" />
+
+            <div role="radiogroup" aria-label="Template" className="inline-flex items-center">
+              {templates.map((template) => {
+                const selected = template.id === templateId;
+                return (
+                  <button
+                    key={template.id}
+                    type="button"
+                    role="radio"
+                    aria-checked={selected}
+                    onClick={() => onTemplateChange(template.id)}
+                    className={
+                      selected
+                        ? "inline-flex h-8 items-center rounded-full bg-horizon-primary px-2.5 text-xs font-semibold text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-secondary"
+                        : "inline-flex h-8 items-center rounded-full px-2.5 text-xs font-medium text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-secondary"
+                    }
+                  >
+                    {template.name}
+                  </button>
+                );
+              })}
             </div>
 
             <span aria-hidden className="h-4 w-px bg-slate-200" />
@@ -146,13 +191,31 @@ export function ResumeStudioCanvas({
             </p>
           ) : null}
 
-          {/* Paper Sheet Stage (Strictly 1 Page ATS Layout) */}
-          <div className="w-full transition-transform duration-150" style={{ zoom: zoom / 100 }}>
+          <div
+            className="transition-transform duration-150"
+            style={
+              resume
+                ? {
+                    width: LETTER_WIDTH_PX * (zoom / 100),
+                    height: Math.max(sheetHeight, 1) * (zoom / 100),
+                  }
+                : { width: "100%" }
+            }
+          >
             {resume ? (
-              <GuestResumePreview
-                resume={resume}
-                className="rounded-sm border border-slate-200/80 shadow-md shadow-slate-300/50"
-              />
+              <div
+                ref={sheetFrameRef}
+                className="shadow-md shadow-slate-300/50"
+                style={{
+                  width: LETTER_WIDTH_PX,
+                  transform: `scale(${zoom / 100})`,
+                  transformOrigin: "top left",
+                }}
+              >
+                <ResumeSheet fitKey={`${templateId}:${JSON.stringify(resume)}`}>
+                  <SelectedTemplate resume={resume} />
+                </ResumeSheet>
+              </div>
             ) : isPending ? (
               <div
                 role="status"
@@ -198,7 +261,7 @@ export function ResumeStudioCanvas({
                 </div>
 
                 <div className="border-t border-slate-100 pt-6 text-center text-xs text-slate-400">
-                  Strictly 1-page ATS formatted document
+                  ATS-friendly Letter layout
                 </div>
               </div>
             ) : (
@@ -247,13 +310,13 @@ export function ResumeStudioCanvas({
                       Your tailored résumé will appear here
                     </h2>
                     <p className="mt-2 text-xs leading-5 text-slate-600">
-                      Paste the job description on the left and tailor your résumé to see your 1-page ATS-optimized document rendered right here.
+                      Paste the job description on the left and tailor your résumé to see the Letter pages that download.
                     </p>
                   </div>
                 </div>
 
                 <div className="border-t border-slate-100 pt-4 text-center text-xs text-slate-400">
-                  Strictly 1-page ATS formatted document
+                  ATS-friendly Letter layout
                 </div>
               </div>
             )}

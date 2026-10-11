@@ -6,12 +6,11 @@ import { ArrowLeft, Download, LoaderCircle, Sparkles } from "lucide-react";
 
 import { AccountBar } from "@/components/horizon/account-bar";
 import { BrandMark } from "@/components/brand-mark";
+import { readJobTarget } from "@/features/tailoring/lib/read-job-target";
 import { downloadOptimizedResumePdf } from "@/features/tailoring/pdf/download-resume-pdf";
-import { readJobTarget } from "@/features/tailoring/components/guest/source-summary-card";
 import type { OptimizedResume } from "@/features/tailoring/lib/types";
 import type { AuthUser } from "@/server/auth/types";
-
-export { readJobTarget };
+import type { TemplateId } from "@/templates/registry";
 
 export function ResumeStudioHeader({
   resume,
@@ -21,6 +20,7 @@ export function ResumeStudioHeader({
   headingRef,
   mode,
   user,
+  templateId = "minimal",
 }: {
   resume?: OptimizedResume;
   jobDescription: string;
@@ -29,6 +29,7 @@ export function ResumeStudioHeader({
   headingRef: RefObject<HTMLHeadingElement | null>;
   mode: "guest" | "account";
   user?: AuthUser;
+  templateId?: TemplateId;
 }) {
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadError, setDownloadError] = useState<string | null>(null);
@@ -45,9 +46,11 @@ export function ResumeStudioHeader({
     setDownloadError(null);
     setIsDownloading(true);
     try {
-      await downloadOptimizedResumePdf(resume);
-    } catch {
-      setDownloadError("Your PDF could not be created. Please try again.");
+      await downloadOptimizedResumePdf(resume, undefined, templateId);
+    } catch (error: unknown) {
+      setDownloadError(
+        error instanceof Error ? error.message : "Your PDF could not be created. Please try again.",
+      );
     } finally {
       setIsDownloading(false);
     }

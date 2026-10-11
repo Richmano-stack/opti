@@ -18,7 +18,7 @@ import { DevSampleFill } from "@/features/devtools/components/dev-sample-fill";
 import type { DevSampleInput } from "@/features/devtools/lib/sample-inputs";
 import { ContactInformationPreflight } from "@/features/tailoring/components/contact-information-preflight";
 import { cn } from "@/lib/utils";
-import { readJobTarget } from "./resume-studio-header";
+import { readJobTarget } from "@/features/tailoring/lib/read-job-target";
 import type { ContactField } from "@/features/tailoring/lib/contact-info";
 import type { OptimizedResume } from "@/features/tailoring/lib/types";
 
