@@ -10,7 +10,7 @@ Sign in. Default destination is the template store.
 ## In
 
 - Email and password sign-in.
-- Optional `callbackUrl`. When none is set, go to `/dashboard/templates`.
+- Optional `callbackUrl`. When none is set, go to `/dashboard/generator`.
 
 ## Out
 

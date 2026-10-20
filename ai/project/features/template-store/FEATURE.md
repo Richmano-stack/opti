@@ -5,16 +5,16 @@
 
 ## Job
 
-Logged-in home. Browse layouts like a store, pick one, continue. Open even with no master résumé.
+Placeholder until templates ship. Tells signed-in users that templates are coming soon and points them to the tailor studio.
 
 ## In
 
-- Signed-in browsing of templates.
-- Choose a layout, then continue into the account studio with that template.
-- Default post-login destination.
+- A signed-in "Templates are coming soon" notice.
+- A link to `/dashboard/generator`.
 
 ## Out
 
+- Browsing or choosing templates. The gallery component (`template-gallery.tsx`) stays in the codebase, unused, for when templates ship.
+- Being the post-login destination. That is now `/dashboard/generator`.
 - Job description or generation.
-- Blocking the page until a master résumé exists.
 - Guest access.

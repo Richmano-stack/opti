@@ -1,5 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { authClient } from "@/server/auth/client";
-export function AccountSignOutButton() { const router = useRouter(); return <button type="button" onClick={async () => { await authClient.signOut(); router.push("/"); router.refresh(); }} className="horizon-button-ghost h-10 px-4 text-xs"><LogOut aria-hidden className="size-3.5" /> Sign out</button>; }
+export function AccountSignOutButton() { const router = useRouter(); return <Button type="button" variant="outline" size="lg" onClick={async () => { await authClient.signOut(); router.push("/"); router.refresh(); }}><LogOut aria-hidden data-icon="inline-start" /> Sign out</Button>; }

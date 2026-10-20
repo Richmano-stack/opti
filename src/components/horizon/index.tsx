@@ -1,18 +1,20 @@
 import { forwardRef } from "react";
 import type { ButtonHTMLAttributes, HTMLAttributes, InputHTMLAttributes, TextareaHTMLAttributes } from "react";
 
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 type ButtonTone = "primary" | "secondary" | "quiet" | "danger";
 
-export const HorizonButton = forwardRef<HTMLButtonElement, ButtonHTMLAttributes<HTMLButtonElement> & { tone?: ButtonTone }>(function HorizonButton({ className, tone = "primary", ...props }, ref) {
-  const tones: Record<ButtonTone, string> = {
-    primary: "bg-horizon-primary text-white hover:bg-horizon-primary-hover",
-    secondary: "border border-horizon-outline/20 bg-white text-horizon-ink hover:bg-horizon-canvas",
-    quiet: "text-horizon-muted hover:bg-horizon-primary/8 hover:text-horizon-ink",
-    danger: "bg-red-700 text-white hover:bg-red-800",
-  };
-  return <button ref={ref} className={cn("inline-flex min-h-11 items-center justify-center gap-2 rounded-[var(--horizon-radius-control)] px-4 text-sm font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-secondary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50", tones[tone], className)} {...props} />;
+const toneVariant = {
+  primary: "default",
+  secondary: "outline",
+  quiet: "ghost",
+  danger: "destructive",
+} as const satisfies Record<ButtonTone, string>;
+
+export const HorizonButton = forwardRef<HTMLButtonElement, ButtonHTMLAttributes<HTMLButtonElement> & { tone?: ButtonTone }>(function HorizonButton({ tone = "primary", ...props }, ref) {
+  return <Button ref={ref} variant={toneVariant[tone]} size="lg" {...props} />;
 });
 
 export function HorizonSurface({ className, ...props }: HTMLAttributes<HTMLDivElement>) {

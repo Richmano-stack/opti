@@ -95,7 +95,7 @@ export function MasterResumeWorkspace({ user, initialContent = "", initialUpdate
       title="Master résumé"
       actions={
         isSetup ? (
-          <Link href="/dashboard/templates" className={buttonVariants()}>
+          <Link href="/dashboard/generator" className={buttonVariants()}>
             Tailor for a role <ArrowRight aria-hidden="true" data-icon="inline-end" />
           </Link>
         ) : null

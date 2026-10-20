@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import type { OptimizedResume } from "@/features/tailoring/lib/types";
 import { ResumeStudio } from "./resume-studio";
-import { ResumeStudioCanvas, resumeToPlainText } from "./resume-studio-canvas";
+import { ResumeStudioCanvas } from "./resume-studio-canvas";
 import { ResumeStudioHeader } from "./resume-studio-header";
 
 vi.mock("@/features/tailoring/actions/generate-resume", () => ({
@@ -65,9 +65,9 @@ describe("ResumeStudio", () => {
     expect(html).toContain("ATS-friendly Letter layout");
     expect(html).toContain("Zoom");
     expect(html).toContain("100%");
-    expect(html).toContain('aria-label="Template"');
-    expect(html).toContain("Minimal");
-    expect(html).toContain("Modern");
+    expect(html).toContain("Fit width");
+    expect(html).not.toContain('aria-label="Template"');
+    expect(html).not.toContain("Copy text");
   });
 
   it("renders the Canva-style studio workspace for authenticated users with saved master résumé", () => {
@@ -89,7 +89,7 @@ describe("ResumeStudio", () => {
     expect(html).not.toContain("Sign in");
   });
 
-  it("puts the account studio heading and actions in the single shell header", () => {
+  it("keeps one header with the role, the download on the canvas, and one Tailor button inside the form", () => {
     const user = { id: "u-1", email: "test@example.com", name: "Test User" };
     const html = renderToStaticMarkup(<ResumeStudio mode="account" user={user} />);
 
@@ -97,33 +97,30 @@ describe("ResumeStudio", () => {
     expect(html.match(/<header/g)).toHaveLength(1);
     expect(header).toContain('id="studio-target-heading"');
     expect(header).toContain("New tailored résumé");
-    expect(header).toContain("Studio Ready");
-    expect(header).toContain("Download PDF");
+    expect(header).not.toContain("Download PDF");
+    expect(header).not.toContain("Tailor my résumé");
 
-    const formId = html.match(/<form[^>]*id="([^"]+)"/)?.[1];
-    expect(formId).toBeTruthy();
-    expect(header).toMatch(new RegExp(`<button[^>]*form="${formId}"[^>]*aria-label="Tailor my résumé"|<button[^>]*aria-label="Tailor my résumé"[^>]*form="${formId}"`));
+    const canvas = html.match(/<section[^>]*aria-label="Résumé canvas"[\s\S]*?<\/section>/)?.[0] ?? "";
+    expect(canvas).toContain('aria-label="Download PDF"');
+
+    const form = html.match(/<form[\s\S]*<\/form>/)?.[0] ?? "";
+    expect(html.match(/Tailor my résumé/g)).toHaveLength(1);
+    expect(form).toMatch(/<button[^>]*type="submit"[^>]*>[\s\S]*?Tailor my résumé/);
+    expect(html).not.toContain("Tailor with AI");
   });
 
-  it("opens the account studio on the template chosen before tailoring", () => {
+  it("disables the Match tab until a tailored résumé exists", () => {
     const user = { id: "u-1", email: "test@example.com", name: "Test User" };
-    const html = renderToStaticMarkup(
-      <ResumeStudio mode="account" user={user} initialTemplateId="modern" />,
-    );
+    const html = renderToStaticMarkup(<ResumeStudio mode="account" user={user} />);
 
-    expect(html).toMatch(/aria-checked="true"[^>]*>\s*Modern/);
-    expect(html).toMatch(/aria-checked="false"[^>]*>\s*Minimal/);
+    expect(html).toContain('aria-label="Studio panels"');
+    expect(html).toMatch(/<button[^>]*role="tab"[^>]*(aria-disabled="true"|disabled="")[^>]*>Match<|<button[^>]*(aria-disabled="true"|disabled="")[^>]*role="tab"[^>]*>Match</);
+    expect(html).toContain("Using your saved master résumé");
   });
 
   it("renders completed tailored résumé with zoom toolbar on the paper canvas", () => {
     const html = renderToStaticMarkup(
-      <ResumeStudioCanvas
-        resume={mockResume}
-        isPending={false}
-        isReady={true}
-        templateId="minimal"
-        onTemplateChange={() => undefined}
-      />,
+      <ResumeStudioCanvas resume={mockResume} isPending={false} templateId="minimal" />,
     );
 
     expect(html).toContain("Taylor Doe");
@@ -131,50 +128,40 @@ describe("ResumeStudio", () => {
     expect(html).toContain("Senior Software Engineer");
     expect(html).toContain("Acme Corp");
     expect(html).toContain("TypeScript, Next.js, Tailwind CSS");
-    expect(html).toContain('aria-checked="true"');
-    expect(html).toContain("Copy text");
-    expect(html).toContain("Refine with AI");
+    expect(html).not.toContain("Refine with AI");
     expect(html).toContain("100%");
   });
 
-  it("exports formatted plain text from resumeToPlainText", () => {
-    const text = resumeToPlainText(mockResume);
-
-    expect(text).toContain("Taylor Doe");
-    expect(text).toContain("Professional summary");
-    expect(text).toContain("Senior Full Stack Engineer with cloud architecture experience.");
-    expect(text).toContain("Experience");
-    expect(text).toContain("Acme Corp");
-    expect(text).toContain("• Architected accessible customer-facing applications.");
-    expect(text).toContain("Skills\nTypeScript · Next.js · Tailwind CSS");
-  });
-
-  it("displays detected role and draft status on the studio header", () => {
+  it("displays the detected role on the guest studio header without the download", () => {
     const ref = { current: null };
     const html = renderToStaticMarkup(
-      <ResumeStudioHeader
-        resume={mockResume}
-        jobDescription={"Title: Staff Engineer\nCompany: Stripe\n"}
-        isPending={false}
-        isReady={true}
-        headingRef={ref}
-      />,
+      <ResumeStudioHeader jobDescription={"Title: Staff Engineer\nCompany: Stripe\n"} headingRef={ref} />,
     );
 
     expect(html).toContain("Staff Engineer (Stripe)");
-    expect(html).toContain("Draft Ready");
-    expect(html).toContain("Download PDF");
-    expect(html).toContain("Refine with AI");
+    expect(html).not.toContain("Download PDF");
+    expect(html).not.toContain("Refine with AI");
   });
 
-  it("renders segmented tabs for switching between Job description and Master résumé", () => {
+  it("puts the guest download on the canvas", () => {
+    const html = renderToStaticMarkup(<ResumeStudio mode="guest" />);
+
+    const header = html.match(/<header[\s\S]*?<\/header>/)?.[0] ?? "";
+    const canvas = html.match(/<section[^>]*aria-label="Résumé canvas"[\s\S]*?<\/section>/)?.[0] ?? "";
+    expect(header).not.toContain("Download PDF");
+    expect(canvas).toContain('aria-label="Download PDF"');
+  });
+
+  it("renders Job, Résumé and Match tabs for guests with both inputs kept in the form", () => {
     const html = renderToStaticMarkup(<ResumeStudio mode="guest" />);
 
     expect(html).toContain('role="tablist"');
-    expect(html).toContain('aria-label="Source documents"');
-    expect(html).toContain('role="tab"');
-    expect(html).toContain("Job description");
-    expect(html).toContain("Master résumé");
+    expect(html).toContain('aria-label="Studio panels"');
+    expect(html).toContain(">Job<");
+    expect(html).toContain(">Résumé<");
+    expect(html).toContain(">Match<");
+    expect(html).toContain('name="jobDescription"');
+    expect(html).toContain('name="resume"');
   });
 
   it("renders contact preflight with vertically stacked action buttons to prevent collision", async () => {
@@ -189,8 +176,6 @@ describe("ResumeStudio", () => {
         isPending={false}
         isReady={true}
         missingFields={["linkedin", "portfolio"]}
-        editingSources={false}
-        onToggleEditingSources={() => undefined}
         onFillSample={() => undefined}
       />,
     );

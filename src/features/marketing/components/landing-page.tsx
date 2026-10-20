@@ -3,6 +3,7 @@ import { ArrowRight, CheckCircle2, ShieldCheck } from "lucide-react";
 
 import { BenefitsSection } from "./benefits-section";
 import { BrandMark } from "@/components/brand-mark";
+import { buttonVariants } from "@/components/ui/button";
 import { HeroSection } from "./hero-section";
 import { HowItWorksSection } from "./how-it-works-section";
 import { LandingNavbar } from "./landing-navbar";
@@ -47,8 +48,8 @@ function FinalCta() {
           <span className="horizon-eyebrow">Your next application</span>
           <h2 className="mt-6 text-3xl font-bold leading-tight tracking-[-0.035em] text-horizon-ink sm:text-5xl">Let the role change—not your whole workflow.</h2>
           <p className="mx-auto mt-5 max-w-xl text-base leading-7 text-horizon-muted">Try the complete tailoring flow without creating an account.</p>
-          <Link href="/try" className="horizon-button-primary mt-8 h-13 px-8 text-sm">
-            Try Opti free <ArrowRight className="size-4" aria-hidden="true" />
+          <Link href="/try" className={buttonVariants({ size: "lg", className: "mt-8 h-11 px-6" })}>
+            Try Opti free <ArrowRight aria-hidden="true" data-icon="inline-end" />
           </Link>
         </div>
       </Reveal>
@@ -68,9 +69,9 @@ function LandingFooter() {
           </div>
           <Link
             href="/try"
-            className="horizon-button-primary h-12 shrink-0 bg-white px-6 text-sm !text-horizon-ink transition-transform duration-200 hover:-translate-y-0.5 hover:bg-horizon-inverse-primary"
+            className={buttonVariants({ variant: "secondary", size: "lg", className: "h-11 shrink-0 px-6" })}
           >
-            Start with a job description <ArrowRight className="size-4" aria-hidden="true" />
+            Start with a job description <ArrowRight aria-hidden="true" data-icon="inline-end" />
           </Link>
         </div>
         <div className="grid gap-10 py-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_0.7fr_0.7fr_0.7fr]">

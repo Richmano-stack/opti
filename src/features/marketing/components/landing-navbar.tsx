@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { BrandMark } from "@/components/brand-mark";
+import { buttonVariants } from "@/components/ui/button";
 
 export type LandingNavbarProps = {
   guest?: boolean;
@@ -32,15 +33,18 @@ export function LandingNavbar({
         </div>
 
         <div className="flex items-center gap-2">
-          <Link href="/login" className="horizon-button-ghost hidden h-10 px-5 text-xs sm:inline-flex">
+          <Link
+            href="/login"
+            className={buttonVariants({ variant: "outline", size: "lg", className: "hidden sm:inline-flex" })}
+          >
             Log in
           </Link>
           {guest ? (
-            <Link href="/signup" className="horizon-button-primary h-10 px-5 text-xs">
+            <Link href="/signup" className={buttonVariants({ size: "lg" })}>
               Create account
             </Link>
           ) : (
-            <Link href="/try" className="horizon-button-primary h-10 px-5 text-xs">
+            <Link href="/try" className={buttonVariants({ size: "lg" })}>
               Try it free
             </Link>
           )}

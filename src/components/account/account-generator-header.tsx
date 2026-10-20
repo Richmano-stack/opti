@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { BrandMark } from "@/components/brand-mark";
+import { buttonVariants } from "@/components/ui/button";
 import type { AuthUser } from "@/server/auth/types";
 import { AccountSignOutButton } from "@/components/account/account-sign-out-button";
 
@@ -16,7 +17,7 @@ export function AccountGeneratorHeader({ user }: { user: AuthUser }) {
             <p className="text-xs font-bold text-horizon-ink">{user.name || user.email}</p>
             <p className="text-[10px] text-horizon-muted">Account workspace</p>
           </div>
-          <Link href="/dashboard" className="horizon-button-ghost h-10 px-4 text-xs">Master résumé</Link><AccountSignOutButton />
+          <Link href="/dashboard" className={buttonVariants({ variant: "outline", size: "lg" })}>Master résumé</Link><AccountSignOutButton />
         </div>
       </div>
     </header>

@@ -2,24 +2,29 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import {
-  ArrowRight,
-  BriefcaseBusiness,
-  Check,
-  FileText,
-  Info,
-  LoaderCircle,
-  Lock,
-  Pencil,
-  Sparkles,
-} from "lucide-react";
+import { AlertCircle, Check, FileText, Info, Lock, Sparkles } from "lucide-react";
 
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from "@/components/ui/item";
+import { Spinner } from "@/components/ui/spinner";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { DevSampleFill } from "@/features/devtools/components/dev-sample-fill";
 import type { DevSampleInput } from "@/features/devtools/lib/sample-inputs";
@@ -29,6 +34,8 @@ import { readJobTarget } from "@/features/tailoring/lib/read-job-target";
 import type { ContactField } from "@/features/tailoring/lib/contact-info";
 import type { OptimizedResume } from "@/features/tailoring/lib/types";
 
+type StudioTab = "job" | "resume" | "match";
+
 function notePoints(text: string): string[] {
   const points = text
     .split(";")
@@ -37,36 +44,37 @@ function notePoints(text: string): string[] {
   return points.length > 0 ? points : [text];
 }
 
-export function StudioTextAreaField({
+function SourceField({
   id,
   name,
+  label,
   value,
   onChange,
-  label,
   placeholder,
+  hint,
   maxChars,
   disabled,
-  minHeightClass = "min-h-[260px] sm:min-h-[300px]",
+  onFillSample,
 }: {
   id: string;
   name: string;
+  label: string;
   value: string;
   onChange: (value: string) => void;
-  label?: string;
   placeholder: string;
+  hint: string;
   maxChars: number;
   disabled: boolean;
-  minHeightClass?: string;
+  onFillSample: (sample: DevSampleInput) => void;
 }) {
   const descriptionId = `${id}-description`;
 
   return (
-    <div className="group grid gap-1.5">
-      {label ? (
-        <Label htmlFor={id} className="text-xs font-bold">
-          {label}
-        </Label>
-      ) : null}
+    <Field className="min-h-0 flex-1">
+      <div className="flex items-center justify-between gap-2">
+        <FieldLabel htmlFor={id}>{label}</FieldLabel>
+        <DevSampleFill disabled={disabled} onFill={onFillSample} />
+      </div>
       <Textarea
         id={id}
         name={name}
@@ -76,19 +84,80 @@ export function StudioTextAreaField({
         required
         disabled={disabled}
         placeholder={placeholder}
-        aria-label={label ? undefined : placeholder}
         aria-describedby={descriptionId}
-        className={cn("resize-y bg-white text-xs leading-5", minHeightClass)}
+        className="min-h-40 flex-1 resize-none [field-sizing:fixed]"
       />
-      <div
-        id={descriptionId}
-        className="flex items-center justify-between px-0.5 text-[11px] font-medium text-muted-foreground"
-      >
-        <span>Plain text only</span>
-        <span>
+      <FieldDescription id={descriptionId} className="flex items-center justify-between gap-2">
+        <span>{hint}</span>
+        <span className="shrink-0 tabular-nums">
           {value.length.toLocaleString()} / {maxChars.toLocaleString()}
         </span>
-      </div>
+      </FieldDescription>
+    </Field>
+  );
+}
+
+function MatchInsights({ resume, jobDescription }: { resume: OptimizedResume; jobDescription: string }) {
+  const target = readJobTarget(jobDescription);
+
+  return (
+    <div className="flex flex-col gap-4">
+      <Card size="sm">
+        <CardHeader>
+          <CardDescription>Target role</CardDescription>
+          <CardTitle>{target.title}</CardTitle>
+          <CardDescription>{target.company}</CardDescription>
+        </CardHeader>
+      </Card>
+
+      <section aria-labelledby="studio-skills-heading" className="flex flex-col gap-2">
+        <h2 id="studio-skills-heading" className="text-sm font-medium">
+          {resume.skills.length} {resume.skills.length === 1 ? "skill" : "skills"} carried into this draft
+        </h2>
+        {resume.skills.length > 0 ? (
+          <ul className="flex flex-wrap gap-1.5" aria-label="Matching skills">
+            {resume.skills.map((skill) => (
+              <li key={skill}>
+                <Badge variant="secondary">{skill}</Badge>
+              </li>
+            ))}
+          </ul>
+        ) : null}
+      </section>
+
+      {resume.matchNote ? (
+        <section aria-label="Match note" className="flex flex-col gap-2">
+          <Accordion defaultValue={["strengths", "gaps"]}>
+            <AccordionItem value="strengths">
+              <AccordionTrigger>Core strengths</AccordionTrigger>
+              <AccordionContent>
+                <ul className="flex flex-col gap-1.5">
+                  {notePoints(resume.matchNote.strengths).map((point) => (
+                    <li key={point} className="flex items-start gap-2">
+                      <Check aria-hidden className="mt-0.5 size-4 shrink-0 text-primary" />
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="gaps">
+              <AccordionTrigger>Potential gaps</AccordionTrigger>
+              <AccordionContent>
+                <ul className="flex flex-col gap-1.5">
+                  {notePoints(resume.matchNote.gaps).map((point) => (
+                    <li key={point} className="flex items-start gap-2">
+                      <Info aria-hidden className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+          <p className="text-xs text-muted-foreground">For you only. This note is not in your PDF.</p>
+        </section>
+      ) : null}
     </div>
   );
 }
@@ -104,8 +173,6 @@ export function ResumeStudioSidebar({
   isReady,
   missingFields,
   errorMessage,
-  editingSources,
-  onToggleEditingSources,
   onFillSample,
   resume,
 }: {
@@ -119,315 +186,151 @@ export function ResumeStudioSidebar({
   isReady: boolean;
   missingFields?: ContactField[];
   errorMessage?: string;
-  editingSources: boolean;
-  onToggleEditingSources: () => void;
   onFillSample: (sample: DevSampleInput) => void;
   resume?: OptimizedResume;
 }) {
-  const [activeTab, setActiveTab] = useState<"jd" | "resume">("jd");
+  const [tab, setTab] = useState<StudioTab>("job");
+  const [shownResume, setShownResume] = useState(resume);
+  if (resume !== shownResume) {
+    setShownResume(resume);
+    setTab(resume ? "match" : "job");
+  }
 
-  const target = readJobTarget(jobDescription);
   const hasResult = Boolean(resume);
-
-  const jdLength = jobDescription.trim().length;
-  const resumeLength = resumeText.trim().length;
-
-  const inputsSection = (
-    <div className="space-y-3.5">
-      <Tabs
-        value={activeTab}
-        onValueChange={(value) => {
-          if (value === "jd" || value === "resume") setActiveTab(value);
-        }}
-      >
-        <TabsList aria-label="Source documents" className="grid h-auto w-full grid-cols-2">
-          <TabsTrigger value="jd" className="text-xs">
-            <BriefcaseBusiness aria-hidden className="size-3.5" />
-            Job description
-            {jdLength > 0 ? (
-              <Badge variant="secondary" className="px-1.5 text-[10px]">
-                {jdLength >= 1000 ? `${(jdLength / 1000).toFixed(1)}k` : jdLength}
-              </Badge>
-            ) : null}
-          </TabsTrigger>
-          <TabsTrigger value="resume" className="text-xs">
-            <FileText aria-hidden className="size-3.5" />
-            Master résumé
-            {mode === "account" ? (
-              <span
-                title="Saved in your account"
-                className="size-1.5 rounded-full bg-emerald-500"
-              />
-            ) : resumeLength > 0 ? (
-              <Badge variant="secondary" className="px-1.5 text-[10px]">
-                {resumeLength >= 1000 ? `${(resumeLength / 1000).toFixed(1)}k` : resumeLength}
-              </Badge>
-            ) : null}
-          </TabsTrigger>
-        </TabsList>
-      </Tabs>
-
-      {/* Tab Panels: Both inputs stay rendered in DOM for FormData submission */}
-      <div className={activeTab === "jd" ? "block space-y-1.5" : "hidden"}>
-        <div className="flex items-center justify-between gap-2">
-          <Label htmlFor="studio-job-description" className="text-xs font-bold">
-            Job description
-          </Label>
-          <DevSampleFill
-            disabled={isPending}
-            onFill={(sample) => {
-              if (mode === "guest") onFillSample(sample);
-              else onJobDescriptionChange(sample.jobDescription);
-            }}
-          />
-        </div>
-        <StudioTextAreaField
-          id="studio-job-description"
-          name="jobDescription"
-          value={jobDescription}
-          onChange={onJobDescriptionChange}
-          placeholder="Paste the complete job posting here"
-          maxChars={30_000}
-          disabled={isPending}
-        />
-      </div>
-
-      {mode === "guest" ? (
-        <div className={activeTab === "resume" ? "block space-y-1.5" : "hidden"}>
-          <div className="flex items-center justify-between gap-2">
-            <Label htmlFor="studio-resume" className="text-xs font-bold">
-              Master résumé
-            </Label>
-            <DevSampleFill disabled={isPending} onFill={onFillSample} />
-          </div>
-          <StudioTextAreaField
-            id="studio-resume"
-            name="resume"
-            value={resumeText}
-            onChange={onResumeTextChange}
-            placeholder="Paste your complete résumé here"
-            maxChars={50_000}
-            disabled={isPending}
-          />
-        </div>
-      ) : (
-        <div className={activeTab === "resume" ? "block" : "hidden"}>
-          <Card className="bg-white py-4 shadow-sm">
-            <CardContent className="flex items-center justify-between gap-3">
-              <div className="flex min-w-0 items-center gap-2.5">
-                <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-horizon-primary/10 text-horizon-primary">
-                  <FileText aria-hidden className="size-4" />
-                </span>
-                <div className="min-w-0">
-                  <p className="truncate text-xs font-bold text-slate-900">
-                    Using your saved master résumé
-                  </p>
-                  <p className="text-[11px] text-muted-foreground">
-                    {masterResumeUpdatedAt
-                      ? `Last updated ${masterResumeUpdatedAt}`
-                      : "Stored securely in your account"}
-                  </p>
-                </div>
-              </div>
-              <Button variant="link" size="sm" nativeButton={false} render={<Link href="/dashboard" />} className="shrink-0 px-0 text-xs">
-                Edit
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      )}
-
-      {/* Quick Readiness Indicator */}
-      <div className="flex items-center justify-between rounded-lg bg-slate-100/90 px-3 py-2 text-[11px] text-slate-600">
-        <span className="flex items-center gap-1.5 font-medium">
-          <span
-            className={cn(
-              "size-2 rounded-full",
-              isReady ? "bg-emerald-500" : "bg-amber-400",
-            )}
-          />
-          {isReady
-            ? "Both documents ready"
-            : mode === "guest"
-              ? !resumeLength
-                ? "Master résumé needed"
-                : "Job description needed"
-              : "Job description needed"}
-        </span>
-        {mode === "guest" ? (
-          <Button
-            type="button"
-            variant="link"
-            className="h-auto px-0 text-[11px]"
-            onClick={() => setActiveTab(activeTab === "jd" ? "resume" : "jd")}
-          >
-            View {activeTab === "jd" ? "résumé" : "job post"} →
-          </Button>
-        ) : null}
-      </div>
-
-      {errorMessage ? (
-        <p
-          role="alert"
-          className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs font-medium text-red-800"
-        >
-          {errorMessage}
-        </p>
-      ) : null}
-
-      {/* Preflight Missing Contact Information */}
-      {missingFields && missingFields.length > 0 ? (
-        <ContactInformationPreflight
-          missingFields={missingFields}
-          canSave={mode === "account"}
-          isPending={isPending}
-        />
-      ) : (
-        <div className="pt-1">
-          <Button type="submit" disabled={isPending || !isReady} className="h-10 w-full px-5 text-xs font-bold">
-            {isPending ? (
-              <>
-                <LoaderCircle aria-hidden className="size-3.5 animate-spin motion-reduce:animate-none" />
-                Tailoring your résumé...
-              </>
-            ) : (
-              <>
-                <Sparkles aria-hidden className="size-3.5" />
-                {hasResult ? "Refine tailored résumé" : "Tailor my résumé"}
-                <ArrowRight aria-hidden className="ml-1 size-3.5" />
-              </>
-            )}
-          </Button>
-          <p className="mt-2.5 flex items-center justify-center gap-1.5 text-[11px] text-slate-500">
-            <Lock aria-hidden className="size-3 text-horizon-secondary" />
-            {mode === "guest"
-              ? "Nothing is saved after this session."
-              : "Job descriptions and generated résumés are not saved."}
-          </p>
-        </div>
-      )}
-    </div>
-  );
+  const needsContactReview = Boolean(missingFields && missingFields.length > 0);
+  const readinessHint =
+    mode === "guest" && !resumeText.trim()
+      ? "Add your master résumé to continue."
+      : "Paste a job description to continue.";
 
   return (
     <aside
       aria-label="Studio source inputs and insights"
-      className={cn(
-        "flex w-full min-w-0 flex-col overflow-y-auto border-b border-slate-200 p-4 sm:p-5 md:w-[380px] md:shrink-0 md:border-b-0 md:border-r lg:w-[400px]",
-        mode === "guest" && "bg-slate-50/80",
-      )}
+      className={cn("flex h-full min-h-0 w-full min-w-0 flex-col", mode === "guest" && "bg-slate-50/80")}
     >
-      {resume ? (
-        <div className="space-y-4">
-          {/* Target Role Card */}
-          <Card className="bg-white py-4 shadow-sm">
-            <CardContent>
-              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
-                Target role
-              </p>
-              <h2 className="mt-1 text-base font-bold tracking-tight text-slate-900">
-                {target.title}
-              </h2>
-              <p className="mt-0.5 text-xs text-slate-600">{target.company}</p>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={onToggleEditingSources}
-                aria-expanded={editingSources}
-                className="mt-3 rounded-full text-xs"
-              >
-                <Pencil aria-hidden className="size-3" />
-                {editingSources ? "Hide source inputs" : "Edit source inputs"}
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* Collapsible Source Fields */}
-          <div className={editingSources ? "block" : "hidden"}>
-            <Card className="bg-white py-4 shadow-sm">
-              <CardContent>{inputsSection}</CardContent>
-            </Card>
-          </div>
-
-          {/* Match Insights Card */}
-          <Card className="bg-white py-4 shadow-sm">
-            <CardContent>
-            <h2 className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
-              Match insights
-            </h2>
-            <p className="mt-2 text-xs font-bold text-slate-900">
-              {resume.skills.length} {resume.skills.length === 1 ? "skill" : "skills"} carried into this draft
-            </p>
-
-            {resume.skills.length > 0 ? (
-              <ul className="mt-2.5 flex flex-wrap gap-1.5" aria-label="Matching skills">
-                {resume.skills.map((skill) => (
-                  <li key={skill}>
-                    <Badge variant="secondary">{skill}</Badge>
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-
-            {resume.matchNote ? (
-              <div className="mt-4 space-y-3 text-xs leading-5 text-slate-700">
-                <Separator />
-                <div>
-                  <p className="font-bold text-slate-900">Core strengths</p>
-                  <ul className="mt-1 space-y-1">
-                    {notePoints(resume.matchNote.strengths).map((point) => (
-                      <li key={point} className="flex items-start gap-1.5">
-                        <Check aria-hidden className="mt-0.5 size-3.5 shrink-0 text-emerald-600" />
-                        <span>{point}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div>
-                  <p className="font-bold text-slate-900">Potential gaps</p>
-                  <ul className="mt-1 space-y-1">
-                    {notePoints(resume.matchNote.gaps).map((point) => (
-                      <li key={point} className="flex items-start gap-1.5">
-                        <Info aria-hidden className="mt-0.5 size-3.5 shrink-0 text-slate-400" />
-                        <span>{point}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <p className="text-[10px] text-slate-500">
-                  For you only. This note is not in your PDF.
-                </p>
-              </div>
-            ) : null}
-            </CardContent>
-          </Card>
+      <Tabs
+        value={tab}
+        onValueChange={(value) => {
+          if (value === "job" || value === "resume" || value === "match") setTab(value);
+        }}
+        className="min-h-0 flex-1 gap-0"
+      >
+        <div className="px-4 pt-4">
+          <TabsList aria-label="Studio panels" className="w-full">
+            <TabsTrigger value="job">Job</TabsTrigger>
+            {mode === "guest" ? <TabsTrigger value="resume">Résumé</TabsTrigger> : null}
+            <TabsTrigger value="match" disabled={!hasResult}>
+              Match
+            </TabsTrigger>
+          </TabsList>
         </div>
-      ) : (
-        <div className="space-y-4">
-          <Card className="bg-white py-4 shadow-sm">
-            <CardContent>
-            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-horizon-secondary">
-              Source documents
-            </p>
-            <h2 className="mt-1 text-base font-bold tracking-tight text-slate-900">
-              {mode === "guest" ? "Add your source material" : "Start with the role"}
-            </h2>
-            <p className="mt-1 text-xs leading-5 text-slate-600">
-              {mode === "guest"
-                ? "Both master résumé and job description are required."
-                : "Paste the complete job description to tailor against your master résumé."}
-            </p>
-            </CardContent>
-          </Card>
 
-          <Card className="bg-white py-4 shadow-sm">
-            <CardContent>{inputsSection}</CardContent>
-          </Card>
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto p-4">
+          {needsContactReview && missingFields ? (
+            <div className="mb-4">
+              <ContactInformationPreflight
+                missingFields={missingFields}
+                canSave={mode === "account"}
+                isPending={isPending}
+              />
+            </div>
+          ) : null}
+
+          <TabsContent value="job" keepMounted className="flex min-h-0 flex-col">
+            <FieldGroup className="min-h-0 flex-1 gap-4">
+              <SourceField
+                id="studio-job-description"
+                name="jobDescription"
+                label="Job description"
+                value={jobDescription}
+                onChange={onJobDescriptionChange}
+                placeholder="Paste the complete job posting here"
+                hint="Include the requirements and responsibilities."
+                maxChars={30_000}
+                disabled={isPending}
+                onFillSample={(sample) => {
+                  if (mode === "guest") onFillSample(sample);
+                  else onJobDescriptionChange(sample.jobDescription);
+                }}
+              />
+              {mode === "account" ? (
+                <Item variant="outline" size="sm">
+                  <ItemMedia variant="icon">
+                    <FileText aria-hidden />
+                  </ItemMedia>
+                  <ItemContent>
+                    <ItemTitle>Using your saved master résumé</ItemTitle>
+                    <ItemDescription>
+                      {masterResumeUpdatedAt ? `Last updated ${masterResumeUpdatedAt}` : "Stored securely in your account"}
+                    </ItemDescription>
+                  </ItemContent>
+                  <ItemActions>
+                    <Button variant="ghost" size="sm" nativeButton={false} render={<Link href="/dashboard" />}>
+                      Edit
+                    </Button>
+                  </ItemActions>
+                </Item>
+              ) : null}
+            </FieldGroup>
+          </TabsContent>
+
+          {mode === "guest" ? (
+            <TabsContent value="resume" keepMounted className="flex min-h-0 flex-col">
+              <SourceField
+                id="studio-resume"
+                name="resume"
+                label="Master résumé"
+                value={resumeText}
+                onChange={onResumeTextChange}
+                placeholder="Paste your complete résumé here"
+                hint="Plain text works best."
+                maxChars={50_000}
+                disabled={isPending}
+                onFillSample={onFillSample}
+              />
+            </TabsContent>
+          ) : null}
+
+          <TabsContent value="match">
+            {resume ? <MatchInsights resume={resume} jobDescription={jobDescription} /> : null}
+          </TabsContent>
         </div>
-      )}
+      </Tabs>
+
+      <div className="flex flex-col gap-2 border-t p-4">
+        {errorMessage ? (
+          <Alert variant="destructive">
+            <AlertCircle aria-hidden />
+            <AlertTitle>{errorMessage}</AlertTitle>
+          </Alert>
+        ) : null}
+
+        {needsContactReview ? null : (
+          <Button type="submit" size="lg" disabled={isPending || !isReady} className="w-full">
+            {isPending ? (
+              <>
+                <Spinner data-icon="inline-start" aria-hidden />
+                Tailoring your résumé…
+              </>
+            ) : (
+              <>
+                <Sparkles aria-hidden data-icon="inline-start" />
+                {hasResult ? "Refine tailored résumé" : "Tailor my résumé"}
+              </>
+            )}
+          </Button>
+        )}
+
+        {!isReady && !isPending && !needsContactReview ? (
+          <p className="text-center text-xs text-muted-foreground">{readinessHint}</p>
+        ) : null}
+        <p className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
+          <Lock aria-hidden className="size-3" />
+          {mode === "guest"
+            ? "Nothing is saved after this session."
+            : "Job descriptions and generated résumés are not saved."}
+        </p>
+      </div>
     </aside>
   );
 }

@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 
 import { AppSidebar } from "@/components/app-sidebar";
+import { useSidebarOpenState } from "@/components/horizon/sidebar-open-state";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -30,8 +31,14 @@ interface AuthenticatedAppShellProps {
 }
 
 export function AuthenticatedAppShell({ children, user, title, heading, actions, fill = false }: AuthenticatedAppShellProps) {
+  const sidebarState = useSidebarOpenState();
+
   return (
-    <SidebarProvider className={cn(fill && "h-dvh overflow-hidden")}>
+    <SidebarProvider
+      open={sidebarState?.open}
+      onOpenChange={sidebarState?.setOpen}
+      className={cn(fill && "h-dvh overflow-hidden")}
+    >
       <AppSidebar user={user} />
       <SidebarInset className={cn(fill && "min-h-0 overflow-hidden")}>
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">

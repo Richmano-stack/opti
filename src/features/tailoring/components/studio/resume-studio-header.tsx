@@ -2,11 +2,12 @@
 
 import { useState, type RefObject } from "react";
 import Link from "next/link";
-import { Download, LoaderCircle, Sparkles } from "lucide-react";
+import { AlertCircle, Download } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
+import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Spinner } from "@/components/ui/spinner";
 import { BrandMark } from "@/components/brand-mark";
 import { cn } from "@/lib/utils";
 import { readJobTarget } from "@/features/tailoring/lib/read-job-target";
@@ -69,128 +70,82 @@ export function StudioHeading({
 export function StudioActions({
   resume,
   isPending,
-  isReady,
   isDownloading,
   onDownload,
-  form,
+  className,
 }: {
   resume?: OptimizedResume;
   isPending: boolean;
-  isReady: boolean;
   isDownloading: boolean;
   onDownload: () => void;
-  /** Id of the studio form, needed when the actions render outside it. */
-  form?: string;
+  className?: string;
 }) {
   return (
-    <>
-      <Badge variant="secondary" className="hidden sm:inline-flex">
-        <span aria-hidden className="size-1.5 rounded-full bg-emerald-500" />
-        {isPending ? "Tailoring" : resume ? "Draft Ready" : "Studio Ready"}
-      </Badge>
-
-      <Button
-        type="submit"
-        form={form}
-        size="lg"
-        variant="outline"
-        disabled={isPending || !isReady}
-        aria-label={resume ? "Refine with AI" : "Tailor my résumé"}
-        className="rounded-full px-3 text-xs"
-      >
-        {isPending ? (
-          <LoaderCircle aria-hidden className="size-3.5 animate-spin motion-reduce:animate-none" />
-        ) : (
-          <Sparkles aria-hidden className="size-3.5" />
-        )}
-        <span className="hidden sm:inline">{resume ? "Refine with AI" : "Tailor my résumé"}</span>
-      </Button>
-
-      <Button
-        type="button"
-        size="lg"
-        onClick={onDownload}
-        disabled={isDownloading || !resume}
-        aria-label="Download PDF"
-        className="rounded-full px-4 text-xs"
-      >
-        {isDownloading ? (
-          <LoaderCircle aria-hidden className="size-3.5 animate-spin motion-reduce:animate-none" />
-        ) : (
-          <Download aria-hidden className="size-3.5" />
-        )}
-        <span className="hidden sm:inline">Download PDF</span>
-      </Button>
-    </>
+    <Button
+      type="button"
+      onClick={onDownload}
+      disabled={isDownloading || isPending || !resume}
+      aria-label="Download PDF"
+      className={className}
+    >
+      {isDownloading ? (
+        <Spinner data-icon="inline-start" aria-hidden />
+      ) : (
+        <Download aria-hidden data-icon="inline-start" />
+      )}
+      <span className="hidden sm:inline">Download PDF</span>
+    </Button>
   );
 }
 
 export function DownloadErrorAlert({ message }: { message: string | null }) {
   if (!message) return null;
   return (
-    <div role="alert" className="border-b border-red-200 bg-red-50 px-6 py-2 text-xs font-medium text-red-800">
-      {message}
+    <div className="border-b p-3">
+      <Alert variant="destructive">
+        <AlertCircle aria-hidden />
+        <AlertTitle>{message}</AlertTitle>
+      </Alert>
     </div>
   );
 }
 
 export function ResumeStudioHeader({
-  resume,
   jobDescription,
-  isPending,
-  isReady,
   headingRef,
-  templateId = "minimal",
 }: {
-  resume?: OptimizedResume;
   jobDescription: string;
-  isPending: boolean;
-  isReady: boolean;
   headingRef: RefObject<HTMLHeadingElement | null>;
-  templateId?: TemplateId;
 }) {
-  const { isDownloading, downloadError, download } = useResumeDownload(resume, templateId);
-
   return (
-    <>
-      <header className="flex h-14 shrink-0 items-center justify-between gap-4 border-b border-slate-200 bg-white px-4 sm:px-6">
-        <div className="flex min-w-0 items-center gap-3">
-          <Link
-            href="/"
-            aria-label="Opti home"
-            className="shrink-0 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-primary focus-visible:ring-offset-2"
-          >
-            <BrandMark />
-          </Link>
-          <Separator orientation="vertical" className="h-4 shrink-0" />
-          <StudioHeading
-            label={studioRoleLabel(jobDescription)}
-            headingRef={headingRef}
-            className="font-medium text-slate-700"
-          />
-        </div>
+    <header className="flex h-14 shrink-0 items-center justify-between gap-4 border-b border-slate-200 bg-white px-4 sm:px-6">
+      <div className="flex min-w-0 items-center gap-3">
+        <Link
+          href="/"
+          aria-label="Opti home"
+          className="shrink-0 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-primary focus-visible:ring-offset-2"
+        >
+          <BrandMark />
+        </Link>
+        <Separator orientation="vertical" className="h-4 shrink-0" />
+        <StudioHeading
+          label={studioRoleLabel(jobDescription)}
+          headingRef={headingRef}
+          className="font-medium text-slate-700"
+        />
+      </div>
 
-        <div className="flex shrink-0 items-center gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            nativeButton={false}
-            render={<Link href="/login" />}
-            className="mr-1 hidden text-xs sm:inline-flex"
-          >
-            Sign in
-          </Button>
-          <StudioActions
-            resume={resume}
-            isPending={isPending}
-            isReady={isReady}
-            isDownloading={isDownloading}
-            onDownload={download}
-          />
-        </div>
-      </header>
-
-      <DownloadErrorAlert message={downloadError} />
-    </>
+      <div className="flex shrink-0 items-center gap-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          nativeButton={false}
+          render={<Link href="/login" />}
+          className="mr-1 hidden text-xs sm:inline-flex"
+        >
+          Sign in
+        </Button>
+      </div>
+    </header>
   );
 }

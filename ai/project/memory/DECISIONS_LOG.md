@@ -676,3 +676,87 @@ The product uses one teal / sage family everywhere: CSS tokens, buttons, logo, f
 - src/app/globals.css
 - src/templates/theme.ts
 - src/components/brand-mark.tsx
+
+---
+
+## DEC-014: The studio preview fits the Letter sheet to its pane
+
+**Date:** 2026-10-20
+**Status:** accepted
+**Deciders:** Product owner
+**Supersedes:** DEC-012 (only the line "The studio shows that full-size sheet")
+**Superseded by:** N/A
+
+### Context
+
+At 100%, the 816px Letter sheet is wider than the preview pane on most laptops and on every phone. People had to scroll sideways to read their résumé.
+
+### Decision
+
+The sheet keeps its Letter layout: 816px wide, real type size, the same DOM that Chromium prints. The preview only scales it with a CSS transform. By default it fits the pane width. Fit width, 100%, and step zoom (50–200%) are on the canvas toolbar. On phones, Fit width can go down to 25%. The empty and tailoring sheets use the same Letter frame. Below the `md` breakpoint, the studio switches from the resizable split to two tabs: Input & tailoring, and Live preview. Both tabs stay mounted so the form keeps every field.
+
+### Alternatives Considered
+
+| Option | Pros | Cons |
+|--------|------|------|
+| Always 100% | Matches print pixel for pixel on screen | Sideways scroll on laptops and phones |
+| Reflow the sheet to the pane | No scaling | Preview no longer matches the PDF |
+| A4 canvas (794px) | Requested in a prototype spec | PDF prints Letter; preview and download would disagree |
+
+### Consequences
+
+**Positive:**
+
+- The whole page width is visible without sideways scrolling
+- PDF output is unchanged
+
+**Negative:**
+
+- Type is smaller than print size on narrow panes until the user picks 100%
+
+### References
+
+- src/features/tailoring/lib/canvas-zoom.ts
+- src/features/tailoring/components/studio/resume-studio-canvas.tsx
+- src/features/tailoring/components/studio/resume-studio-panels.tsx
+
+## DEC-015: Templates page is "coming soon"; the studio is the logged-in home
+
+**Date:** 2026-10-20
+**Status:** accepted
+**Deciders:** Product owner
+**Supersedes:** The template store as the post-login home
+**Superseded by:** N/A
+
+### Context
+
+There is only one real template so far. A gallery with placeholder layouts looked unfinished, and it was the first page people saw after logging in.
+
+### Decision
+
+`/dashboard/templates` shows a "Templates are coming soon" notice with a link to the studio. Login, signup and the Opti home links (`ACCOUNT_HOME`) go to `/dashboard/generator`. The Master résumé "Tailor for a role" button goes straight to the studio. The gallery component stays in the codebase, unused, for when templates ship.
+
+### Alternatives Considered
+
+| Option | Pros | Cons |
+|--------|------|------|
+| Keep the gallery | No work | Looks unfinished; it was the front door |
+| Land on the Master résumé page | Source first | Extra step for returning users who already have a source |
+| Delete the gallery code | Less dead code | It has to be rebuilt when templates ship |
+
+### Consequences
+
+**Positive:**
+
+- The first page after login is the one people use
+- No half-built page in the main navigation flow
+
+**Negative:**
+
+- `template-gallery.tsx` and its test are kept but unused until templates ship
+
+### References
+
+- src/app/dashboard/templates/page.tsx
+- src/features/tailoring/components/templates-coming-soon.tsx
+- src/features/auth/lib/callback-url.ts

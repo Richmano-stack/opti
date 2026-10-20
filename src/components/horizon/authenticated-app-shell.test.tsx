@@ -5,6 +5,7 @@ vi.mock("next/navigation", () => ({ usePathname: () => "/dashboard", useRouter: 
 vi.mock("@/server/auth/client", () => ({ authClient: { signOut: vi.fn() } }));
 
 import { AuthenticatedAppShell } from "./authenticated-app-shell";
+import { SidebarOpenStateProvider } from "./sidebar-open-state";
 
 describe("AuthenticatedAppShell", () => {
   it("wraps page content in the sidebar-07 shell with Opti navigation and the signed-in user", () => {
@@ -34,9 +35,22 @@ describe("AuthenticatedAppShell", () => {
     expect(html).not.toContain("Acme Inc");
     expect(html).not.toContain("Build Your Application");
     expect(html).not.toContain("Data Fetching");
-    expect(html).toMatch(/data-slot="breadcrumb-link"[^>]*href="\/dashboard\/templates"[^>]*>Opti<|href="\/dashboard\/templates"[^>]*data-slot="breadcrumb-link"[^>]*>Opti</);
+    expect(html).toMatch(/data-slot="breadcrumb-link"[^>]*href="\/dashboard\/generator"[^>]*>Opti<|href="\/dashboard\/generator"[^>]*data-slot="breadcrumb-link"[^>]*>Opti</);
     expect(html).toMatch(/data-slot="breadcrumb-page"[^>]*>Master résumé</);
     expect(html).toContain("Tailor for a role");
     expect(html).toContain("<p>Workspace</p>");
+  });
+
+  it("keeps the sidebar collapsed when the dashboard layout says it was collapsed", () => {
+    const html = renderToStaticMarkup(
+      <SidebarOpenStateProvider initialOpen={false}>
+        <AuthenticatedAppShell title="Tailor" user={{ id: "u1", email: "a@example.com", name: "Alex Rivera" }}>
+          <p>Workspace</p>
+        </AuthenticatedAppShell>
+      </SidebarOpenStateProvider>,
+    );
+
+    expect(html).toContain('data-state="collapsed"');
+    expect(html).not.toContain('data-state="expanded"');
   });
 });

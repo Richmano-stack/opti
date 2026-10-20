@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, FileText, LockKeyhole } from "lucide-react";
 
 import { AuthenticatedAppShell } from "@/components/horizon/authenticated-app-shell";
+import { buttonVariants } from "@/components/ui/button";
 import type { AuthUser } from "@/server/auth/types";
 
 export function AccountGeneratorSetupRequired({ user }: { user: AuthUser }) {
@@ -16,8 +17,8 @@ export function AccountGeneratorSetupRequired({ user }: { user: AuthUser }) {
           <p className="mt-2 text-sm leading-6 text-slate-600">
             Add your master résumé once. Opti will use only that source to focus your real experience for every application.
           </p>
-          <Link href="/dashboard" className="horizon-button-primary mt-6 h-11 px-6 text-sm">
-            Go to master résumé <ArrowRight aria-hidden className="size-4" />
+          <Link href="/dashboard" className={buttonVariants({ size: "lg", className: "mt-6" })}>
+            Go to master résumé <ArrowRight aria-hidden data-icon="inline-end" />
           </Link>
           <p className="mt-4 flex items-center justify-center gap-2 text-xs text-slate-500">
             <LockKeyhole aria-hidden className="size-3.5 text-horizon-secondary" />
