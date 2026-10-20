@@ -48,7 +48,7 @@ Only the master-resume text is saved. Job descriptions, generated resumes, and P
 - OpenRouter-backed structured resume tailoring.
 - Validated preview and single-column PDF export.
 - Clear loading, validation, provider-failure, and retry states.
-- Responsive, accessible light sky-blue interface built with shadcn primitives.
+- Responsive, accessible teal / sage interface built with shadcn primitives.
 
 ### Excluded
 

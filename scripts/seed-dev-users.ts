@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 
 import { db, session, users } from "@/db";
 import { auth } from "@/server/auth/auth";
@@ -74,6 +74,11 @@ async function main() {
       await upsertMasterResume(userId, content);
     },
   });
+
+  await db
+    .update(users)
+    .set({ emailVerified: true })
+    .where(inArray(users.email, DEV_USERS.map((user) => user.email)));
 
   console.info("\nLocal users are ready:\n");
   for (const result of results) {

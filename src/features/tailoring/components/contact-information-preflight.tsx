@@ -1,5 +1,8 @@
 import { AlertCircle } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import type { ContactField } from "@/features/tailoring/lib/contact-info";
 
 const fieldContent: Record<ContactField, { label: string; placeholder: string; type: string }> = {
@@ -45,16 +48,16 @@ export function ContactInformationPreflight({
         {missingFields.map((field) => {
           const content = fieldContent[field];
           return (
-            <label key={field} className="grid gap-1 text-[11px] font-semibold text-slate-700">
+            <Label key={field} className="grid gap-1 text-[11px] font-semibold text-slate-700">
               {content.label}
-              <input
+              <Input
                 name={`contact_${field}`}
                 type={content.type}
                 placeholder={content.placeholder}
                 disabled={isPending}
-                className="h-9 rounded-lg border border-slate-200 bg-white px-3 text-xs font-normal text-slate-900 outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-horizon-secondary focus:ring-2 focus:ring-horizon-secondary/20 disabled:cursor-not-allowed disabled:bg-slate-100"
+                className="h-9 bg-white text-xs font-normal"
               />
-            </label>
+            </Label>
           );
         })}
       </div>
@@ -67,24 +70,25 @@ export function ContactInformationPreflight({
       ) : null}
 
       <div className="mt-4 flex flex-col gap-2">
-        <button
+        <Button
           type="submit"
           name="contactDecision"
           value="add"
           disabled={isPending}
-          className="horizon-button-primary h-10 w-full px-4 text-xs font-bold disabled:pointer-events-none disabled:opacity-45"
+          className="h-10 w-full px-4 text-xs font-bold"
         >
           Add details and continue
-        </button>
-        <button
+        </Button>
+        <Button
           type="submit"
           name="contactDecision"
           value="continue"
+          variant="outline"
           disabled={isPending}
-          className="inline-flex h-9 w-full items-center justify-center rounded-full border border-slate-200 bg-white text-xs font-semibold text-slate-700 transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-secondary disabled:pointer-events-none disabled:opacity-45"
+          className="h-9 w-full text-xs"
         >
           Continue without them
-        </button>
+        </Button>
       </div>
     </section>
   );

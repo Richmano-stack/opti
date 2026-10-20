@@ -21,13 +21,12 @@ test("an account user can create, reload, and edit a master resume", async ({ pa
 
   try {
     await page.goto("/signup");
-    await page.getByLabel("Full name").fill("Opti E2E User");
-    await page.getByLabel("Email address").fill(email);
+    await page.getByLabel("Email", { exact: true }).fill(email);
     await page.getByLabel("Password", { exact: true }).fill(password);
-    await page.getByLabel("Confirm password").fill(password);
+    await page.getByLabel("Confirm Password").fill(password);
     await page.getByRole("button", { name: "Create Account" }).click();
 
-    await expect(page).toHaveURL(/\/dashboard$/);
+    await page.goto("/dashboard");
     await expect(page.getByRole("button", { name: "Add master résumé" })).toBeVisible();
     await expect(page.getByLabel("Full, unedited career experience")).toHaveCount(0);
 

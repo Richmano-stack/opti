@@ -67,12 +67,11 @@ test("an account user tailors from only a saved master resume", async ({ page })
 
   try {
     await page.goto("/signup");
-    await page.getByLabel("Full name").fill("Alex Example");
-    await page.getByLabel("Email address").fill(email);
+    await page.getByLabel("Email", { exact: true }).fill(email);
     await page.getByLabel("Password", { exact: true }).fill(password);
-    await page.getByLabel("Confirm password").fill(password);
+    await page.getByLabel("Confirm Password").fill(password);
     await page.getByRole("button", { name: "Create Account" }).click();
-    await expect(page).toHaveURL(/\/dashboard$/);
+    await expect(page).toHaveURL(/\/dashboard\/templates$/);
 
     await page.goto("/dashboard/generator");
     await expect(page.getByRole("heading", { name: "Save your master résumé first" })).toBeVisible();

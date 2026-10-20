@@ -13,10 +13,10 @@ test.describe("user lifecycle routing", () => {
 
   test("unsafe callback URLs fall back to the dashboard", async ({ page }) => {
     await page.goto("/login?callbackUrl=https%3A%2F%2Fevil.example");
-    await expect(page.getByRole("heading", { name: "Pick up where you left off." })).toBeVisible();
-    await page.getByLabel("Email address").fill("demo@example.test");
+    await expect(page.getByRole("heading", { name: "Welcome back" })).toBeVisible();
+    await page.getByLabel("Email", { exact: true }).fill("demo@example.test");
     await page.getByLabel("Password").fill("invalid-password");
-    await page.getByRole("button", { name: "Sign in" }).click();
+    await page.getByRole("button", { name: "Login" }).click();
     await expect(page).toHaveURL(/\/login\?callbackUrl=https%3A%2F%2Fevil\.example/);
   });
 

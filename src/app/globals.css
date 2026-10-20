@@ -34,6 +34,7 @@
   --color-horizon-muted: var(--horizon-muted);
   --color-horizon-outline: var(--horizon-outline);
   --color-horizon-primary: var(--horizon-primary);
+  --color-horizon-primary-hover: var(--horizon-primary-hover);
   --color-horizon-secondary: var(--horizon-secondary);
   --color-horizon-tertiary: var(--horizon-tertiary);
   --color-horizon-inverse-primary: var(--horizon-inverse-primary);
@@ -94,25 +95,26 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* Opti light theme  aligned with /try design language (#f8faff + blue accents) */
+/* Opti light theme: teal / sage résumé palette */
 :root {
-  --background: oklch(0.985 0.008 240);
+  --background: #eef4e4;
   --page-gradient-start: #ffffff;
-  --page-gradient-end: #eef9ff;
-  --brand-ink: #3d88bd;
-  --brand-muted: #68afe0;
-  --brand-action: #75bce7;
-  --brand-action-hover: #5da8dc;
-  --brand-soft: #eef8ff;
-  --brand-border: #cfe8f7;
-  --horizon-canvas: #f9f9f9;
-  --horizon-ink: #1a1c1c;
-  --horizon-muted: #5a413b;
-  --horizon-outline: #8e7069;
-  --horizon-primary: #b42907;
-  --horizon-secondary: #00668a;
-  --horizon-tertiary: #7b41b4;
-  --horizon-inverse-primary: #ffb4a3;
+  --page-gradient-end: #eef4e4;
+  --brand-ink: #1e3d47;
+  --brand-muted: #6aa89c;
+  --brand-action: #3e7c94;
+  --brand-action-hover: #1e3d47;
+  --brand-soft: #eef4e4;
+  --brand-border: #c5d9c0;
+  --horizon-canvas: #eef4e4;
+  --horizon-ink: #1e3d47;
+  --horizon-muted: #4d6b68;
+  --horizon-outline: #8eaea4;
+  --horizon-primary: #3e7c94;
+  --horizon-primary-hover: #1e3d47;
+  --horizon-secondary: #6aa89c;
+  --horizon-tertiary: #a8c9a4;
+  --horizon-inverse-primary: #dceec8;
   --horizon-display: 2.5rem;
   --horizon-title: 2rem;
   --horizon-heading: 1.25rem;
@@ -123,41 +125,41 @@
   --horizon-section: 3rem;
   --horizon-radius-card: 1.25rem;
   --horizon-radius-control: 0.75rem;
-  --horizon-shadow-card: 0 12px 32px rgb(26 28 28 / 0.06);
-  --horizon-shadow-focus: 0 0 0 3px rgb(0 102 138 / 0.2);
-  --foreground: oklch(0.18 0.03 264);
+  --horizon-shadow-card: 0 12px 32px rgb(30 61 71 / 0.08);
+  --horizon-shadow-focus: 0 0 0 3px rgb(62 124 148 / 0.25);
+  --foreground: oklch(0.28 0.04 210);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.03 264);
+  --card-foreground: oklch(0.28 0.04 210);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.03 264);
+  --popover-foreground: oklch(0.28 0.04 210);
   --primary: var(--brand-action);
-  --primary-foreground: oklch(0.2 0.025 245);
-  --secondary: oklch(0.96 0.015 240);
-  --secondary-foreground: oklch(0.4 0.15 255);
-  --muted: oklch(0.96 0.01 240);
-  --muted-foreground: oklch(0.5 0.03 264);
-  --accent: oklch(0.95 0.03 250);
-  --accent-foreground: oklch(0.4 0.18 255);
+  --primary-foreground: #ffffff;
+  --secondary: oklch(0.94 0.03 145);
+  --secondary-foreground: oklch(0.32 0.05 200);
+  --muted: oklch(0.96 0.02 140);
+  --muted-foreground: oklch(0.45 0.04 180);
+  --accent: oklch(0.94 0.03 165);
+  --accent-foreground: oklch(0.32 0.06 200);
   --destructive: oklch(0.62 0.22 25);
-  --border: oklch(0.9 0.01 240);
-  --input: oklch(0.9 0.01 240);
+  --border: oklch(0.9 0.02 150);
+  --input: oklch(0.9 0.02 150);
   --ring: var(--brand-muted);
   --success: oklch(0.65 0.18 150);
   --success-muted: oklch(0.95 0.04 150);
   --warning: oklch(0.75 0.18 75);
-  --chart-1: oklch(0.55 0.22 255);
-  --chart-2: oklch(0.65 0.18 290);
-  --chart-3: oklch(0.5 0.03 264);
-  --chart-4: oklch(0.65 0.18 150);
-  --chart-5: oklch(0.75 0.18 75);
+  --chart-1: oklch(0.55 0.08 210);
+  --chart-2: oklch(0.65 0.06 170);
+  --chart-3: oklch(0.4 0.04 200);
+  --chart-4: oklch(0.75 0.08 140);
+  --chart-5: oklch(0.55 0.04 180);
   --radius: 0.75rem;
-  --sidebar: oklch(0.98 0.01 240);
-  --sidebar-foreground: oklch(0.18 0.03 264);
+  --sidebar: oklch(0.97 0.015 140);
+  --sidebar-foreground: oklch(0.28 0.04 210);
   --sidebar-primary: var(--brand-action);
-  --sidebar-primary-foreground: oklch(0.2 0.025 245);
-  --sidebar-accent: oklch(0.95 0.02 240);
-  --sidebar-accent-foreground: oklch(0.18 0.03 264);
-  --sidebar-border: oklch(0.9 0.01 240);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: oklch(0.94 0.025 165);
+  --sidebar-accent-foreground: oklch(0.28 0.04 210);
+  --sidebar-border: oklch(0.9 0.02 150);
   --sidebar-ring: var(--brand-muted);
 }
 
@@ -171,7 +173,7 @@
     background-image: linear-gradient(
       135deg,
       var(--page-gradient-start) 0%,
-      #f8fcff 48%,
+      #f4f7ee 48%,
       var(--page-gradient-end) 100%
     );
     background-attachment: fixed;
@@ -187,7 +189,7 @@
     background-image: linear-gradient(
       135deg,
       var(--page-gradient-start) 0%,
-      #f8fcff 48%,
+      #f4f7ee 48%,
       var(--page-gradient-end) 100%
     );
   }
@@ -198,7 +200,7 @@
   }
 
   .btn-brand {
-    @apply inline-flex items-center justify-center rounded-xl bg-brand-action font-semibold text-slate-900 shadow-sm shadow-sky-200/20 transition-all hover:bg-brand-action-hover hover:shadow-md hover:shadow-sky-200/30 cursor-pointer;
+    @apply inline-flex items-center justify-center rounded-xl bg-brand-action font-semibold text-white shadow-sm transition-all hover:bg-brand-action-hover hover:shadow-md cursor-pointer;
   }
 
   .btn-brand-outline {
@@ -218,9 +220,9 @@
   .horizon-page {
     background-color: var(--horizon-canvas);
     background-image:
-      radial-gradient(circle at 8% 18%, rgb(255 94 58 / 0.1), transparent 30rem),
-      radial-gradient(circle at 88% 22%, rgb(64 194 253 / 0.12), transparent 32rem),
-      radial-gradient(circle at 64% 72%, rgb(180 121 240 / 0.09), transparent 30rem);
+      radial-gradient(circle at 8% 18%, rgb(62 124 148 / 0.12), transparent 30rem),
+      radial-gradient(circle at 88% 22%, rgb(106 168 156 / 0.14), transparent 32rem),
+      radial-gradient(circle at 64% 72%, rgb(168 201 164 / 0.16), transparent 30rem);
   }
 
   .horizon-glass {
@@ -231,7 +233,7 @@
   }
 
   .horizon-button-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-full bg-horizon-primary font-bold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#8b1a00] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-primary focus-visible:ring-offset-2 active:scale-95;
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-horizon-primary font-bold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-horizon-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-primary focus-visible:ring-offset-2 active:scale-95;
   }
 
   .horizon-button-ghost {
@@ -255,7 +257,7 @@
     top: 5rem;
     width: 26rem;
     height: 26rem;
-    background: rgb(255 94 58 / 0.12);
+    background: rgb(62 124 148 / 0.16);
   }
 
   .horizon-orb-secondary {
@@ -263,7 +265,7 @@
     top: 1rem;
     width: 32rem;
     height: 32rem;
-    background: rgb(64 194 253 / 0.14);
+    background: rgb(106 168 156 / 0.16);
   }
 
   .horizon-orb-tertiary {
@@ -271,7 +273,7 @@
     left: 46%;
     width: 25rem;
     height: 25rem;
-    background: rgb(180 121 240 / 0.1);
+    background: rgb(220 238 200 / 0.45);
   }
 
   .horizon-fade-up {

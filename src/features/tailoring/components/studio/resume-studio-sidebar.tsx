@@ -14,6 +14,13 @@ import {
   Sparkles,
 } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
 import { DevSampleFill } from "@/features/devtools/components/dev-sample-fill";
 import type { DevSampleInput } from "@/features/devtools/lib/sample-inputs";
 import { ContactInformationPreflight } from "@/features/tailoring/components/contact-information-preflight";
@@ -54,13 +61,13 @@ export function StudioTextAreaField({
   const descriptionId = `${id}-description`;
 
   return (
-    <div className="group">
+    <div className="group grid gap-1.5">
       {label ? (
-        <label htmlFor={id} className="text-xs font-bold text-slate-800">
+        <Label htmlFor={id} className="text-xs font-bold">
           {label}
-        </label>
+        </Label>
       ) : null}
-      <textarea
+      <Textarea
         id={id}
         name={name}
         value={value}
@@ -71,14 +78,11 @@ export function StudioTextAreaField({
         placeholder={placeholder}
         aria-label={label ? undefined : placeholder}
         aria-describedby={descriptionId}
-        className={cn(
-          "mt-1.5 w-full resize-y rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-xs leading-5 text-horizon-ink outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-horizon-secondary focus:ring-2 focus:ring-horizon-secondary/20 disabled:cursor-not-allowed disabled:bg-slate-100",
-          minHeightClass,
-        )}
+        className={cn("resize-y bg-white text-xs leading-5", minHeightClass)}
       />
       <div
         id={descriptionId}
-        className="mt-1 flex items-center justify-between px-0.5 text-[11px] font-medium text-slate-500"
+        className="flex items-center justify-between px-0.5 text-[11px] font-medium text-muted-foreground"
       >
         <span>Plain text only</span>
         <span>
@@ -130,66 +134,45 @@ export function ResumeStudioSidebar({
 
   const inputsSection = (
     <div className="space-y-3.5">
-      {/* Segmented Tab Navigation for Documents */}
-      <div
-        className="flex rounded-xl bg-slate-200/70 p-1 text-xs font-medium"
-        role="tablist"
-        aria-label="Source documents"
+      <Tabs
+        value={activeTab}
+        onValueChange={(value) => {
+          if (value === "jd" || value === "resume") setActiveTab(value);
+        }}
       >
-        <button
-          type="button"
-          role="tab"
-          aria-selected={activeTab === "jd"}
-          onClick={() => setActiveTab("jd")}
-          className={cn(
-            "flex flex-1 items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-semibold transition",
-            activeTab === "jd"
-              ? "bg-white text-slate-900 shadow-sm"
-              : "text-slate-600 hover:text-slate-900",
-          )}
-        >
-          <BriefcaseBusiness aria-hidden className="size-3.5" />
-          <span>Job description</span>
-          {jdLength > 0 ? (
-            <span className="rounded-full bg-slate-100 px-1.5 py-0.5 text-[10px] font-bold text-slate-600">
-              {jdLength >= 1000 ? `${(jdLength / 1000).toFixed(1)}k` : jdLength}
-            </span>
-          ) : null}
-        </button>
-
-        <button
-          type="button"
-          role="tab"
-          aria-selected={activeTab === "resume"}
-          onClick={() => setActiveTab("resume")}
-          className={cn(
-            "flex flex-1 items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-semibold transition",
-            activeTab === "resume"
-              ? "bg-white text-slate-900 shadow-sm"
-              : "text-slate-600 hover:text-slate-900",
-          )}
-        >
-          <FileText aria-hidden className="size-3.5" />
-          <span>Master résumé</span>
-          {mode === "account" ? (
-            <span
-              title="Saved in your account"
-              className="size-1.5 rounded-full bg-emerald-500"
-            />
-          ) : resumeLength > 0 ? (
-            <span className="rounded-full bg-slate-100 px-1.5 py-0.5 text-[10px] font-bold text-slate-600">
-              {resumeLength >= 1000
-                ? `${(resumeLength / 1000).toFixed(1)}k`
-                : resumeLength}
-            </span>
-          ) : null}
-        </button>
-      </div>
+        <TabsList aria-label="Source documents" className="grid h-auto w-full grid-cols-2">
+          <TabsTrigger value="jd" className="text-xs">
+            <BriefcaseBusiness aria-hidden className="size-3.5" />
+            Job description
+            {jdLength > 0 ? (
+              <Badge variant="secondary" className="px-1.5 text-[10px]">
+                {jdLength >= 1000 ? `${(jdLength / 1000).toFixed(1)}k` : jdLength}
+              </Badge>
+            ) : null}
+          </TabsTrigger>
+          <TabsTrigger value="resume" className="text-xs">
+            <FileText aria-hidden className="size-3.5" />
+            Master résumé
+            {mode === "account" ? (
+              <span
+                title="Saved in your account"
+                className="size-1.5 rounded-full bg-emerald-500"
+              />
+            ) : resumeLength > 0 ? (
+              <Badge variant="secondary" className="px-1.5 text-[10px]">
+                {resumeLength >= 1000 ? `${(resumeLength / 1000).toFixed(1)}k` : resumeLength}
+              </Badge>
+            ) : null}
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
 
       {/* Tab Panels: Both inputs stay rendered in DOM for FormData submission */}
       <div className={activeTab === "jd" ? "block space-y-1.5" : "hidden"}>
         <div className="flex items-center justify-between gap-2">
-          <span className="text-xs font-bold text-slate-800">Job description</span>
+          <Label htmlFor="studio-job-description" className="text-xs font-bold">
+            Job description
+          </Label>
           <DevSampleFill
             disabled={isPending}
             onFill={(sample) => {
@@ -212,7 +195,9 @@ export function ResumeStudioSidebar({
       {mode === "guest" ? (
         <div className={activeTab === "resume" ? "block space-y-1.5" : "hidden"}>
           <div className="flex items-center justify-between gap-2">
-            <span className="text-xs font-bold text-slate-800">Master résumé</span>
+            <Label htmlFor="studio-resume" className="text-xs font-bold">
+              Master résumé
+            </Label>
             <DevSampleFill disabled={isPending} onFill={onFillSample} />
           </div>
           <StudioTextAreaField
@@ -227,8 +212,8 @@ export function ResumeStudioSidebar({
         </div>
       ) : (
         <div className={activeTab === "resume" ? "block" : "hidden"}>
-          <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-            <div className="flex items-center justify-between gap-3">
+          <Card className="bg-white py-4 shadow-sm">
+            <CardContent className="flex items-center justify-between gap-3">
               <div className="flex min-w-0 items-center gap-2.5">
                 <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-horizon-primary/10 text-horizon-primary">
                   <FileText aria-hidden className="size-4" />
@@ -237,21 +222,18 @@ export function ResumeStudioSidebar({
                   <p className="truncate text-xs font-bold text-slate-900">
                     Using your saved master résumé
                   </p>
-                  <p className="text-[11px] text-slate-500">
+                  <p className="text-[11px] text-muted-foreground">
                     {masterResumeUpdatedAt
                       ? `Last updated ${masterResumeUpdatedAt}`
                       : "Stored securely in your account"}
                   </p>
                 </div>
               </div>
-              <Link
-                href="/dashboard"
-                className="shrink-0 text-xs font-bold text-horizon-primary hover:underline"
-              >
+              <Button variant="link" size="sm" nativeButton={false} render={<Link href="/dashboard" />} className="shrink-0 px-0 text-xs">
                 Edit
-              </Link>
-            </div>
-          </div>
+              </Button>
+            </CardContent>
+          </Card>
         </div>
       )}
 
@@ -273,13 +255,14 @@ export function ResumeStudioSidebar({
               : "Job description needed"}
         </span>
         {mode === "guest" ? (
-          <button
+          <Button
             type="button"
+            variant="link"
+            className="h-auto px-0 text-[11px]"
             onClick={() => setActiveTab(activeTab === "jd" ? "resume" : "jd")}
-            className="font-semibold text-horizon-primary hover:underline"
           >
             View {activeTab === "jd" ? "résumé" : "job post"} →
-          </button>
+          </Button>
         ) : null}
       </div>
 
@@ -301,11 +284,7 @@ export function ResumeStudioSidebar({
         />
       ) : (
         <div className="pt-1">
-          <button
-            type="submit"
-            disabled={isPending || !isReady}
-            className="horizon-button-primary h-10 w-full px-5 text-xs font-bold disabled:pointer-events-none disabled:opacity-45"
-          >
+          <Button type="submit" disabled={isPending || !isReady} className="h-10 w-full px-5 text-xs font-bold">
             {isPending ? (
               <>
                 <LoaderCircle aria-hidden className="size-3.5 animate-spin motion-reduce:animate-none" />
@@ -318,7 +297,7 @@ export function ResumeStudioSidebar({
                 <ArrowRight aria-hidden className="ml-1 size-3.5" />
               </>
             )}
-          </button>
+          </Button>
           <p className="mt-2.5 flex items-center justify-center gap-1.5 text-[11px] text-slate-500">
             <Lock aria-hidden className="size-3 text-horizon-secondary" />
             {mode === "guest"
@@ -333,44 +312,48 @@ export function ResumeStudioSidebar({
   return (
     <aside
       aria-label="Studio source inputs and insights"
-      className="flex w-full min-w-0 flex-col overflow-y-auto border-b border-slate-200 bg-slate-50/80 p-4 sm:p-5 md:w-[380px] md:shrink-0 md:border-b-0 md:border-r lg:w-[400px]"
+      className={cn(
+        "flex w-full min-w-0 flex-col overflow-y-auto border-b border-slate-200 p-4 sm:p-5 md:w-[380px] md:shrink-0 md:border-b-0 md:border-r lg:w-[400px]",
+        mode === "guest" && "bg-slate-50/80",
+      )}
     >
       {resume ? (
         <div className="space-y-4">
           {/* Target Role Card */}
-          <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500">
-              Target role
-            </p>
-            <h2 className="mt-1 text-base font-bold tracking-tight text-slate-900">
-              {target.title}
-            </h2>
-            <p className="mt-0.5 text-xs text-slate-600">{target.company}</p>
-            <button
-              type="button"
-              onClick={onToggleEditingSources}
-              aria-expanded={editingSources}
-              className="mt-3 inline-flex h-8 items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-secondary"
-            >
-              <Pencil aria-hidden className="size-3" />
-              {editingSources ? "Hide source inputs" : "Edit source inputs"}
-            </button>
-          </div>
+          <Card className="bg-white py-4 shadow-sm">
+            <CardContent>
+              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
+                Target role
+              </p>
+              <h2 className="mt-1 text-base font-bold tracking-tight text-slate-900">
+                {target.title}
+              </h2>
+              <p className="mt-0.5 text-xs text-slate-600">{target.company}</p>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={onToggleEditingSources}
+                aria-expanded={editingSources}
+                className="mt-3 rounded-full text-xs"
+              >
+                <Pencil aria-hidden className="size-3" />
+                {editingSources ? "Hide source inputs" : "Edit source inputs"}
+              </Button>
+            </CardContent>
+          </Card>
 
           {/* Collapsible Source Fields */}
-          <div
-            className={
-              editingSources
-                ? "space-y-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
-                : "hidden"
-            }
-          >
-            {inputsSection}
+          <div className={editingSources ? "block" : "hidden"}>
+            <Card className="bg-white py-4 shadow-sm">
+              <CardContent>{inputsSection}</CardContent>
+            </Card>
           </div>
 
           {/* Match Insights Card */}
-          <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-            <h2 className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500">
+          <Card className="bg-white py-4 shadow-sm">
+            <CardContent>
+            <h2 className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
               Match insights
             </h2>
             <p className="mt-2 text-xs font-bold text-slate-900">
@@ -380,18 +363,16 @@ export function ResumeStudioSidebar({
             {resume.skills.length > 0 ? (
               <ul className="mt-2.5 flex flex-wrap gap-1.5" aria-label="Matching skills">
                 {resume.skills.map((skill) => (
-                  <li
-                    key={skill}
-                    className="rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-700"
-                  >
-                    {skill}
+                  <li key={skill}>
+                    <Badge variant="secondary">{skill}</Badge>
                   </li>
                 ))}
               </ul>
             ) : null}
 
             {resume.matchNote ? (
-              <div className="mt-4 space-y-3 border-t border-slate-100 pt-3 text-xs leading-5 text-slate-700">
+              <div className="mt-4 space-y-3 text-xs leading-5 text-slate-700">
+                <Separator />
                 <div>
                   <p className="font-bold text-slate-900">Core strengths</p>
                   <ul className="mt-1 space-y-1">
@@ -421,11 +402,13 @@ export function ResumeStudioSidebar({
                 </p>
               </div>
             ) : null}
-          </div>
+            </CardContent>
+          </Card>
         </div>
       ) : (
         <div className="space-y-4">
-          <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+          <Card className="bg-white py-4 shadow-sm">
+            <CardContent>
             <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-horizon-secondary">
               Source documents
             </p>
@@ -437,11 +420,12 @@ export function ResumeStudioSidebar({
                 ? "Both master résumé and job description are required."
                 : "Paste the complete job description to tailor against your master résumé."}
             </p>
-          </div>
+            </CardContent>
+          </Card>
 
-          <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-            {inputsSection}
-          </div>
+          <Card className="bg-white py-4 shadow-sm">
+            <CardContent>{inputsSection}</CardContent>
+          </Card>
         </div>
       )}
     </aside>

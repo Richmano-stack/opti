@@ -3,6 +3,9 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { Check, Copy, FileText, LoaderCircle, Minus, Plus, Sparkles } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
 import type { OptimizedResume } from "@/features/tailoring/lib/types";
 import { LETTER_WIDTH_PX } from "@/templates/letter-page";
 import { getTemplate, listTemplates, type TemplateId } from "@/templates/registry";
@@ -61,12 +64,14 @@ export function ResumeStudioCanvas({
   isReady,
   templateId,
   onTemplateChange,
+  mode = "guest",
 }: {
   resume?: OptimizedResume;
   isPending: boolean;
   isReady: boolean;
   templateId: TemplateId;
   onTemplateChange: (templateId: TemplateId) => void;
+  mode?: "guest" | "account";
 }) {
   const [zoom, setZoom] = useState<(typeof zoomSteps)[number]>(100);
   const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle");
@@ -100,65 +105,72 @@ export function ResumeStudioCanvas({
   return (
     <section
       aria-label="Résumé canvas"
-      className="flex h-full min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-slate-100/70"
+      className={cn(
+        "flex h-full min-h-0 min-w-0 flex-1 flex-col overflow-hidden",
+        mode === "guest" && "bg-slate-100/70",
+      )}
     >
       <div className="flex min-h-0 flex-1 items-start justify-center overflow-y-auto p-4 sm:p-8">
         <div className="flex w-full max-w-[816px] flex-col items-center">
           {/* Floating Canvas Toolbar */}
           <div className="sticky top-0 z-10 mb-4 inline-flex max-w-full flex-wrap items-center justify-center gap-1 rounded-full border border-slate-200/80 bg-white px-1.5 py-1 shadow-sm">
             <div className="inline-flex items-center" role="group" aria-label="Zoom">
-              <button
+              <Button
                 type="button"
+                variant="ghost"
+                size="icon"
                 aria-label="Zoom out"
                 disabled={zoomIndex <= 0}
                 onClick={() => setZoom(zoomSteps[zoomIndex - 1] ?? zoom)}
-                className="inline-flex size-8 items-center justify-center rounded-full text-slate-700 hover:bg-slate-50 disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-secondary"
+                className="rounded-full"
               >
                 <Minus aria-hidden className="size-3.5" />
-              </button>
+              </Button>
               <span className="min-w-10 text-center text-xs font-medium text-slate-700">{zoom}%</span>
-              <button
+              <Button
                 type="button"
+                variant="ghost"
+                size="icon"
                 aria-label="Zoom in"
                 disabled={zoomIndex >= zoomSteps.length - 1}
                 onClick={() => setZoom(zoomSteps[zoomIndex + 1] ?? zoom)}
-                className="inline-flex size-8 items-center justify-center rounded-full text-slate-700 hover:bg-slate-50 disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-secondary"
+                className="rounded-full"
               >
                 <Plus aria-hidden className="size-3.5" />
-              </button>
+              </Button>
             </div>
 
-            <span aria-hidden className="h-4 w-px bg-slate-200" />
+            <Separator orientation="vertical" className="mx-0.5 h-4" />
 
             <div role="radiogroup" aria-label="Template" className="inline-flex items-center">
               {templates.map((template) => {
                 const selected = template.id === templateId;
                 return (
-                  <button
+                  <Button
                     key={template.id}
                     type="button"
+                    size="sm"
+                    variant={selected ? "default" : "ghost"}
                     role="radio"
                     aria-checked={selected}
                     onClick={() => onTemplateChange(template.id)}
-                    className={
-                      selected
-                        ? "inline-flex h-8 items-center rounded-full bg-horizon-primary px-2.5 text-xs font-semibold text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-secondary"
-                        : "inline-flex h-8 items-center rounded-full px-2.5 text-xs font-medium text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-secondary"
-                    }
+                    className="h-8 rounded-full px-2.5 text-xs"
                   >
                     {template.name}
-                  </button>
+                  </Button>
                 );
               })}
             </div>
 
-            <span aria-hidden className="h-4 w-px bg-slate-200" />
+            <Separator orientation="vertical" className="mx-0.5 h-4" />
 
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="sm"
               onClick={handleCopy}
               disabled={!resume}
-              className="inline-flex h-8 items-center gap-1.5 rounded-full px-2.5 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-secondary"
+              className="h-8 rounded-full px-2.5 text-xs"
             >
               {copyState === "copied" ? (
                 <Check aria-hidden className="size-3.5 text-emerald-600" />
@@ -166,12 +178,14 @@ export function ResumeStudioCanvas({
                 <Copy aria-hidden className="size-3.5" />
               )}
               {copyState === "copied" ? "Copied" : "Copy text"}
-            </button>
+            </Button>
 
-            <button
+            <Button
               type="submit"
+              variant="ghost"
+              size="sm"
               disabled={isPending || !isReady}
-              className="inline-flex h-8 items-center gap-1.5 rounded-full px-2.5 text-xs font-medium text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-secondary disabled:pointer-events-none disabled:opacity-45"
+              className="h-8 rounded-full px-2.5 text-xs"
             >
               {isPending ? (
                 <LoaderCircle aria-hidden className="size-3.5 animate-spin motion-reduce:animate-none" />
@@ -179,7 +193,7 @@ export function ResumeStudioCanvas({
                 <Sparkles aria-hidden className="size-3.5" />
               )}
               {resume ? "Refine with AI" : "Tailor with AI"}
-            </button>
+            </Button>
           </div>
 
           {copyState === "failed" ? (

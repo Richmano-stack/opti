@@ -2,13 +2,23 @@
 
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, LoaderCircle, LockKeyhole } from "lucide-react";
+import { AlertCircle, ArrowRight, CheckCircle2, LoaderCircle, LockKeyhole } from "lucide-react";
 
 import { saveMasterResume } from "@/features/master-resume/actions/save-master-resume";
-import { AccountBar } from "@/components/horizon/account-bar";
-import { ActionGroup, HorizonDialog, ScrollRegion } from "@/components/horizon/page-composition";
+import { AuthenticatedAppShell } from "@/components/horizon/authenticated-app-shell";
 import { DevSampleFill } from "@/features/devtools/components/dev-sample-fill";
-import { HorizonButton, HorizonTextarea } from "@/components/horizon";
+import { Alert, AlertTitle } from "@/components/ui/alert";
+import { Button, buttonVariants } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
+import { Textarea } from "@/components/ui/textarea";
 import type { AuthUser } from "@/server/auth/types";
 
 const MAX_CHARACTERS = 50_000;
@@ -80,33 +90,32 @@ export function MasterResumeWorkspace({ user, initialContent = "", initialUpdate
   const savedLabel = `${isSetup ? "Saved" : "Not saved"}${lastSavedAt ? ` · Last saved at ${lastSavedAt}` : ""} · ${savedContent.length.toLocaleString()} / ${MAX_CHARACTERS.toLocaleString()} characters`;
 
   return (
-    <div className="flex h-dvh flex-col overflow-hidden bg-white text-horizon-ink">
-      <AccountBar
-        user={user}
-        title="Master résumé"
-        actions={
-          isSetup ? (
-            <Link href="/dashboard/generator" className="horizon-button-primary h-9 px-4 text-xs">
-              Tailor for a role <ArrowRight aria-hidden="true" className="size-3.5" />
-            </Link>
-          ) : null
-        }
-      />
-      <div className="min-h-0 flex-1 overflow-y-auto bg-slate-100/70">
+    <AuthenticatedAppShell
+      user={user}
+      title="Master résumé"
+      actions={
+        isSetup ? (
+          <Link href="/dashboard/templates" className={buttonVariants()}>
+            Tailor for a role <ArrowRight aria-hidden="true" data-icon="inline-end" />
+          </Link>
+        ) : null
+      }
+    >
+      <div className="min-h-full">
         <div className="mx-auto flex w-full max-w-[816px] flex-col px-4 py-8 sm:px-0">
           <div aria-live="polite" aria-atomic="true">
             {isSavedRecently ? (
-              <p className="mb-4 flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-bold text-emerald-800">
-                <CheckCircle2 aria-hidden="true" className="size-4" />
-                Your master résumé is saved.
-              </p>
+              <Alert role="status" className="mb-4">
+                <CheckCircle2 aria-hidden="true" />
+                <AlertTitle>Your master résumé is saved.</AlertTitle>
+              </Alert>
             ) : null}
           </div>
           <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-xs font-medium text-slate-600">{savedLabel}</p>
-            <HorizonButton onClick={openEditor} ref={editButtonRef} tone={isSetup ? "secondary" : "primary"} type="button">
+            <p className="text-xs font-medium text-muted-foreground">{savedLabel}</p>
+            <Button onClick={openEditor} ref={editButtonRef} type="button" size="lg" variant={isSetup ? "outline" : "default"}>
               {editorTitle}
-            </HorizonButton>
+            </Button>
           </div>
           <article
             aria-label="Master résumé source"
@@ -126,17 +135,68 @@ export function MasterResumeWorkspace({ user, initialContent = "", initialUpdate
         </div>
       </div>
 
-      <HorizonDialog
-        description="This is the only résumé Opti stores. Job descriptions and generated results stay temporary."
-        footer={
-          <ActionGroup className="sm:justify-end">
-            <HorizonButton disabled={isPending} onClick={requestClose} tone="secondary" type="button">
+      <Dialog
+        open={isEditorOpen}
+        onOpenChange={(open) => {
+          if (!open) requestClose();
+        }}
+      >
+        <DialogContent
+          className="max-h-[calc(100dvh-2rem)] grid-rows-[auto_minmax(0,1fr)_auto] sm:max-w-4xl"
+          finalFocus={editButtonRef}
+          showCloseButton={!isPending}
+        >
+          <DialogHeader>
+            <DialogTitle>{editorTitle}</DialogTitle>
+            <DialogDescription>
+              This is the only résumé Opti stores. Job descriptions and generated results stay temporary.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="flex min-h-0 flex-col gap-4 overflow-y-auto">
+            {error ? (
+              <Alert variant="destructive">
+                <AlertCircle aria-hidden="true" />
+                <AlertTitle>{error}</AlertTitle>
+              </Alert>
+            ) : null}
+            <Field>
+              <FieldLabel htmlFor="master-resume-editor" className="sr-only">
+                Full, unedited career experience
+              </FieldLabel>
+              <div className="flex flex-col gap-1 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+                <span>Keep the original detail. Tailoring happens later.</span>
+                <span className="flex items-center gap-3">
+                  <DevSampleFill disabled={isPending} onFill={(sample) => setDraft(sample.resume)} />
+                  <span id="resume-counter">{draft.length.toLocaleString()} / {MAX_CHARACTERS.toLocaleString()} characters</span>
+                </span>
+              </div>
+              <Textarea
+                aria-describedby="resume-counter resume-storage-note"
+                aria-invalid={error ? true : undefined}
+                className="max-h-[50dvh] min-h-80"
+                disabled={isPending}
+                id="master-resume-editor"
+                maxLength={MAX_CHARACTERS}
+                onChange={(event) => setDraft(event.target.value)}
+                placeholder={"PROFESSIONAL SUMMARY\nWrite a concise overview of your experience.\n\nEXPERIENCE\nRole | Company | Dates\nDescribe your work and measurable achievements.\n\nSKILLS\nList your relevant tools and capabilities."}
+                value={draft}
+              />
+              <FieldDescription id="resume-storage-note" className="flex items-start gap-2 text-xs">
+                <LockKeyhole aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
+                <span>Your master resume is stored privately. Generated resumes, job descriptions, and PDFs are not stored.</span>
+              </FieldDescription>
+            </Field>
+          </div>
+
+          <DialogFooter>
+            <Button disabled={isPending} onClick={requestClose} type="button" variant="outline">
               Cancel
-            </HorizonButton>
-            <HorizonButton aria-busy={isPending || undefined} disabled={isPending || !canSave} onClick={handleSave} type="button">
+            </Button>
+            <Button aria-busy={isPending || undefined} disabled={isPending || !canSave} onClick={handleSave} type="button">
               {isPending ? (
                 <>
-                  <LoaderCircle aria-hidden="true" className="size-4 animate-spin" />
+                  <LoaderCircle aria-hidden="true" className="animate-spin" data-icon="inline-start" />
                   Saving…
                 </>
               ) : isSetup ? (
@@ -144,49 +204,10 @@ export function MasterResumeWorkspace({ user, initialContent = "", initialUpdate
               ) : (
                 "Save master resume"
               )}
-            </HorizonButton>
-          </ActionGroup>
-        }
-        isOpen={isEditorOpen}
-        onClose={requestClose}
-        size="wide"
-        title={editorTitle}
-      >
-        <div className="space-y-4">
-          {error ? (
-            <p className="rounded-[var(--horizon-radius-control)] border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-800" role="alert">
-              {error}
-            </p>
-          ) : null}
-          <div className="flex flex-col gap-1 text-horizon-meta font-semibold text-horizon-muted sm:flex-row sm:items-center sm:justify-between">
-            <span>Keep the original detail. Tailoring happens later.</span>
-            <span className="flex items-center gap-3">
-              <DevSampleFill disabled={isPending} onFill={(sample) => setDraft(sample.resume)} />
-              <span id="resume-counter">{draft.length.toLocaleString()} / {MAX_CHARACTERS.toLocaleString()} characters</span>
-            </span>
-          </div>
-          <label className="sr-only" htmlFor="master-resume-editor">
-            Full, unedited career experience
-          </label>
-          <ScrollRegion className="max-h-[50dvh]">
-            <HorizonTextarea
-              aria-describedby="resume-counter resume-storage-note"
-              aria-invalid={error ? true : undefined}
-              className="min-h-80"
-              disabled={isPending}
-              id="master-resume-editor"
-              maxLength={MAX_CHARACTERS}
-              onChange={(event) => setDraft(event.target.value)}
-              placeholder={"PROFESSIONAL SUMMARY\nWrite a concise overview of your experience.\n\nEXPERIENCE\nRole | Company | Dates\nDescribe your work and measurable achievements.\n\nSKILLS\nList your relevant tools and capabilities."}
-              value={draft}
-            />
-          </ScrollRegion>
-          <p className="flex items-start gap-2 text-xs leading-5 text-horizon-muted" id="resume-storage-note">
-            <LockKeyhole aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-horizon-secondary" />
-            <span>Your master resume is stored privately. Generated resumes, job descriptions, and PDFs are not stored.</span>
-          </p>
-        </div>
-      </HorizonDialog>
-    </div>
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </AuthenticatedAppShell>
   );
 }

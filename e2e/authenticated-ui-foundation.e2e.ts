@@ -8,7 +8,7 @@ import { collectBrowserErrors, expectNoHorizontalOverflow } from "./support/ui-v
 const connectionString = process.env.DATABASE_URL;
 
 const viewports = [
-  { name: "mobile", viewport: { width: 375, height: 812 }, navigation: "Mobile workspace navigation" },
+  { name: "mobile", viewport: { width: 375, height: 812 }, navigation: "Toggle Sidebar" },
   { name: "desktop", viewport: { width: 1440, height: 960 }, navigation: "Workspace navigation" },
 ] as const;
 
@@ -25,14 +25,13 @@ for (const { name, viewport, navigation } of viewports) {
 
     try {
       await page.goto("/signup");
-      await page.getByLabel("Full name").fill("UI Check User");
-      await page.getByLabel("Email address").fill(email);
+      await page.getByLabel("Email", { exact: true }).fill(email);
       await page.getByLabel("Password", { exact: true }).fill(password);
-      await page.getByLabel("Confirm password").fill(password);
+      await page.getByLabel("Confirm Password").fill(password);
       await page.getByRole("button", { name: "Create Account" }).click();
 
-      await expect(page).toHaveURL(/\/dashboard$/);
-      await expect(page.getByRole("navigation", { name: navigation })).toBeVisible();
+      await expect(page).toHaveURL(/\/dashboard\/templates$/);
+      await expect(page.getByRole(name === "mobile" ? "button" : "navigation", { name: navigation })).toBeVisible();
       await expectNoHorizontalOverflow(page);
       expect(browserErrors.errors).toEqual([]);
     } finally {

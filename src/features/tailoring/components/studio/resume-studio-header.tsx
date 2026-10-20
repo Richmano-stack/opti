@@ -2,46 +2,29 @@
 
 import { useState, type RefObject } from "react";
 import Link from "next/link";
-import { ArrowLeft, Download, LoaderCircle, Sparkles } from "lucide-react";
+import { Download, LoaderCircle, Sparkles } from "lucide-react";
 
-import { AccountBar } from "@/components/horizon/account-bar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { BrandMark } from "@/components/brand-mark";
+import { cn } from "@/lib/utils";
 import { readJobTarget } from "@/features/tailoring/lib/read-job-target";
 import { downloadOptimizedResumePdf } from "@/features/tailoring/pdf/download-resume-pdf";
 import type { OptimizedResume } from "@/features/tailoring/lib/types";
-import type { AuthUser } from "@/server/auth/types";
 import type { TemplateId } from "@/templates/registry";
 
-export function ResumeStudioHeader({
-  resume,
-  jobDescription,
-  isPending,
-  isReady,
-  headingRef,
-  mode,
-  user,
-  templateId = "minimal",
-}: {
-  resume?: OptimizedResume;
-  jobDescription: string;
-  isPending: boolean;
-  isReady: boolean;
-  headingRef: RefObject<HTMLHeadingElement | null>;
-  mode: "guest" | "account";
-  user?: AuthUser;
-  templateId?: TemplateId;
-}) {
+export function studioRoleLabel(jobDescription: string): string {
+  if (!jobDescription.trim()) return "New tailored résumé";
+  const target = readJobTarget(jobDescription);
+  return target.company === "Company not listed" ? target.title : `${target.title} (${target.company})`;
+}
+
+export function useResumeDownload(resume: OptimizedResume | undefined, templateId: TemplateId) {
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadError, setDownloadError] = useState<string | null>(null);
 
-  const target = readJobTarget(jobDescription);
-  const roleLabel = jobDescription.trim()
-    ? target.company === "Company not listed"
-      ? target.title
-      : `${target.title} (${target.company})`
-    : "New tailored résumé";
-
-  const handleDownload = async () => {
+  const download = async () => {
     if (!resume) return;
     setDownloadError(null);
     setIsDownloading(true);
@@ -56,18 +39,64 @@ export function ResumeStudioHeader({
     }
   };
 
-  const studioActions = (
+  return { isDownloading, downloadError, download };
+}
+
+export function StudioHeading({
+  label,
+  headingRef,
+  className,
+}: {
+  label: string;
+  headingRef: RefObject<HTMLHeadingElement | null>;
+  className?: string;
+}) {
+  return (
+    <h1
+      id="studio-target-heading"
+      ref={headingRef}
+      tabIndex={-1}
+      className={cn(
+        "min-w-0 truncate text-sm outline-none focus-visible:ring-2 focus-visible:ring-horizon-secondary",
+        className,
+      )}
+    >
+      {label}
+    </h1>
+  );
+}
+
+export function StudioActions({
+  resume,
+  isPending,
+  isReady,
+  isDownloading,
+  onDownload,
+  form,
+}: {
+  resume?: OptimizedResume;
+  isPending: boolean;
+  isReady: boolean;
+  isDownloading: boolean;
+  onDownload: () => void;
+  /** Id of the studio form, needed when the actions render outside it. */
+  form?: string;
+}) {
+  return (
     <>
-      <span className="hidden items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700 sm:inline-flex">
+      <Badge variant="secondary" className="hidden sm:inline-flex">
         <span aria-hidden className="size-1.5 rounded-full bg-emerald-500" />
         {isPending ? "Tailoring" : resume ? "Draft Ready" : "Studio Ready"}
-      </span>
+      </Badge>
 
-      <button
+      <Button
         type="submit"
+        form={form}
+        size="lg"
+        variant="outline"
         disabled={isPending || !isReady}
         aria-label={resume ? "Refine with AI" : "Tailor my résumé"}
-        className="inline-flex h-9 items-center gap-2 rounded-full border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-secondary disabled:pointer-events-none disabled:opacity-45"
+        className="rounded-full px-3 text-xs"
       >
         {isPending ? (
           <LoaderCircle aria-hidden className="size-3.5 animate-spin motion-reduce:animate-none" />
@@ -75,14 +104,15 @@ export function ResumeStudioHeader({
           <Sparkles aria-hidden className="size-3.5" />
         )}
         <span className="hidden sm:inline">{resume ? "Refine with AI" : "Tailor my résumé"}</span>
-      </button>
+      </Button>
 
-      <button
+      <Button
         type="button"
-        onClick={handleDownload}
+        size="lg"
+        onClick={onDownload}
         disabled={isDownloading || !resume}
         aria-label="Download PDF"
-        className="horizon-button-primary h-9 px-4 text-xs disabled:pointer-events-none disabled:opacity-45"
+        className="rounded-full px-4 text-xs"
       >
         {isDownloading ? (
           <LoaderCircle aria-hidden className="size-3.5 animate-spin motion-reduce:animate-none" />
@@ -90,40 +120,36 @@ export function ResumeStudioHeader({
           <Download aria-hidden className="size-3.5" />
         )}
         <span className="hidden sm:inline">Download PDF</span>
-      </button>
+      </Button>
     </>
   );
+}
 
-  if (mode === "account" && user) {
-    return (
-      <>
-        <AccountBar
-          user={user}
-          title={roleLabel}
-          headingId="studio-target-heading"
-          headingRef={headingRef}
-          actions={
-            <>
-              <Link
-                href="/dashboard"
-                aria-label="Master résumé"
-                className="inline-flex h-9 items-center gap-1.5 rounded-full px-2 text-xs font-semibold text-slate-600 hover:text-horizon-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-secondary"
-              >
-                <ArrowLeft aria-hidden className="size-3.5" />
-                <span className="hidden md:inline">Master résumé</span>
-              </Link>
-              {studioActions}
-            </>
-          }
-        />
-        {downloadError ? (
-          <div role="alert" className="border-b border-red-200 bg-red-50 px-6 py-2 text-xs font-medium text-red-800">
-            {downloadError}
-          </div>
-        ) : null}
-      </>
-    );
-  }
+export function DownloadErrorAlert({ message }: { message: string | null }) {
+  if (!message) return null;
+  return (
+    <div role="alert" className="border-b border-red-200 bg-red-50 px-6 py-2 text-xs font-medium text-red-800">
+      {message}
+    </div>
+  );
+}
+
+export function ResumeStudioHeader({
+  resume,
+  jobDescription,
+  isPending,
+  isReady,
+  headingRef,
+  templateId = "minimal",
+}: {
+  resume?: OptimizedResume;
+  jobDescription: string;
+  isPending: boolean;
+  isReady: boolean;
+  headingRef: RefObject<HTMLHeadingElement | null>;
+  templateId?: TemplateId;
+}) {
+  const { isDownloading, downloadError, download } = useResumeDownload(resume, templateId);
 
   return (
     <>
@@ -136,36 +162,35 @@ export function ResumeStudioHeader({
           >
             <BrandMark />
           </Link>
-          <span aria-hidden className="h-4 w-px shrink-0 bg-slate-200" />
-          <h1
-            id="studio-target-heading"
-            ref={headingRef}
-            tabIndex={-1}
-            className="truncate text-sm font-medium text-slate-700 outline-none focus-visible:ring-2 focus-visible:ring-horizon-secondary"
-          >
-            {roleLabel}
-          </h1>
+          <Separator orientation="vertical" className="h-4 shrink-0" />
+          <StudioHeading
+            label={studioRoleLabel(jobDescription)}
+            headingRef={headingRef}
+            className="font-medium text-slate-700"
+          />
         </div>
 
         <div className="flex shrink-0 items-center gap-2">
-          <Link
-            href="/login"
-            className="mr-1 hidden items-center text-xs font-semibold text-slate-600 hover:text-horizon-primary sm:inline-flex"
+          <Button
+            variant="ghost"
+            size="sm"
+            nativeButton={false}
+            render={<Link href="/login" />}
+            className="mr-1 hidden text-xs sm:inline-flex"
           >
             Sign in
-          </Link>
-          {studioActions}
+          </Button>
+          <StudioActions
+            resume={resume}
+            isPending={isPending}
+            isReady={isReady}
+            isDownloading={isDownloading}
+            onDownload={download}
+          />
         </div>
       </header>
 
-      {downloadError ? (
-        <div
-          role="alert"
-          className="border-b border-red-200 bg-red-50 px-6 py-2 text-xs font-medium text-red-800"
-        >
-          {downloadError}
-        </div>
-      ) : null}
+      <DownloadErrorAlert message={downloadError} />
     </>
   );
 }

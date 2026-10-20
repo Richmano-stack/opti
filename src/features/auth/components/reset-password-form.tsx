@@ -1,154 +1,185 @@
-"use client";
+"use client"
 
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useState } from "react";
-import { toast } from "sonner";
-import { ArrowRight, LoaderCircle } from "lucide-react";
+import Link from "next/link"
+import { useRouter, useSearchParams } from "next/navigation"
+import { Suspense, useState } from "react"
+import { toast } from "sonner"
+import { LoaderCircle } from "lucide-react"
 
-import { PasswordField } from "@/features/auth/components/auth-fields";
-import { authClient } from "@/server/auth/client";
+import { cn } from "@/lib/utils"
+
+import { Button, buttonVariants } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+import { authClient } from "@/server/auth/client"
 
 type ResetPasswordPanelProps = {
-  token: string | null;
-  error: string | null;
-};
+  token: string | null
+  error: string | null
+}
 
 export function ResetPasswordForm(props: Partial<ResetPasswordPanelProps> = {}) {
   if ("token" in props || "error" in props) {
-    return <ResetPasswordPanel token={props.token ?? null} error={props.error ?? null} />;
+    return <ResetPasswordPanel token={props.token ?? null} error={props.error ?? null} />
   }
 
   return (
     <Suspense fallback={null}>
       <ResetPasswordFromSearch />
     </Suspense>
-  );
+  )
 }
 
 function ResetPasswordFromSearch() {
-  const searchParams = useSearchParams();
-  return <ResetPasswordPanel token={searchParams.get("token")} error={searchParams.get("error")} />;
+  const searchParams = useSearchParams()
+  return <ResetPasswordPanel token={searchParams.get("token")} error={searchParams.get("error")} />
 }
 
 function ResetPasswordPanel({ token, error }: ResetPasswordPanelProps) {
-  const router = useRouter();
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [passwordMismatch, setPasswordMismatch] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const linkIsInvalid = error === "INVALID_TOKEN" || !token;
+  const router = useRouter()
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [passwordMismatch, setPasswordMismatch] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const linkIsInvalid = error === "INVALID_TOKEN" || !token
 
   const savePassword = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!token) return;
+    event.preventDefault()
+    if (!token) return
     if (password !== confirmPassword) {
-      setPasswordMismatch(true);
-      return;
+      setPasswordMismatch(true)
+      return
     }
-    setPasswordMismatch(false);
-    setIsSubmitting(true);
+    setPasswordMismatch(false)
+    setIsSubmitting(true)
     const { error: resetError } = await authClient.resetPassword({
       newPassword: password,
       token,
-    });
-    setIsSubmitting(false);
+    })
+    setIsSubmitting(false)
     if (resetError) {
-      toast.error(resetError.message ?? "This reset link is no longer valid.");
-      return;
+      toast.error(resetError.message ?? "This reset link is no longer valid.")
+      return
     }
-    toast.success("Password updated. Sign in with the new password.");
-    router.push("/login");
-  };
-
-  if (linkIsInvalid) {
-    return (
-      <div className="horizon-glass flex h-full flex-col justify-center gap-6 rounded-3xl p-6 sm:rounded-[2rem] sm:p-8 lg:p-10">
-        <div role="alert">
-          <p className="text-[10px] font-bold uppercase tracking-[0.17em] text-horizon-primary">Password reset</p>
-          <h2 className="mt-3 text-2xl font-bold tracking-[-0.02em] text-horizon-ink sm:text-3xl">
-            This link is no longer valid
-          </h2>
-          <p className="mt-2 text-sm leading-6 text-horizon-muted">
-            Request a new reset link and open it before it expires.
-          </p>
-        </div>
-        <Link
-          href="/forgot-password"
-          className="inline-flex h-12 w-full items-center justify-center rounded-full bg-horizon-primary text-sm font-bold text-white hover:bg-[#8b1a00] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-primary"
-        >
-          Request a new link
-        </Link>
-      </div>
-    );
+    toast.success("Password updated. Sign in with the new password.")
+    router.push("/login")
   }
 
   return (
-    <div className="horizon-glass flex h-full flex-col justify-center gap-6 rounded-3xl p-6 sm:rounded-[2rem] sm:p-8 lg:p-10">
-      <div>
-        <p className="text-[10px] font-bold uppercase tracking-[0.17em] text-horizon-primary">Password reset</p>
-        <h2 className="mt-3 text-2xl font-bold tracking-[-0.02em] text-horizon-ink sm:text-3xl">
-          Choose a new password
-        </h2>
-        <p className="mt-2 text-sm leading-6 text-horizon-muted">
-          This replaces the password on your account. You will sign in again afterward.
-        </p>
-      </div>
-      <form onSubmit={savePassword} className="flex flex-col gap-4" aria-busy={isSubmitting}>
-        <PasswordField
-          id="password"
-          label="New password"
-          autoComplete="new-password"
-          placeholder="Min. 8 characters"
-          required
-          minLength={8}
-          disabled={isSubmitting}
-          value={password}
-          onChange={(value) => {
-            setPassword(value);
-            setPasswordMismatch(false);
-          }}
-        />
-        <div>
-          <PasswordField
-            id="confirm-password"
-            label="Confirm password"
-            autoComplete="new-password"
-            required
-            minLength={8}
-            disabled={isSubmitting}
-            invalid={passwordMismatch}
-            describedBy={passwordMismatch ? "confirm-password-error" : undefined}
-            value={confirmPassword}
-            onChange={(value) => {
-              setConfirmPassword(value);
-              setPasswordMismatch(false);
-            }}
-          />
-          {passwordMismatch ? (
-            <p id="confirm-password-error" role="alert" className="mt-1 text-xs font-semibold text-red-700">
-              Passwords do not match.
-            </p>
-          ) : null}
+    <ResetPasswordCard>
+      {linkIsInvalid ? (
+        <div className="flex flex-col justify-center p-6 md:p-8">
+          <FieldGroup>
+            <div role="alert" className="flex flex-col items-center gap-2 text-center">
+              <h1 className="text-2xl font-bold">This link is no longer valid</h1>
+              <p className="text-balance text-muted-foreground">
+                Request a new reset link and open it before it expires.
+              </p>
+            </div>
+            <Field>
+              <Link href="/forgot-password" className={buttonVariants()}>
+                Request a new link
+              </Link>
+            </Field>
+          </FieldGroup>
         </div>
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-horizon-primary text-sm font-bold text-white transition-all hover:-translate-y-0.5 hover:bg-[#8b1a00] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-primary active:scale-[0.98] disabled:pointer-events-none disabled:opacity-55"
-        >
-          {isSubmitting ? (
-            <>
-              <LoaderCircle className="size-4 animate-spin" />
-              Saving password
-            </>
-          ) : (
-            <>
-              Save password
-              <ArrowRight className="size-4" aria-hidden="true" />
-            </>
-          )}
-        </button>
-      </form>
+      ) : (
+        <form className="p-6 md:p-8" onSubmit={savePassword} aria-busy={isSubmitting}>
+          <FieldGroup>
+            <div className="flex flex-col items-center gap-2 text-center">
+              <h1 className="text-2xl font-bold">Choose a new password</h1>
+              <p className="text-balance text-muted-foreground">
+                This replaces the password on your account. You&apos;ll sign in again afterward.
+              </p>
+            </div>
+            <Field>
+              <FieldLabel htmlFor="password">New Password</FieldLabel>
+              <Input
+                id="password"
+                type="password"
+                autoComplete="new-password"
+                required
+                minLength={8}
+                disabled={isSubmitting}
+                value={password}
+                onChange={(event) => {
+                  setPassword(event.target.value)
+                  setPasswordMismatch(false)
+                }}
+              />
+              <FieldDescription>Must be at least 8 characters long.</FieldDescription>
+            </Field>
+            <Field data-invalid={passwordMismatch || undefined}>
+              <FieldLabel htmlFor="confirm-password">Confirm Password</FieldLabel>
+              <Input
+                id="confirm-password"
+                type="password"
+                autoComplete="new-password"
+                required
+                minLength={8}
+                disabled={isSubmitting}
+                aria-invalid={passwordMismatch || undefined}
+                aria-describedby={passwordMismatch ? "confirm-password-error" : undefined}
+                value={confirmPassword}
+                onChange={(event) => {
+                  setConfirmPassword(event.target.value)
+                  setPasswordMismatch(false)
+                }}
+              />
+              {passwordMismatch ? (
+                <FieldError id="confirm-password-error">Passwords do not match.</FieldError>
+              ) : null}
+            </Field>
+            <Field>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? (
+                  <>
+                    <LoaderCircle aria-hidden="true" className="animate-spin" data-icon="inline-start" />
+                    Saving password
+                  </>
+                ) : (
+                  "Save password"
+                )}
+              </Button>
+            </Field>
+            <FieldDescription className="text-center">
+              <Link href="/login">Back to sign in</Link>
+            </FieldDescription>
+          </FieldGroup>
+        </form>
+      )}
+    </ResetPasswordCard>
+  )
+}
+
+function ResetPasswordCard({
+  children,
+  className,
+}: {
+  children: React.ReactNode
+  className?: string
+}) {
+  return (
+    <div className={cn("flex flex-col gap-6", className)}>
+      <Card className="overflow-hidden p-0">
+        <CardContent className="grid p-0 md:grid-cols-2">
+          {children}
+          <div className="relative hidden bg-muted md:block">
+            <img
+              src="/placeholder.svg"
+              alt="Image"
+              className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+            />
+          </div>
+        </CardContent>
+      </Card>
     </div>
-  );
+  )
 }

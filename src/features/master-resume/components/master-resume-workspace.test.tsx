@@ -38,7 +38,7 @@ describe("MasterResumeWorkspace", () => {
     expect(html).not.toContain("Fill sample");
   });
 
-  it("shows a saved overview with tailoring primary and editing secondary", () => {
+  it("shows the saved overview inside the sidebar shell", () => {
     const content = "5+ years of software engineering experience.";
     const html = renderToStaticMarkup(
       <MasterResumeWorkspace
@@ -48,19 +48,15 @@ describe("MasterResumeWorkspace", () => {
       />,
     );
 
-    const tailorPosition = html.indexOf("Tailor for a role");
-    const editPosition = html.indexOf("Edit master résumé");
-
-    expect(html).toContain('href="/dashboard/generator"');
+    expect(html).toContain("Edit master résumé");
     expect(html).toContain("Saved · Last saved at 10:30 AM");
     expect(html).not.toContain("Not saved");
     expect(html).toContain("Last saved at 10:30 AM");
     expect(html).toContain(`${content.length} / 50,000 characters`);
     expect(html).toContain('aria-label="Master résumé source"');
     expect(html).toContain(content);
-    expect(html).not.toContain("Workspace navigation");
-    expect(tailorPosition).toBeGreaterThan(-1);
-    expect(editPosition).toBeGreaterThan(tailorPosition);
+    expect(html).toContain('data-slot="sidebar-wrapper"');
+    expect(html).toContain("Tailor for a role");
     expect(html).not.toContain("<textarea");
     expect(html).not.toContain('role="dialog"');
   });

@@ -34,9 +34,9 @@ export function authLinkEmail(input: {
     ? `${input.heading}\n\n${input.body}\n\n${input.action}: ${input.url}\n\nIf you did not ask for this, you can ignore this email.`
     : `${input.heading}\n\n${input.body}\n\nIf you did not ask for this, you can ignore this email.`;
   const action = input.url
-    ? `<p style="margin:24px 0"><a href="${escapeHtml(input.url)}" style="display:inline-block;background:#b42907;color:#ffffff;text-decoration:none;font-weight:700;border-radius:999px;padding:12px 20px">${escapeHtml(input.action)}</a></p><p style="font-size:12px;color:#5a413b;word-break:break-all">${escapeHtml(input.url)}</p>`
+    ? `<p style="margin:24px 0"><a href="${escapeHtml(input.url)}" style="display:inline-block;background:#3e7c94;color:#ffffff;text-decoration:none;font-weight:700;border-radius:999px;padding:12px 20px">${escapeHtml(input.action)}</a></p><p style="font-size:12px;color:#4d6b68;word-break:break-all">${escapeHtml(input.url)}</p>`
     : "";
-  const html = `<div style="font-family:Georgia,serif;color:#1a1c1c;line-height:1.5"><h1 style="font-size:20px">${escapeHtml(input.heading)}</h1><p>${escapeHtml(input.body)}</p>${action}<p style="font-size:12px;color:#5a413b">If you did not ask for this, you can ignore this email.</p></div>`;
+  const html = `<div style="font-family:Georgia,serif;color:#1e3d47;line-height:1.5"><h1 style="font-size:20px">${escapeHtml(input.heading)}</h1><p>${escapeHtml(input.body)}</p>${action}<p style="font-size:12px;color:#4d6b68">If you did not ask for this, you can ignore this email.</p></div>`;
   return { text, html };
 }
 

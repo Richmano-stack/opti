@@ -85,10 +85,34 @@ describe("ResumeStudio", () => {
     expect(html).toContain('aria-label="Résumé canvas"');
     expect(html).toContain("ATS-friendly Letter layout");
     expect(html).toContain("Master résumé");
-    expect(html).toContain('aria-label="Sign out"');
-    expect(html).toContain("TU");
-    expect(html).not.toContain("Workspace navigation");
+    expect(html).toContain('data-slot="sidebar-wrapper"');
     expect(html).not.toContain("Sign in");
+  });
+
+  it("puts the account studio heading and actions in the single shell header", () => {
+    const user = { id: "u-1", email: "test@example.com", name: "Test User" };
+    const html = renderToStaticMarkup(<ResumeStudio mode="account" user={user} />);
+
+    const header = html.match(/<header[\s\S]*?<\/header>/)?.[0] ?? "";
+    expect(html.match(/<header/g)).toHaveLength(1);
+    expect(header).toContain('id="studio-target-heading"');
+    expect(header).toContain("New tailored résumé");
+    expect(header).toContain("Studio Ready");
+    expect(header).toContain("Download PDF");
+
+    const formId = html.match(/<form[^>]*id="([^"]+)"/)?.[1];
+    expect(formId).toBeTruthy();
+    expect(header).toMatch(new RegExp(`<button[^>]*form="${formId}"[^>]*aria-label="Tailor my résumé"|<button[^>]*aria-label="Tailor my résumé"[^>]*form="${formId}"`));
+  });
+
+  it("opens the account studio on the template chosen before tailoring", () => {
+    const user = { id: "u-1", email: "test@example.com", name: "Test User" };
+    const html = renderToStaticMarkup(
+      <ResumeStudio mode="account" user={user} initialTemplateId="modern" />,
+    );
+
+    expect(html).toMatch(/aria-checked="true"[^>]*>\s*Modern/);
+    expect(html).toMatch(/aria-checked="false"[^>]*>\s*Minimal/);
   });
 
   it("renders completed tailored résumé with zoom toolbar on the paper canvas", () => {
@@ -134,7 +158,6 @@ describe("ResumeStudio", () => {
         isPending={false}
         isReady={true}
         headingRef={ref}
-        mode="guest"
       />,
     );
 

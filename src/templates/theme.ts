@@ -32,7 +32,7 @@ export const templateTheme = {
   color: {
     ink: "#1c1c1c",
     muted: "#5f5f5f",
-    accent: "#b42907",
+    accent: "#3e7c94",
     accentInk: "#ffffff",
     rule: "#1c1c1c",
     paper: "#ffffff",

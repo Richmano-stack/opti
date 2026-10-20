@@ -7,7 +7,7 @@ import styles from "./sky-theme.module.css";
 type SkyThemeProps = ComponentProps<"div">;
 
 /**
- * Applies Opti's light, sky-blue semantic tokens to a product surface.
+ * Applies Opti's light teal / sage semantic tokens to a product surface.
  * All shadcn components rendered beneath this boundary inherit the theme.
  */
 export function SkyTheme({ className, ...props }: SkyThemeProps) {
