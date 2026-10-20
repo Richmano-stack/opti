@@ -186,23 +186,22 @@ export function ResumeStudioCanvas({
     <div className="flex h-full min-h-0 min-w-0 flex-1 flex-col p-2">
       <section
         aria-label="Résumé canvas"
-        className="relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-xl border border-slate-200 bg-slate-100 dark:border-slate-800 dark:bg-slate-900"
+        className="relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-xl border bg-muted"
       >
-        <div className="pointer-events-none absolute top-2 right-5 z-10 flex items-center gap-2">
-          <div
-            role="group"
-            aria-label="Zoom"
-            className="pointer-events-auto inline-flex items-center gap-0.5 rounded-full border border-slate-200/80 bg-white px-1.5 py-1 shadow-sm"
-          >
+        <div
+          role="toolbar"
+          aria-label="Canvas"
+          className="absolute top-2 left-1/2 z-10 -translate-x-1/2 flex items-center gap-1 rounded-lg border bg-card p-1 shadow-sm"
+        >
+          <div role="group" aria-label="Zoom" className="flex items-center gap-1">
             <Button
               type="button"
               size="sm"
               variant={zoomMode === "fit" ? "secondary" : "ghost"}
               aria-pressed={zoomMode === "fit"}
               onClick={() => setZoomMode("fit")}
-              className="h-8 rounded-full px-2.5 text-xs"
             >
-              <MoveHorizontal aria-hidden className="size-3.5" />
+              <MoveHorizontal aria-hidden data-icon="inline-start" />
               Fit width
             </Button>
             <Button
@@ -211,44 +210,46 @@ export function ResumeStudioCanvas({
               variant={zoomMode === 100 ? "secondary" : "ghost"}
               aria-pressed={zoomMode === 100}
               onClick={() => setZoomMode(100)}
-              className="h-8 rounded-full px-2.5 text-xs"
             >
               100%
             </Button>
 
-            <Separator orientation="vertical" className="mx-0.5 h-4" />
+            <Separator orientation="vertical" className="h-4" />
 
             <Button
               type="button"
               variant="ghost"
-              size="icon"
+              size="icon-sm"
               aria-label="Zoom out"
               disabled={nextZoomOut === null}
               onClick={() => {
                 if (nextZoomOut !== null) setZoomMode(nextZoomOut);
               }}
-              className="size-8 rounded-full"
             >
-              <Minus aria-hidden className="size-3.5" />
+              <Minus aria-hidden />
             </Button>
-            <span aria-live="polite" className="min-w-10 text-center text-xs font-medium tabular-nums text-slate-700">
+            <span aria-live="polite" className="min-w-10 text-center text-xs font-medium tabular-nums text-muted-foreground">
               {zoomPercent(scale)}%
             </span>
             <Button
               type="button"
               variant="ghost"
-              size="icon"
+              size="icon-sm"
               aria-label="Zoom in"
               disabled={nextZoomIn === null}
               onClick={() => {
                 if (nextZoomIn !== null) setZoomMode(nextZoomIn);
               }}
-              className="size-8 rounded-full"
             >
-              <Plus aria-hidden className="size-3.5" />
+              <Plus aria-hidden />
             </Button>
           </div>
-          {actions ? <div className="pointer-events-auto">{actions}</div> : null}
+          {actions ? (
+            <>
+              <Separator orientation="vertical" className="h-4" />
+              {actions}
+            </>
+          ) : null}
         </div>
 
         <div

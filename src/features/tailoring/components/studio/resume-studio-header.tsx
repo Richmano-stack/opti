@@ -72,21 +72,21 @@ export function StudioActions({
   isPending,
   isDownloading,
   onDownload,
-  className,
+  size = "default",
 }: {
   resume?: OptimizedResume;
   isPending: boolean;
   isDownloading: boolean;
   onDownload: () => void;
-  className?: string;
+  size?: "default" | "sm";
 }) {
   return (
     <Button
       type="button"
+      size={size}
       onClick={onDownload}
       disabled={isDownloading || isPending || !resume}
       aria-label="Download PDF"
-      className={className}
     >
       {isDownloading ? (
         <Spinner data-icon="inline-start" aria-hidden />

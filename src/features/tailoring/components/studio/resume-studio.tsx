@@ -31,8 +31,6 @@ export type ResumeStudioProps =
       initialTemplateId?: TemplateId;
     };
 
-const canvasDownloadClassName = "h-10 rounded-full px-4";
-
 function GuestStudio() {
   const [state, formAction, isPending] = useActionState(submitGuestResume, { status: "idle" });
   const [resumeText, setResumeText] = useState("");
@@ -93,7 +91,7 @@ function GuestStudio() {
                   isPending={isPending}
                   isDownloading={isDownloading}
                   onDownload={download}
-                  className={canvasDownloadClassName}
+                  size="sm"
                 />
               }
             />
@@ -176,7 +174,7 @@ function AccountStudio({
                     isPending={isPending}
                     isDownloading={isDownloading}
                     onDownload={download}
-                    className={canvasDownloadClassName}
+                    size="sm"
                   />
                 }
               />
