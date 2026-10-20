@@ -39,6 +39,8 @@ describe("ResumePrintDocument", () => {
     expect(html).toContain("height: auto");
     expect(html).toContain("Ada Lovelace");
     expect(html).toContain("Mathematics, Analysis");
+    expect(html).toContain('data-typeface="sans"');
+    expect(html).not.toContain("Georgia");
   });
 
   it("prints Modern from the same registry component, with skills kept apart", () => {

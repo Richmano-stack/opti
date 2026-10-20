@@ -760,3 +760,50 @@ There is only one real template so far. A gallery with placeholder layouts looke
 - src/app/dashboard/templates/page.tsx
 - src/features/tailoring/components/templates-coming-soon.tsx
 - src/features/auth/lib/callback-url.ts
+
+---
+
+## DEC-016: Inter for the app, a per-template typeface for the résumé
+
+**Date:** 2026-10-21
+**Status:** accepted
+**Deciders:** Product owner
+**Supersedes:** Segoe UI app font; Segoe UI body with a Georgia name on every résumé
+**Superseded by:** N/A
+
+### Context
+
+The app and the résumé used system fonts (Segoe UI, Georgia), so the result changed with the reader's OS and could not be matched on a server that renders the PDF. Classic or executive templates will want a serif.
+
+### Decision
+
+The root layout loads Inter as `--font-sans` and Merriweather as `--font-serif` with `next/font/google`. The `@theme inline` block in `globals.css` maps the Tailwind `font-sans`, `font-serif` and `font-heading` utilities to those variables; the project is on Tailwind v4, so there is no `tailwind.config.ts`. `body` is `font-sans antialiased`.
+
+Each template definition has `typeface: "sans" | "serif"`. `ResumeSheet`, used by both the studio canvas and the PDF print page, puts `font-sans` or `font-serif` on the sheet, and the templates inherit it, including the candidate name. Modern and Minimal are both sans. Merriweather is not preloaded because no current template uses it.
+
+### Alternatives Considered
+
+| Option | Pros | Cons |
+|--------|------|------|
+| Add `tailwind.config.ts` | Matches older Tailwind guides | Legacy in v4; splits theme config across two places |
+| Font family in each template's inline style | No registry change | The canvas cannot switch fonts; the preview and PDF can disagree |
+| Make Minimal the serif template | Serif in use now | Changes an existing template's look without a classic design |
+
+### Consequences
+
+**Positive:**
+
+- Same fonts on every OS and in the generated PDF
+- A new serif template only needs `typeface: "serif"`
+
+**Negative:**
+
+- Inter is wider than Segoe UI, so existing résumés can wrap or break onto the next page differently
+
+### References
+
+- src/app/layout.tsx
+- src/app/globals.css
+- src/templates/registry.ts
+- src/templates/resume-sheet.tsx
+- src/templates/theme.ts

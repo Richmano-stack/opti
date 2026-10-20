@@ -25,10 +25,6 @@ const spacePx = {
 } as const;
 
 export const templateTheme = {
-  font: {
-    display: 'Georgia, "Times New Roman", serif',
-    body: '"Segoe UI", Calibri, sans-serif',
-  },
   color: {
     ink: "#1c1c1c",
     muted: "#5f5f5f",
@@ -76,11 +72,8 @@ export function themeStyle(density: TemplateDensity, format: PageFormat = "lette
     "--resume-entry": `${space.entry}px`,
     "--resume-bullet": `${space.bullet}px`,
     "--resume-margin": `${page.margin}px`,
-    "--resume-display": templateTheme.font.display,
-    "--resume-body": templateTheme.font.body,
     width: "100%",
     maxWidth: page.width,
-    fontFamily: "var(--resume-body)",
     color: "var(--resume-ink)",
     backgroundColor: "var(--resume-paper)",
   } as CSSProperties;

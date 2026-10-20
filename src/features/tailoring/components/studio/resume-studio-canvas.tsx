@@ -176,7 +176,7 @@ export function ResumeStudioCanvas({
   const [zoomMode, setZoomMode] = useState<ZoomMode>("fit");
   const { viewportRef, availableWidth } = useAvailableWidth();
   const { sheetRef, sheetHeight } = useSheetHeight();
-  const SelectedTemplate = getTemplate(templateId).Component;
+  const { Component: SelectedTemplate, typeface } = getTemplate(templateId);
 
   const scale = resolveScale(zoomMode, availableWidth, LETTER_WIDTH_PX);
   const nextZoomIn = zoomInFrom(scale);
@@ -271,7 +271,7 @@ export function ResumeStudioCanvas({
             >
               {resume ? (
                 <div className="shadow-2xl">
-                  <ResumeSheet fitKey={`${templateId}:${JSON.stringify(resume)}`}>
+                  <ResumeSheet fitKey={`${templateId}:${JSON.stringify(resume)}`} typeface={typeface}>
                     <SelectedTemplate resume={resume} />
                   </ResumeSheet>
                 </div>
