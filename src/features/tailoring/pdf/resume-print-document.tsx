@@ -25,12 +25,12 @@ export function ResumePrintDocument({
   resume: ResumeData;
   templateId: TemplateId;
 }) {
-  const Template = getTemplate(templateId).Component;
+  const { Component: Template, typeface } = getTemplate(templateId);
 
   return (
     <>
       <style>{printPageStyle}</style>
-      <ResumeSheet fitKey={`${templateId}:${JSON.stringify(resume)}`}>
+      <ResumeSheet fitKey={`${templateId}:${JSON.stringify(resume)}`} typeface={typeface}>
         <Template resume={resume} />
       </ResumeSheet>
     </>

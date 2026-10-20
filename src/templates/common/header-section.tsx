@@ -25,7 +25,7 @@ export function HeaderSection(props: HeaderSectionProps) {
 
   return (
     <header className={onAccent ? "text-center text-[var(--resume-accent-ink)]" : "text-center"}>
-      <h2 className="font-[family-name:var(--resume-display)] text-[2rem] leading-tight font-semibold tracking-[-0.03em]">
+      <h2 className="text-[2rem] leading-tight font-semibold tracking-[-0.03em]">
         {props.name}
       </h2>
       {props.headline ? <p className={`mt-1 text-sm ${onAccent ? "text-white/90" : "text-[var(--resume-ink)]"}`}>{props.headline}</p> : null}

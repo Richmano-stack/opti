@@ -40,7 +40,22 @@ const sheetStyle = `
 }
 `;
 
-export function ResumeSheet({ children, fitKey }: { children: ReactNode; fitKey: string }) {
+export type Typeface = "sans" | "serif";
+
+const typefaceClass: Record<Typeface, string> = {
+  sans: "font-sans",
+  serif: "font-serif",
+};
+
+export function ResumeSheet({
+  children,
+  fitKey,
+  typeface,
+}: {
+  children: ReactNode;
+  fitKey: string;
+  typeface: Typeface;
+}) {
   const pageRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
@@ -58,7 +73,12 @@ export function ResumeSheet({ children, fitKey }: { children: ReactNode; fitKey:
   }, [fitKey]);
 
   return (
-    <div ref={pageRef} data-resume-page="" className="@container/resume">
+    <div
+      ref={pageRef}
+      data-resume-page=""
+      data-typeface={typeface}
+      className={`@container/resume ${typefaceClass[typeface]}`}
+    >
       <style>{sheetStyle}</style>
       <div data-resume-print="">{children}</div>
     </div>

@@ -2,6 +2,7 @@ import type { ComponentType } from "react";
 
 import { MinimalTemplate } from "@/templates/minimal-template";
 import { ModernTemplate } from "@/templates/modern-template";
+import type { Typeface } from "@/templates/resume-sheet";
 import type { ResumeData } from "@/templates/types";
 
 export const templateIds = ["modern", "minimal"] as const;
@@ -15,6 +16,7 @@ export type TemplateDefinition = {
   name: string;
   description: string;
   thumbnail: string;
+  typeface: Typeface;
   Component: TemplateComponent;
 };
 
@@ -24,6 +26,7 @@ const templates: Record<TemplateId, TemplateDefinition> = {
     name: "Modern",
     description: "Accent header with the role history on the left and skills beside it.",
     thumbnail: "/templates/modern.svg",
+    typeface: "sans",
     Component: ModernTemplate,
   },
   minimal: {
@@ -31,6 +34,7 @@ const templates: Record<TemplateId, TemplateDefinition> = {
     name: "Minimal",
     description: "Single column with tight type and rules, suited to an ATS read.",
     thumbnail: "/templates/minimal.svg",
+    typeface: "sans",
     Component: MinimalTemplate,
   },
 };
