@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
 
 import { BrandMark } from "@/components/brand-mark";
+import { ACCOUNT_HOME } from "@/features/auth/lib/callback-url";
 import { authClient } from "@/server/auth/client";
 import type { AuthUser } from "@/server/auth/types";
 
@@ -21,7 +22,7 @@ export function accountInitials(user: AuthUser): string {
 export function AccountBar({
   user,
   title,
-  homeHref = "/dashboard",
+  homeHref = ACCOUNT_HOME,
   headingId,
   headingRef,
   actions,

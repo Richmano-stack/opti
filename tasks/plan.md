@@ -30,7 +30,7 @@ Generated resumes and PDFs are not persisted. File upload, history, billing, tea
 - PostgreSQL and Drizzle store authentication data and one raw-text master resume per user.
 - Generated resume data remains in the current browser flow long enough to preview and download; it is not written to the database.
 - React PDF produces a selectable-text, single-column PDF in the browser.
-- The light sky-blue shadcn token system is the visual foundation.
+- The teal / sage token system is the visual foundation.
 
 ## Dependency path
 

@@ -30,7 +30,7 @@ The executable implementation plan is [`tasks/plan.md`](./tasks/plan.md). Primar
 ## Phase 3: Export and experience
 
 - Verify selectable-text single-column PDF output.
-- Apply the light sky-blue shadcn design system.
+- Apply the teal / sage shadcn design system.
 - Refine responsive layout, accessibility, and interaction states.
 
 **Exit condition:** Both modes produce a dependable PDF through a coherent, modern interface.

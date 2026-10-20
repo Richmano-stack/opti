@@ -621,3 +621,58 @@ The shared sheet keeps the template's real type size and the Letter width. It do
 ### References
 
 - src/templates/resume-sheet.tsx
+
+---
+
+## DEC-013: Teal / sage is the product palette
+
+**Date:** 2026-10-16
+**Status:** accepted
+**Deciders:** Product owner
+**Supersedes:** N/A (replaces terracotta Horizon and leftover sky-blue tokens)
+**Superseded by:** N/A
+
+### Context
+
+Horizon launched with terracotta primary (`#b42907`) and a leftover sky-blue brand layer. That reads as a lifestyle or AI-SaaS product, not a résumé tool. The owner picked a five-stop teal / sage strip: dark teal ink, dusty blue, sage, light sage, pale mint canvas.
+
+### Decision
+
+The product uses one teal / sage family everywhere: CSS tokens, buttons, logo, favicon, email, template accent, and aurora. Paper stays white. Neutrals stay for hairlines.
+
+| Role | Hex |
+|---|---|
+| Ink / hover | `#1e3d47` |
+| Primary | `#3e7c94` |
+| Secondary | `#6aa89c` |
+| Tertiary | `#a8c9a4` |
+| Canvas | `#eef4e4` |
+| Inverse / tint | `#dceec8` |
+| Paper | `#ffffff` |
+
+`--horizon-primary-hover` is the ink. `--brand-*` maps to the same family. Terracotta, purple aurora, and sky-blue action colors are gone.
+
+### Alternatives Considered
+
+| Option | Pros | Cons |
+|--------|------|------|
+| Keep terracotta | Already in Horizon | Does not feel like a résumé product |
+| Pink / mauve strip | Soft | Fashion, not professional |
+| Purple + peach | Distinct | AI-SaaS, not career |
+
+### Consequences
+
+**Positive:**
+
+- One palette across app, PDF accent, email, and mark
+- Primary buttons use white text on dusty blue
+
+**Negative:**
+
+- Existing Stitch screens painted in terracotta will look off until the design system is reapplied
+
+### References
+
+- src/app/globals.css
+- src/templates/theme.ts
+- src/components/brand-mark.tsx

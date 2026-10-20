@@ -25,14 +25,14 @@ describe("AuthLayout", () => {
     expect(redirect).not.toHaveBeenCalled();
   });
 
-  it("redirects a valid authenticated session to the dashboard", async () => {
+  it("redirects a valid authenticated session to the template store", async () => {
     getServerSession.mockResolvedValue({
       user: { id: "user-1", email: "demo@opti.local", name: "Opti Demo" },
     });
 
     await AuthLayout({ children: <div>Log in</div> });
 
-    expect(redirect).toHaveBeenCalledWith("/dashboard");
+    expect(redirect).toHaveBeenCalledWith("/dashboard/templates");
   });
 });
 

@@ -4,6 +4,8 @@
 
 Store your feature-based folders here. Inside each feature folder, create a `tickets/` directory to store your work items.
 
+**Pages:** Each user-facing page is one feature. Catalog: [../product/PAGES.md](../product/PAGES.md). Page folder: `ai/project/features/<page-id>/FEATURE.md`.
+
 **Structure:** `ai/project/features/<feature_name>/tickets/TICKET-001-short-slug.md`
 
 **Schema:** See [../../reusable/workflow/TICKET_SCHEMA.md](../../reusable/workflow/TICKET_SCHEMA.md) for required fields.

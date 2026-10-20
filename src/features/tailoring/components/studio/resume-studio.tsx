@@ -1,11 +1,19 @@
 "use client";
 
-import { useActionState, useEffect, useRef, useState } from "react";
+import { useActionState, useEffect, useId, useRef, useState } from "react";
 
+import { AuthenticatedAppShell } from "@/components/horizon/authenticated-app-shell";
 import { submitGuestResume } from "@/features/tailoring/actions/generate-resume";
 import { submitAccountResume } from "@/features/tailoring/actions/generate-account-resume";
 import { ResumeStudioCanvas } from "./resume-studio-canvas";
-import { ResumeStudioHeader } from "./resume-studio-header";
+import {
+  DownloadErrorAlert,
+  ResumeStudioHeader,
+  StudioActions,
+  StudioHeading,
+  studioRoleLabel,
+  useResumeDownload,
+} from "./resume-studio-header";
 import { ResumeStudioSidebar } from "./resume-studio-sidebar";
 import type { DevSampleInput } from "@/features/devtools/lib/sample-inputs";
 import type { AuthUser } from "@/server/auth/types";
@@ -19,6 +27,7 @@ export type ResumeStudioProps =
       mode: "account";
       user: AuthUser;
       masterResumeUpdatedAt?: string;
+      initialTemplateId?: TemplateId;
     };
 
 function GuestStudio() {
@@ -57,7 +66,6 @@ function GuestStudio() {
           isPending={isPending}
           isReady={isReady}
           headingRef={headingRef}
-          mode="guest"
           templateId={templateId}
         />
         <div className="flex min-h-0 flex-1 flex-col overflow-hidden md:flex-row">
@@ -92,20 +100,24 @@ function GuestStudio() {
 function AccountStudio({
   user,
   masterResumeUpdatedAt,
+  initialTemplateId = "minimal",
 }: {
   user: AuthUser;
   masterResumeUpdatedAt?: string;
+  initialTemplateId?: TemplateId;
 }) {
   const [state, formAction, isPending] = useActionState(submitAccountResume, { status: "idle" });
   const [jobDescription, setJobDescription] = useState("");
   const [editingSources, setEditingSources] = useState(false);
-  const [templateId, setTemplateId] = useState<TemplateId>("minimal");
+  const [templateId, setTemplateId] = useState<TemplateId>(initialTemplateId);
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const formId = useId();
 
   const isReady = Boolean(jobDescription.trim());
   const resume = state.status === "success" ? state.data : undefined;
   const missingFields = state.status === "missing_contact_info" ? state.missingFields : undefined;
   const errorMessage = state.status === "error" ? state.error.message : undefined;
+  const { isDownloading, downloadError, download } = useResumeDownload(resume, templateId);
 
   useEffect(() => {
     if (state.status === "success") {
@@ -121,18 +133,25 @@ function AccountStudio({
   };
 
   return (
-    <div className="flex h-dvh flex-col overflow-hidden bg-white text-horizon-ink antialiased selection:bg-horizon-inverse-primary selection:text-horizon-ink">
-      <form action={formAction} className="flex min-h-0 flex-1 flex-col overflow-hidden">
-        <ResumeStudioHeader
+    <AuthenticatedAppShell
+      user={user}
+      title="Tailor"
+      fill
+      heading={<StudioHeading label={studioRoleLabel(jobDescription)} headingRef={headingRef} />}
+      actions={
+        <StudioActions
           resume={resume}
-          jobDescription={jobDescription}
           isPending={isPending}
           isReady={isReady}
-          headingRef={headingRef}
-          mode="account"
-          user={user}
-          templateId={templateId}
+          isDownloading={isDownloading}
+          onDownload={download}
+          form={formId}
         />
+      }
+    >
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden text-horizon-ink antialiased selection:bg-horizon-inverse-primary selection:text-horizon-ink">
+      <DownloadErrorAlert message={downloadError} />
+      <form id={formId} action={formAction} className="flex min-h-0 flex-1 flex-col overflow-hidden">
         <div className="flex min-h-0 flex-1 flex-col overflow-hidden md:flex-row">
           <ResumeStudioSidebar
             mode="account"
@@ -156,10 +175,12 @@ function AccountStudio({
             isReady={isReady}
             templateId={templateId}
             onTemplateChange={setTemplateId}
+            mode="account"
           />
         </div>
       </form>
-    </div>
+      </div>
+    </AuthenticatedAppShell>
   );
 }
 
@@ -171,6 +192,7 @@ export function ResumeStudio(props: ResumeStudioProps) {
     <AccountStudio
       user={props.user}
       masterResumeUpdatedAt={props.masterResumeUpdatedAt}
+      initialTemplateId={props.initialTemplateId}
     />
   );
 }

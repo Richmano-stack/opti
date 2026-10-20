@@ -7,7 +7,7 @@ type ButtonTone = "primary" | "secondary" | "quiet" | "danger";
 
 export const HorizonButton = forwardRef<HTMLButtonElement, ButtonHTMLAttributes<HTMLButtonElement> & { tone?: ButtonTone }>(function HorizonButton({ className, tone = "primary", ...props }, ref) {
   const tones: Record<ButtonTone, string> = {
-    primary: "bg-horizon-primary text-white hover:bg-horizon-primary/90",
+    primary: "bg-horizon-primary text-white hover:bg-horizon-primary-hover",
     secondary: "border border-horizon-outline/20 bg-white text-horizon-ink hover:bg-horizon-canvas",
     quiet: "text-horizon-muted hover:bg-horizon-primary/8 hover:text-horizon-ink",
     danger: "bg-red-700 text-white hover:bg-red-800",

@@ -23,7 +23,6 @@ describe("AccountGeneratorSetupRequired", () => {
     expect(html).toContain("Your source comes first");
     expect(html).toContain('href="/dashboard"');
     expect(html).toContain("Go to master résumé");
-    expect(html).toContain('aria-label="Sign out"');
-    expect(html).not.toContain("Workspace navigation");
+    expect(html).toContain('data-slot="sidebar-wrapper"');
   });
 });

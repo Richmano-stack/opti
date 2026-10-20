@@ -12,22 +12,21 @@ test("authenticated users follow the protected lifecycle", async ({ page }) => {
 
   try {
     await page.goto("/signup");
-    await page.getByLabel("Full name").fill("Lifecycle User");
-    await page.getByLabel("Email address").fill(email);
+    await page.getByLabel("Email", { exact: true }).fill(email);
     await page.getByLabel("Password", { exact: true }).fill(password);
-    await page.getByLabel("Confirm password").fill(password);
+    await page.getByLabel("Confirm Password").fill(password);
     await page.getByRole("button", { name: "Create Account" }).click();
-    await expect(page).toHaveURL(/\/dashboard$/);
+    await expect(page).toHaveURL(/\/dashboard\/templates$/);
 
-    await page.goto("/");
-    await expect(page.getByRole("link", { name: "Open dashboard" })).toBeVisible();
-    await page.getByRole("link", { name: "Open dashboard" }).click();
-    await expect(page).toHaveURL(/\/dashboard$/);
+    await page.goto("/dashboard/templates");
+    await expect(page).toHaveURL(/\/dashboard\/templates$/);
+    await expect(page.getByRole("heading", { name: "Choose a template" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Templates" })).toBeVisible();
 
     await page.goto("/login");
-    await expect(page).toHaveURL(/\/dashboard$/);
+    await expect(page).toHaveURL(/\/dashboard\/templates$/);
     await page.goto("/signup");
-    await expect(page).toHaveURL(/\/dashboard$/);
+    await expect(page).toHaveURL(/\/dashboard\/templates$/);
 
     await page.goto("/dashboard/generator");
     await page.getByRole("button", { name: "Sign out" }).click();

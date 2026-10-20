@@ -1,14 +1,13 @@
 import Link from "next/link";
 import { ArrowRight, FileText, LockKeyhole } from "lucide-react";
 
-import { AccountBar } from "@/components/horizon/account-bar";
+import { AuthenticatedAppShell } from "@/components/horizon/authenticated-app-shell";
 import type { AuthUser } from "@/server/auth/types";
 
 export function AccountGeneratorSetupRequired({ user }: { user: AuthUser }) {
   return (
-    <div className="flex h-dvh flex-col overflow-hidden bg-white text-horizon-ink">
-      <AccountBar user={user} title="Tailor a résumé" />
-      <div className="flex min-h-0 flex-1 items-center justify-center bg-slate-100/70 p-6">
+    <AuthenticatedAppShell user={user} title="Tailor">
+      <div className="flex min-h-full items-center justify-center bg-slate-100/70 p-6">
         <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-xl">
           <span className="mx-auto flex size-12 items-center justify-center rounded-xl bg-horizon-primary/10 text-horizon-primary">
             <FileText aria-hidden className="size-6" />
@@ -26,6 +25,6 @@ export function AccountGeneratorSetupRequired({ user }: { user: AuthUser }) {
           </p>
         </div>
       </div>
-    </div>
+    </AuthenticatedAppShell>
   );
 }

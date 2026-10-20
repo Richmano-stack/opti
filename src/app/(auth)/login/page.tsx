@@ -1,23 +1,20 @@
 import { Suspense } from "react";
 
-import { AuthPageShell } from "@/features/auth/components/auth-page-shell";
 import { LoginForm } from "@/features/auth/components/login-form";
 import { Skeleton } from "@/components/ui/skeleton";
 
 function LoginFormFallback() {
-  return (
-    <div className="flex w-full flex-col gap-6">
-      <Skeleton className="h-[420px] w-full rounded-xl" />
-    </div>
-  );
+  return <Skeleton className="h-[520px] w-full rounded-xl" />;
 }
 
 export default function LoginPage() {
   return (
-    <AuthPageShell variant="login">
-      <Suspense fallback={<LoginFormFallback />}>
-        <LoginForm />
-      </Suspense>
-    </AuthPageShell>
+    <div className="flex min-h-svh flex-col items-center justify-center bg-muted p-6 md:p-10">
+      <div className="w-full max-w-sm md:max-w-4xl">
+        <Suspense fallback={<LoginFormFallback />}>
+          <LoginForm />
+        </Suspense>
+      </div>
+    </div>
   );
 }

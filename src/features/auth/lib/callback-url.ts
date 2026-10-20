@@ -1,6 +1,6 @@
-const DEFAULT_CALLBACK = "/dashboard";
+export const ACCOUNT_HOME = "/dashboard/templates";
 
 export function getSafeCallbackUrl(value: string | null | undefined): string {
-  if (!value || !value.startsWith("/") || value.startsWith("//") || value.includes("\\")) return DEFAULT_CALLBACK;
+  if (!value || !value.startsWith("/") || value.startsWith("//") || value.includes("\\")) return ACCOUNT_HOME;
   return value;
 }

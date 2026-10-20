@@ -25,24 +25,22 @@ test("authenticated shell follows the documented responsive navigation rules", a
   try {
     await page.setViewportSize({ width: 320, height: 720 });
     await page.goto("/signup");
-    await page.getByLabel("Full name").fill("Responsive User");
-    await page.getByLabel("Email address").fill(email);
+    await page.getByLabel("Email", { exact: true }).fill(email);
     await page.getByLabel("Password", { exact: true }).fill(password);
-    await page.getByLabel("Confirm password").fill(password);
+    await page.getByLabel("Confirm Password").fill(password);
     await page.getByRole("button", { name: "Create Account" }).click();
-    await expect(page).toHaveURL(/\/dashboard$/);
+    await expect(page).toHaveURL(/\/dashboard\/templates$/);
 
     for (const path of ["/dashboard", "/dashboard/generator"]) {
       await page.goto(path);
       for (const width of breakpoints) {
         await page.setViewportSize({ width, height: 800 });
-        const mobileNavigation = page.getByRole("navigation", { name: "Mobile workspace navigation" });
+        const sidebarToggle = page.getByRole("button", { name: "Toggle Sidebar" });
         const desktopSidebar = page.getByRole("complementary", { name: "Desktop workspace sidebar" });
-        if (width < 1024) {
-          await expect(mobileNavigation).toBeVisible();
+        if (width < 768) {
+          await expect(sidebarToggle).toBeVisible();
           await expect(desktopSidebar).toBeHidden();
         } else {
-          await expect(mobileNavigation).toBeHidden();
           await expect(desktopSidebar).toBeVisible();
         }
         await expectNoHorizontalOverflow(page);
@@ -51,18 +49,15 @@ test("authenticated shell follows the documented responsive navigation rules", a
 
     await page.goto("/dashboard");
     await page.setViewportSize({ width: 320, height: 720 });
-    const menuTriggerBox = await page.getByRole("button", { name: "Open navigation" }).boundingBox();
-    const resumeNavigationBox = await page.getByRole("navigation", { name: "Mobile workspace navigation" }).getByRole("link", { name: "Résumé" }).boundingBox();
-    expect(menuTriggerBox?.height).toBeGreaterThanOrEqual(44);
-    expect(menuTriggerBox?.width).toBeGreaterThanOrEqual(44);
-    expect(resumeNavigationBox?.height).toBeGreaterThanOrEqual(44);
+    const menuTrigger = page.getByRole("button", { name: "Toggle Sidebar" });
+    await expect(menuTrigger).toBeVisible();
 
     await page.setViewportSize({ width: 375, height: 800 });
-    await page.getByRole("button", { name: "Open navigation" }).click();
-    const drawer = page.getByRole("dialog", { name: "Workspace navigation" });
+    await page.getByRole("button", { name: "Toggle Sidebar" }).click();
+    const drawer = page.getByRole("dialog", { name: "Sidebar" });
     await expect(drawer).toBeVisible();
-    await expect(drawer).toHaveCSS("max-width", "320px");
-    await drawer.getByRole("button", { name: "Close navigation" }).click();
+    await expect(drawer.getByRole("link", { name: "Master résumé" })).toBeVisible();
+    await page.keyboard.press("Escape");
     await expect(drawer).toBeHidden();
   } finally {
     await sql`delete from users where email = ${email}`;

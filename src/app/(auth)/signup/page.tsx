@@ -1,23 +1,15 @@
-import { Suspense } from "react";
+import { Suspense } from "react"
 
-import { AuthPageShell } from "@/features/auth/components/auth-page-shell";
-import { SignupForm } from "@/features/auth/components/signup-form";
-import { Skeleton } from "@/components/ui/skeleton";
-
-function SignupFormFallback() {
-  return (
-    <div className="flex w-full flex-col gap-6">
-      <Skeleton className="h-[520px] w-full rounded-xl" />
-    </div>
-  );
-}
+import { SignupForm } from "@/features/auth/components/signup-form"
 
 export default function SignupPage() {
   return (
-    <AuthPageShell variant="signup">
-      <Suspense fallback={<SignupFormFallback />}>
-        <SignupForm />
-      </Suspense>
-    </AuthPageShell>
-  );
+    <div className="flex min-h-svh flex-col items-center justify-center bg-muted p-6 md:p-10">
+      <div className="w-full max-w-sm md:max-w-4xl">
+        <Suspense>
+          <SignupForm />
+        </Suspense>
+      </div>
+    </div>
+  )
 }
