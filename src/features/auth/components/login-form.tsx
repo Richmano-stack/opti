@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { ACCOUNT_HOME, getSafeCallbackUrl } from "@/features/auth/lib/callback-url"
+import { AuthBrandPanel } from "@/features/auth/components/auth-brand-panel"
 import { authClient } from "@/server/auth/client"
 
 export function LoginForm({
@@ -182,13 +183,7 @@ export function LoginForm({
               </FieldDescription>
             </FieldGroup>
           </form>
-          <div className="relative hidden bg-muted md:block">
-            <img
-              src="/placeholder.svg"
-              alt="Image"
-              className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-            />
-          </div>
+          <AuthBrandPanel />
         </CardContent>
       </Card>
       <FieldDescription className="px-6 text-center">

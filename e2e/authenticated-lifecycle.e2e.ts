@@ -16,17 +16,17 @@ test("authenticated users follow the protected lifecycle", async ({ page }) => {
     await page.getByLabel("Password", { exact: true }).fill(password);
     await page.getByLabel("Confirm Password").fill(password);
     await page.getByRole("button", { name: "Create Account" }).click();
-    await expect(page).toHaveURL(/\/dashboard\/templates$/);
+    await expect(page).toHaveURL(/\/dashboard\/generator$/);
 
     await page.goto("/dashboard/templates");
     await expect(page).toHaveURL(/\/dashboard\/templates$/);
-    await expect(page.getByRole("heading", { name: "Choose a template" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Templates are coming soon" })).toBeVisible();
     await expect(page.getByRole("link", { name: "Templates" })).toBeVisible();
 
     await page.goto("/login");
-    await expect(page).toHaveURL(/\/dashboard\/templates$/);
+    await expect(page).toHaveURL(/\/dashboard\/generator$/);
     await page.goto("/signup");
-    await expect(page).toHaveURL(/\/dashboard\/templates$/);
+    await expect(page).toHaveURL(/\/dashboard\/generator$/);
 
     await page.goto("/dashboard/generator");
     await page.getByRole("button", { name: "Sign out" }).click();

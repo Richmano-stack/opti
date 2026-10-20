@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { BrandMark } from "@/components/brand-mark";
+import { buttonVariants } from "@/components/ui/button";
 
 export function AuthenticatedFooter() {
   return (
@@ -11,7 +12,7 @@ export function AuthenticatedFooter() {
             <p className="text-[10px] font-bold uppercase tracking-[0.17em] text-horizon-inverse-primary">Keep moving with clarity</p>
             <h2 className="mt-3 text-2xl font-bold tracking-[-0.03em] sm:text-3xl">One truthful source. Sharper applications.</h2>
           </div>
-          <Link href="/dashboard/generator" className="horizon-button-primary h-11 shrink-0 bg-white px-5 text-xs !text-horizon-ink hover:bg-horizon-inverse-primary">Tailor for a role <ArrowRight aria-hidden="true" className="size-3.5" /></Link>
+          <Link href="/dashboard/generator" className={buttonVariants({ variant: "secondary", size: "lg", className: "shrink-0" })}>Tailor for a role <ArrowRight aria-hidden="true" data-icon="inline-end" /></Link>
         </div>
         <div className="flex flex-col gap-6 py-8 sm:flex-row sm:items-center sm:justify-between">
           <div><BrandMark /><p className="mt-3 text-xs text-white/50">A calm workspace for focused applications.</p></div>

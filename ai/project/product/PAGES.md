@@ -28,10 +28,10 @@ Each row is one feature. Feature folder: `ai/project/features/<id>/`.
 |---|---|---|
 | [landing](../features/landing/FEATURE.md) | `/` | Sell the product. Send guests to Try, accounts to Login / Sign up. Not the logged-in home. |
 | [guest-studio](../features/guest-studio/FEATURE.md) | `/try` | Guest pastes résumé + job, tailors, previews, downloads. Skips the store. Default template Minimal. |
-| [template-store](../features/template-store/FEATURE.md) | `/dashboard/templates` | Logged-in home. Browse layouts like a store, pick one, continue. Open even with no master résumé. |
-| [account-studio](../features/account-studio/FEATURE.md) | `/dashboard/generator` | After a template is chosen. Job description, tailor, preview, PDF. Needs a master résumé only when they start tailoring. |
+| [template-store](../features/template-store/FEATURE.md) | `/dashboard/templates` | "Coming soon" placeholder until templates ship. Links to the tailor studio. |
+| [account-studio](../features/account-studio/FEATURE.md) | `/dashboard/generator` | Logged-in home. Job description, tailor, preview, PDF. Needs a master résumé only when they start tailoring. |
 | [master-resume](../features/master-resume/FEATURE.md) | `/dashboard` | Quiet source editor. Create / edit / save the one stored résumé. Not the front door. |
-| [login](../features/login/FEATURE.md) | `/login` | Sign in. Default destination: template store. |
+| [login](../features/login/FEATURE.md) | `/login` | Sign in. Default destination: account studio. |
 | [signup](../features/signup/FEATURE.md) | `/signup` | Create account, verify email. |
 | [forgot-password](../features/forgot-password/FEATURE.md) | `/forgot-password` | Request a reset link. |
 | [reset-password](../features/reset-password/FEATURE.md) | `/reset-password` | Set a new password. |
@@ -43,13 +43,13 @@ flowchart LR
   landing["landing /"]
   tryPage["guest-studio /try"]
   login["login"]
-  store["template-store home"]
-  studio["account-studio"]
+  store["template-store (coming soon)"]
+  studio["account-studio home"]
   source["master-resume"]
 
   landing --> tryPage
   landing --> login
-  login --> store
+  login --> studio
   store --> studio
   studio -->|"no source yet"| source
   source --> studio
@@ -102,4 +102,5 @@ Desktop designs for these nine pages live in Stitch project **Opti pages** (`128
 
 - One route, one job. If two jobs fight, they are two pages.
 - Phone uses the same nine pages. No mobile-only routes.
-- A missing master résumé does not hide the store. It only stops the account studio until the source exists.
+- A missing master résumé does not hide the templates page. It only stops the account studio until the source exists.
+- Until templates ship, `/dashboard/templates` is a "coming soon" page and every tailored résumé uses the default Minimal template.

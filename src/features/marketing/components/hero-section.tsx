@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { ArrowRight, Check, FileText, LockKeyhole, Target } from "lucide-react";
 
+import { buttonVariants } from "@/components/ui/button";
+
 function ResumePreview() {
   return (
     <div className="horizon-float relative mx-auto w-full max-w-[560px] motion-reduce:animate-none lg:mx-0 lg:ml-auto">
@@ -92,10 +94,10 @@ export function HeroSection() {
             className="horizon-fade-up mt-9 flex flex-col gap-3 sm:flex-row"
             style={{ ["--horizon-delay" as string]: "320ms" }}
           >
-            <Link href="/try" className="horizon-button-primary h-13 px-7 text-sm">
-              Tailor a resume free <ArrowRight className="size-4" aria-hidden="true" />
+            <Link href="/try" className={buttonVariants({ size: "lg", className: "h-11 px-6" })}>
+              Tailor a resume free <ArrowRight aria-hidden="true" data-icon="inline-end" />
             </Link>
-            <Link href="/signup" className="horizon-button-ghost h-13 px-7 text-sm">
+            <Link href="/signup" className={buttonVariants({ variant: "outline", size: "lg", className: "h-11 px-6" })}>
               Save my master resume
             </Link>
           </div>

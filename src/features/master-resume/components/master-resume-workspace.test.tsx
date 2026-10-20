@@ -57,6 +57,7 @@ describe("MasterResumeWorkspace", () => {
     expect(html).toContain(content);
     expect(html).toContain('data-slot="sidebar-wrapper"');
     expect(html).toContain("Tailor for a role");
+    expect(html).toMatch(/href="\/dashboard\/generator"[^>]*>Tailor for a role/);
     expect(html).not.toContain("<textarea");
     expect(html).not.toContain('role="dialog"');
   });

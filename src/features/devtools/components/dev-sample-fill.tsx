@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import { Button } from "@/components/ui/button";
 import { devSampleInputSchema, type DevSampleInput } from "@/features/devtools/lib/sample-inputs";
 
 let sampleRequest: Promise<DevSampleInput> | null = null;
@@ -49,14 +50,16 @@ export function DevSampleFill({
 
   return (
     <span className="inline-flex flex-col items-start gap-1">
-      <button
+      <Button
         type="button"
+        variant="link"
+        size="xs"
         onClick={fill}
         disabled={disabled || isLoading}
-        className="text-xs font-semibold text-horizon-secondary underline-offset-2 hover:underline disabled:opacity-50"
+        className="h-auto px-0"
       >
         {isLoading ? "Filling sample…" : "Fill sample"}
-      </button>
+      </Button>
       {error ? <span className="text-xs text-red-700">{error}</span> : null}
     </span>
   );

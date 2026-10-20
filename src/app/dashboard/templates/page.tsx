@@ -1,17 +1,16 @@
 import { redirect } from "next/navigation";
 
-import { TemplateGallery } from "@/features/tailoring/components/template-gallery";
-import { ACCOUNT_HOME } from "@/features/auth/lib/callback-url";
+import { TemplatesComingSoon } from "@/features/tailoring/components/templates-coming-soon";
 import { getServerSession } from "@/server/auth/session";
 
 export const dynamic = "force-dynamic";
 
-export default async function ChooseTemplatePage() {
+export default async function TemplatesPage() {
   const session = await getServerSession();
 
   if (!session?.user) {
-    redirect(`/login?callbackUrl=${encodeURIComponent(ACCOUNT_HOME)}`);
+    redirect(`/login?callbackUrl=${encodeURIComponent("/dashboard/templates")}`);
   }
 
-  return <TemplateGallery user={session.user} />;
+  return <TemplatesComingSoon user={session.user} />;
 }
