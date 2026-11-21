@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="200" viewBox="0 0 640 200" role="img" aria-labelledby="title desc">
+  <title id="title">Opti Precision Cut logo concept</title>
+  <desc id="desc">A minimal orange O with a precise diagonal blue cut, followed directly by the letters pti.</desc>
+  <rect width="640" height="200" rx="32" fill="#F9F9F9"/>
+  <g transform="translate(48 40)">
+    <circle cx="60" cy="60" r="45" fill="#B42907"/>
+    <circle cx="60" cy="60" r="25" fill="#F9F9F9"/>
+    <path d="M78 19 42 101" stroke="#F9F9F9" stroke-width="11"/>
+    <path d="m78 19-9 20" stroke="#00668A" stroke-width="11" stroke-linecap="round"/>
+  </g>
+  <text x="160" y="127" fill="#1A1C1C" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-size="92" font-weight="800" letter-spacing="-5">pti</text>
+</svg>
+
+

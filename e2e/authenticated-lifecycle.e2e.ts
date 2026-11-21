@@ -20,8 +20,8 @@ test("authenticated users follow the protected lifecycle", async ({ page }) => {
     await expect(page).toHaveURL(/\/dashboard$/);
 
     await page.goto("/");
-    await expect(page.getByRole("link", { name: "Open dashboard" })).toBeVisible();
-    await page.getByRole("link", { name: "Open dashboard" }).click();
+    await expect(page.getByRole("link", { name: "Go to Dashboard" })).toBeVisible();
+    await page.getByRole("link", { name: "Go to Dashboard" }).click();
     await expect(page).toHaveURL(/\/dashboard$/);
 
     await page.goto("/login");

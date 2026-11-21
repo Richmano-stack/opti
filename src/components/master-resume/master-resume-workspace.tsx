@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import Link from "next/link";
-import { ArrowRight, Check, CheckCircle2, FileText, LoaderCircle, LockKeyhole, Save, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowRight, Check, CheckCircle2, FileText, LoaderCircle, LockKeyhole, Save, ShieldCheck, Sparkles, UserRound } from "lucide-react";
 
 import { saveMasterResume } from "@/app/actions/master-resume";
 import { AuthenticatedAppShell } from "@/components/horizon/authenticated-app-shell";
@@ -97,13 +97,28 @@ export function MasterResumeWorkspace({ user, initialContent = "", initialUpdate
           </section>
 
           <aside aria-label="How Opti handles your resume" className="space-y-4 lg:sticky lg:top-28">
-            <div className="horizon-glass rounded-2xl p-6">
+            <div id="privacy" className="horizon-glass scroll-mt-24 rounded-2xl p-6">
               <ShieldCheck aria-hidden="true" className="size-6 text-horizon-secondary" />
-              <h2 className="mt-4 text-lg font-bold tracking-[-0.02em]">A focused workspace</h2>
+              <h2 className="mt-4 text-lg font-bold tracking-[-0.02em]">Privacy boundary</h2>
               <ul className="mt-4 space-y-4 text-sm leading-6 text-horizon-muted">
                 <li className="flex gap-3"><Check aria-hidden="true" className="mt-1 size-4 shrink-0 text-horizon-primary" />Your master resume is the only source document Opti saves.</li>
                 <li className="flex gap-3" id="resume-storage-note"><Check aria-hidden="true" className="mt-1 size-4 shrink-0 text-horizon-primary" />Generated resumes, job descriptions, and PDFs are not stored.</li>
               </ul>
+            </div>
+
+            <div id="account" className="horizon-glass scroll-mt-24 rounded-2xl p-6">
+              <UserRound aria-hidden="true" className="size-6 text-horizon-secondary" />
+              <h2 className="mt-4 text-lg font-bold tracking-[-0.02em]">Account details</h2>
+              <div className="mt-4 space-y-3 text-sm leading-6 text-horizon-muted">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-horizon-muted/80">Name</p>
+                  <p className="font-medium text-horizon-ink">{user.name || "Not provided"}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-horizon-muted/80">Email</p>
+                  <p className="font-medium text-horizon-ink">{user.email}</p>
+                </div>
+              </div>
             </div>
 
             {isSetup ? (
@@ -127,11 +142,3 @@ export function MasterResumeWorkspace({ user, initialContent = "", initialUpdate
     </AuthenticatedAppShell>
   );
 }
-
-
-
-
-
-
-
-

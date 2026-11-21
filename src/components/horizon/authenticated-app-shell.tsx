@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { FileText, LogOut, Menu, PenLine, UserRound, X } from "lucide-react";
+import { FileText, LogOut, Menu, PenLine, ShieldCheck, UserRound, X } from "lucide-react";
 import { useEffect, useId, useState } from "react";
 
 import { BrandMark } from "@/components/landing/brand-mark";
@@ -63,9 +63,23 @@ export function AuthenticatedAppShell({ children, user, title }: { children: Rea
         <Link href="/dashboard" aria-label="Opti dashboard"><BrandMark /></Link>
         <p className="mt-10 px-3 text-[10px] font-bold uppercase tracking-[0.15em] text-horizon-muted">Workspace</p>
         <nav aria-label="Workspace navigation" className="mt-3 grid gap-1">{links()}</nav>
-        <button type="button" onClick={signOut} className="mt-auto flex min-h-11 items-center gap-3 rounded-[var(--horizon-radius-control)] px-3 py-2.5 text-left text-sm font-bold text-horizon-muted hover:bg-horizon-primary/5 hover:text-horizon-ink">
-          <LogOut aria-hidden className="size-4" />Sign out
-        </button>
+        <div className="mt-auto grid gap-1 border-t border-horizon-outline/10 pt-3">
+          <Link
+            href="/dashboard#privacy"
+            className="flex min-h-11 items-center gap-3 rounded-[var(--horizon-radius-control)] px-3 py-2.5 text-sm font-bold text-horizon-muted hover:bg-horizon-primary/5 hover:text-horizon-ink transition"
+          >
+            <ShieldCheck aria-hidden className="size-4" />Privacy boundary
+          </Link>
+          <Link
+            href="/dashboard#account"
+            className="flex min-h-11 items-center gap-3 rounded-[var(--horizon-radius-control)] px-3 py-2.5 text-sm font-bold text-horizon-muted hover:bg-horizon-primary/5 hover:text-horizon-ink transition"
+          >
+            <UserRound aria-hidden className="size-4" />Account
+          </Link>
+          <button type="button" onClick={signOut} className="flex min-h-11 items-center gap-3 rounded-[var(--horizon-radius-control)] px-3 py-2.5 text-left text-sm font-bold text-horizon-muted hover:bg-horizon-primary/5 hover:text-horizon-ink transition">
+            <LogOut aria-hidden className="size-4" />Sign out
+          </button>
+        </div>
       </aside>
 
       <div className="flex min-h-dvh min-w-0 flex-col pb-16 lg:h-dvh lg:min-h-0 lg:pb-0">
@@ -93,7 +107,24 @@ export function AuthenticatedAppShell({ children, user, title }: { children: Rea
                 <X aria-hidden className="size-5" />
               </button>
             </div>
-            <nav aria-label="Drawer workspace navigation" className="mt-8 grid gap-1">{links()}</nav>
+            <nav aria-label="Drawer workspace navigation" className="mt-8 grid gap-1">
+              {links()}
+              <div className="my-2 border-t border-horizon-outline/10" />
+              <Link
+                href="/dashboard#privacy"
+                onClick={() => setMenuOpen(false)}
+                className="flex min-h-11 items-center gap-3 rounded-[var(--horizon-radius-control)] px-3 py-2.5 text-sm font-bold text-horizon-muted hover:bg-horizon-primary/5 hover:text-horizon-ink"
+              >
+                <ShieldCheck aria-hidden className="size-4" />Privacy boundary
+              </Link>
+              <Link
+                href="/dashboard#account"
+                onClick={() => setMenuOpen(false)}
+                className="flex min-h-11 items-center gap-3 rounded-[var(--horizon-radius-control)] px-3 py-2.5 text-sm font-bold text-horizon-muted hover:bg-horizon-primary/5 hover:text-horizon-ink"
+              >
+                <UserRound aria-hidden className="size-4" />Account
+              </Link>
+            </nav>
             <button type="button" onClick={signOut} className="mt-auto flex min-h-11 items-center gap-3 rounded-[var(--horizon-radius-control)] px-3 py-2.5 text-left text-sm font-bold text-horizon-muted">
               <LogOut aria-hidden className="size-4" />Sign out
             </button>
@@ -103,6 +134,9 @@ export function AuthenticatedAppShell({ children, user, title }: { children: Rea
 
       <nav aria-label="Mobile workspace navigation" className="fixed inset-x-0 bottom-0 z-30 flex min-h-16 border-t border-horizon-outline/15 bg-white/95 px-2 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden">
         {links(true)}
+        <Link href="/dashboard#privacy" className="flex min-h-11 flex-1 flex-col items-center justify-center gap-1 px-2 py-1 text-[10px] font-bold text-horizon-muted">
+          <ShieldCheck aria-hidden className="size-4" />Privacy
+        </Link>
         <Link href="/dashboard#account" className="flex min-h-11 flex-1 flex-col items-center justify-center gap-1 px-2 py-1 text-[10px] font-bold text-horizon-muted">
           <UserRound aria-hidden className="size-4" />Account
         </Link>

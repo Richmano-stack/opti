@@ -9,19 +9,38 @@ import { AuthenticatedAppShell } from "@/components/horizon/authenticated-app-sh
 import { ContactInformationPreflight } from "@/components/contact-information-preflight";
 import { TailoredResumeResult } from "@/components/pdf";
 import type { AuthUser } from "@/server/auth/types";
+import { clearGuestDraft, loadGuestDraft } from "@/lib/guest-session-storage";
 import type { OptimizedResume } from "@/services/ai/types";
 
 const initialState: AccountGenerationState = { status: "idle" };
 
 export function AccountTailoringWorkspace({ user, masterResumeUpdatedAt }: { user: AuthUser; masterResumeUpdatedAt?: string }) {
   const [state, formAction, isPending] = useActionState(submitAccountResume, initialState);
+  const [stateOverride, setStateOverride] = useState<AccountGenerationState | null>(null);
+  const effectiveState = isPending ? state : (stateOverride ?? state);
   const [jobDescription, setJobDescription] = useState("");
+  const [restoredFromGuest, setRestoredFromGuest] = useState(false);
   const resultHeading = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
-    if (state.status === "success") resultHeading.current?.focus();
-    if (state.status === "error") console.error("[resume-generation] Request failed", state.error);
-  }, [state]);
+    if (effectiveState.status === "success") resultHeading.current?.focus();
+    if (effectiveState.status === "error") console.error("[resume-generation] Request failed", effectiveState.error);
+  }, [effectiveState]);
+
+  // Restore guest draft on first mount
+  useEffect(() => {
+    const draft = loadGuestDraft();
+    if (draft && draft.jobDescription) {
+      setJobDescription(draft.jobDescription);
+      setRestoredFromGuest(true);
+      clearGuestDraft();
+    }
+  }, []);
+
+  const handleReset = () => {
+    setJobDescription("");
+    setStateOverride(initialState);
+  };
 
   return (
     <AuthenticatedAppShell user={user} title="Tailor a résumé">
@@ -30,8 +49,31 @@ export function AccountTailoringWorkspace({ user, masterResumeUpdatedAt }: { use
           <ArrowLeft aria-hidden className="size-3.5" /> Back to master résumé
         </Link>
 
-        {state.status === "success" ? (
-          <AccountGeneratorReview resume={state.data} resultHeading={resultHeading} jobDescription={jobDescription} masterResumeUpdatedAt={masterResumeUpdatedAt} />
+        {restoredFromGuest ? (
+          <div role="status" className="mb-6 mt-4 flex items-center justify-between gap-4 rounded-2xl border border-horizon-secondary/20 bg-horizon-secondary/8 px-5 py-3.5 text-sm">
+            <p className="text-horizon-ink">
+              <span className="font-semibold">Your guest session was restored.</span>{" "}
+              Job description pre-filled from your previous session.
+            </p>
+            <button
+              type="button"
+              onClick={() => setRestoredFromGuest(false)}
+              aria-label="Dismiss restored session notice"
+              className="shrink-0 text-xs font-bold text-horizon-secondary hover:underline"
+            >
+              Dismiss
+            </button>
+          </div>
+        ) : null}
+
+        {effectiveState.status === "success" ? (
+          <AccountGeneratorReview
+            resume={effectiveState.data}
+            resultHeading={resultHeading}
+            jobDescription={jobDescription}
+            masterResumeUpdatedAt={masterResumeUpdatedAt}
+            onReset={handleReset}
+          />
         ) : (
           <div className="mx-auto mt-10 max-w-[760px]">
             <div className="text-center">
@@ -42,7 +84,13 @@ export function AccountTailoringWorkspace({ user, masterResumeUpdatedAt }: { use
 
             <section className="horizon-glass mt-10 rounded-[2rem] p-6 sm:p-9" aria-labelledby="job-description-title">
               <SavedSource updatedAt={masterResumeUpdatedAt} />
-              <form action={formAction} className="mt-7">
+              <form
+                action={(formData) => {
+                  setStateOverride(null);
+                  formAction(formData);
+                }}
+                className="mt-7"
+              >
                 <div className="flex items-start gap-3">
                   <span className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-horizon-secondary/10 text-horizon-secondary"><BriefcaseBusiness aria-hidden className="size-5" /></span>
                   <div>
@@ -63,9 +111,9 @@ export function AccountTailoringWorkspace({ user, masterResumeUpdatedAt }: { use
                 />
                 <div className="mt-2 flex justify-end text-[10px] font-bold tracking-wide text-horizon-muted"><span>{jobDescription.length.toLocaleString()} / 30,000</span></div>
 
-                {state.status === "error" ? <ErrorNotice message={state.error.message} /> : null}
-                {state.status === "missing_contact_info" ? <ContactInformationPreflight missingFields={state.missingFields} canSave isPending={isPending} /> : null}
-                {state.status !== "missing_contact_info" ? (
+                {effectiveState.status === "error" ? <ErrorNotice message={effectiveState.error.message} /> : null}
+                {effectiveState.status === "missing_contact_info" ? <ContactInformationPreflight missingFields={effectiveState.missingFields} canSave isPending={isPending} /> : null}
+                {effectiveState.status !== "missing_contact_info" ? (
                   <button type="submit" disabled={isPending || !jobDescription.trim()} className="horizon-button-primary mt-6 h-13 w-full px-7 text-sm disabled:pointer-events-none disabled:opacity-50">
                     <GeneratorSubmitContent isPending={isPending} />
                   </button>
@@ -88,7 +136,6 @@ function SavedSource({ updatedAt }: { updatedAt?: string }) {
         <div className="min-w-0"><p className="truncate text-sm font-bold">Using your saved master résumé</p><p className="mt-0.5 text-[11px] text-horizon-muted">{updatedAt ? `Last updated ${updatedAt}` : "Stored securely in your account"}</p></div>
       </div>
       <Link href="/dashboard" className="shrink-0 text-xs font-bold text-horizon-primary hover:underline">Edit</Link>
-      
     </div>
   );
 }
@@ -102,16 +149,16 @@ export function ErrorNotice({ message }: { message: string }) {
     <div role="alert" className="mt-5 flex items-start gap-3 rounded-2xl border border-red-200/70 bg-red-50/80 p-4 text-red-900">
       <AlertCircle aria-hidden className="mt-0.5 size-4 shrink-0" />
       <div><p className="text-xs font-bold">We couldn’t tailor this résumé</p><p className="mt-1 text-xs leading-5 text-red-700">{message}</p></div>
-      
     </div>
   );
 }
 
-export function AccountGeneratorReview({ resume, resultHeading, jobDescription, masterResumeUpdatedAt }: {
+export function AccountGeneratorReview({ resume, resultHeading, jobDescription, masterResumeUpdatedAt, onReset }: {
   resume: OptimizedResume;
   resultHeading: React.RefObject<HTMLHeadingElement | null>;
   jobDescription: string;
   masterResumeUpdatedAt?: string;
+  onReset?: () => void;
 }) {
   return (
     <div className="mt-8 grid items-start gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
@@ -121,18 +168,17 @@ export function AccountGeneratorReview({ resume, resultHeading, jobDescription, 
         <p className="mt-3 text-xs leading-6 text-horizon-muted">Read every section before downloading. You remain in control of the final document.</p>
         <div className="mt-6"><SavedSource updatedAt={masterResumeUpdatedAt} /></div>
         <div className="mt-4 rounded-2xl bg-horizon-secondary/8 p-4"><p className="text-[10px] font-bold uppercase tracking-[0.14em] text-horizon-secondary">Role context</p><p className="mt-2 line-clamp-4 text-xs leading-5 text-horizon-muted">{jobDescription}</p></div>
-        <button type="button" onClick={() => window.location.reload()} className="horizon-button-ghost mt-5 h-10 w-full px-4 text-xs"><RotateCcw aria-hidden className="size-3.5" /> Tailor another</button>
+        <button
+          type="button"
+          onClick={onReset ?? (() => window.location.reload())}
+          className="horizon-button-ghost mt-5 h-10 w-full px-4 text-xs"
+        >
+          <RotateCcw aria-hidden className="size-3.5" /> Tailor another
+        </button>
       </aside>
       <section aria-live="polite" className="min-w-0 rounded-[1.5rem] border border-white/80 bg-white p-4 shadow-[0_20px_70px_rgba(47,49,49,0.08)] sm:p-7">
         <TailoredResumeResult resume={resume} />
       </section>
-      
     </div>
   );
 }
-
-
-
-
-
-

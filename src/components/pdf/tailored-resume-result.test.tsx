@@ -19,11 +19,12 @@ const resume = {
 };
 
 describe("TailoredResumeResult", () => {
-  it("renders the validated resume and PDF download control", () => {
+  it("renders the validated resume, PDF download control, and copy text control", () => {
     const html = renderToStaticMarkup(<TailoredResumeResult resume={resume} />);
 
     expect(html).toContain("Alex Example");
     expect(html).toContain("Download PDF");
+    expect(html).toContain("Copy Text");
     expect(html).toContain("Your PDF is generated in this browser and is not saved by Opti.");
   });
 });

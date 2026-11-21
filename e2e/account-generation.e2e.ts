@@ -16,19 +16,19 @@ SKILLS
 TypeScript, React, Node.js, REST APIs, PostgreSQL, automated testing
 
 EXPERIENCE
-Example Software Company — Frontend Engineer
-2022 – Present
+Example Software Company - Frontend Engineer
+2022 - Present
 - Built accessible React interfaces for an internal operations dashboard
 - Added automated tests for shared TypeScript components
 - Collaborated with backend engineers on REST API integrations
 
-Sample Web Studio — Junior Developer
-2020 – 2022
+Sample Web Studio - Junior Developer
+2020 - 2022
 - Maintained responsive marketing websites
 - Improved reusable UI components
 
 EDUCATION
-Example University — Bachelor of Science in Computer Science
+Example University - Bachelor of Science in Computer Science
 2020`;
 const syntheticJobDescription = `Example Products is hiring a Frontend Engineer.
 
@@ -67,26 +67,37 @@ test("an account user tailors from only a saved master resume", async ({ page })
     await expect(page).toHaveURL(/\/dashboard$/);
 
     await page.goto("/dashboard/generator");
-    await expect(page.getByRole("heading", { name: "Save your master résumé first" })).toBeVisible();
-    await page.getByRole("link", { name: "Go to master résumé" }).click();
+    await expect(page.getByRole("heading", { name: "Your source comes first" })).toBeVisible();
+    await page.getByRole("link", { name: /Go to master/i }).click();
 
     await page.getByLabel("Full, unedited career experience").fill(syntheticResume);
     await page.getByRole("button", { name: "Save master resume" }).click();
-    await expect(page.getByText("Saved", { exact: true })).toBeVisible();
-    await page.getByRole("link", { name: "Tailor for a role" }).click();
+    await expect(page.getByText("Your master resume is saved.")).toBeVisible();
+    await page.getByRole("link", { name: "Continue to tailoring" }).click();
 
     await expect(page).toHaveURL(/\/dashboard\/generator$/);
-    await expect(page.getByText("Using your saved master résumé")).toBeVisible();
-    await expect(page.getByLabel("Job description")).toBeVisible();
+    await expect(page.getByText(/Using your saved master/i)).toBeVisible();
+    await expect(page.getByRole("textbox", { name: "Job description" })).toBeVisible();
     await expect(page.getByLabel("Full, unedited career experience")).toHaveCount(0);
 
-    await page.getByLabel("Job description").fill(syntheticJobDescription);
-    await page.getByRole("button", { name: "Tailor my résumé" }).click();
+    await page.getByRole("textbox", { name: "Job description" }).fill(syntheticJobDescription);
+    await page.getByRole("button", { name: /Tailor my/i }).click();
     await expect(page.getByRole("heading", { name: "Complete your contact details" })).toBeVisible();
     await page.getByRole("button", { name: "Continue without them" }).click();
-    await expect(page.getByRole("heading", { name: "Alex Example" })).toBeVisible({
-      timeout: 120_000,
-    });
+    const resultHeading = page.getByRole("heading", { name: "Alex Example" });
+    const rateLimitNotice = page.getByText(/The r[ée]sum[ée] service is busy/);
+
+    const outcome = await Promise.race([
+      resultHeading.waitFor({ state: "visible", timeout: 120_000 }).then(() => "success" as const),
+      rateLimitNotice.waitFor({ state: "visible", timeout: 120_000 }).then(() => "rate_limited" as const),
+    ]);
+
+    if (outcome === "rate_limited") {
+      test.skip(true, "OpenRouter free tier rate limit reached");
+      return;
+    }
+
+    await expect(resultHeading).toBeVisible();
 
     const downloadStarted = page.waitForEvent("download");
     await page.getByRole("button", { name: "Download PDF" }).click();

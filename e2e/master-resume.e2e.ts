@@ -28,20 +28,20 @@ test("an account user can create, reload, and edit a master resume", async ({ pa
     await page.getByRole("button", { name: "Create Account" }).click();
 
     await expect(page).toHaveURL(/\/dashboard$/);
-    await expect(page.getByText("First-time setup")).toBeVisible();
+    await expect(page.getByText("Set up your source resume")).toBeVisible();
 
     const editor = page.getByLabel("Full, unedited career experience");
     await editor.fill("E2E first resume version");
     await page.getByRole("button", { name: "Save master resume" }).click();
-    await expect(page.getByText("Saved", { exact: true })).toBeVisible();
+    await expect(page.getByText("Your master resume is saved.")).toBeVisible();
 
     await page.reload();
     await expect(editor).toHaveValue("E2E first resume version");
-    await expect(page.getByText("Master resume active")).toBeVisible();
+    await expect(page.getByText("Source resume ready")).toBeVisible();
 
     await editor.fill("E2E updated resume version");
     await page.getByRole("button", { name: "Save changes" }).click();
-    await expect(page.getByText("Saved", { exact: true })).toBeVisible();
+    await expect(page.getByText("Your master resume is saved.")).toBeVisible();
 
     await page.reload();
     await expect(editor).toHaveValue("E2E updated resume version");

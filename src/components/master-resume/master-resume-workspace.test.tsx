@@ -34,6 +34,9 @@ describe("MasterResumeWorkspace", () => {
     expect(html).toContain("Save it once. Update it whenever your experience changes.");
     expect(html).toContain("Generated resumes, job descriptions, and PDFs are not stored.");
     expect(html).toContain("0 / 50,000 characters");
+    expect(html).toContain('id="privacy"');
+    expect(html).toContain('id="account"');
+    expect(html).toContain("alex@example.com");
   });
 
   it("renders existing master resume view with content and tailor CTA", () => {
@@ -54,6 +57,8 @@ describe("MasterResumeWorkspace", () => {
     expect(html).toContain("Last saved at 10:30 AM");
     expect(html).toContain("Generated resumes, job descriptions, and PDFs are not stored.");
     expect(html).toContain(content);
+    expect(html).toContain('id="privacy"');
+    expect(html).toContain('id="account"');
+    expect(html).toContain("Alex Smith");
   });
 });
-

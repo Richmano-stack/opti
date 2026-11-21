@@ -1,12 +1,13 @@
 import Link from "next/link";
 import type { ReactNode, RefObject } from "react";
-import { CheckCircle2, Eye, FileText, LoaderCircle, LockKeyhole, Shield } from "lucide-react";
+import { CheckCircle2, Eye, FileText, LoaderCircle, LockKeyhole, RotateCcw, Shield, Sparkles } from "lucide-react";
 
 import type { GuestGenerationState } from "@/app/actions/generate-resume";
 import { BrandMark } from "@/components/landing/brand-mark";
+import { saveGuestDraft } from "@/lib/guest-session-storage";
 import { TailoredResumeResult } from "@/components/pdf";
 
-export function GuestWorkspaceHeader() {
+export function GuestWorkspaceHeader({ onBeforeNavigate }: { onBeforeNavigate?: () => void } = {}) {
   return (
     <header className="sticky top-0 z-20 px-4 pt-4 sm:px-6 sm:pt-6">
       <nav
@@ -26,6 +27,7 @@ export function GuestWorkspaceHeader() {
         </div>
         <Link
           href="/login"
+          onClick={onBeforeNavigate}
           className="horizon-button-ghost px-5 py-2.5 text-sm"
         >
           Log in
@@ -88,10 +90,14 @@ export function GuestResultPanel({
   state,
   isPending,
   headingRef,
+  onSaveDraft,
+  onReset,
 }: {
   state: GuestGenerationState;
   isPending: boolean;
   headingRef: RefObject<HTMLHeadingElement | null>;
+  onSaveDraft?: () => void;
+  onReset?: () => void;
 }) {
   let content: ReactNode;
 
@@ -116,10 +122,23 @@ export function GuestResultPanel({
   } else if (state.status === "success") {
     content = (
       <div className="flex-1 overflow-auto pt-5">
-        <div className="mb-5 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-horizon-secondary">
-          <CheckCircle2 aria-hidden className="size-4" />
-          Ready to review
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-horizon-secondary">
+            <CheckCircle2 aria-hidden className="size-4" />
+            Ready to review
+          </div>
+          {onReset ? (
+            <button
+              type="button"
+              onClick={onReset}
+              className="inline-flex items-center gap-1.5 rounded-full border border-horizon-outline/25 bg-white/70 px-3.5 py-1.5 text-xs font-semibold text-horizon-ink transition hover:bg-white hover:text-horizon-primary"
+            >
+              <RotateCcw aria-hidden className="size-3.5" />
+              Tailor another job
+            </button>
+          ) : null}
         </div>
+        <GuestSaveCTA onSaveDraft={onSaveDraft} />
         <TailoredResumeResult resume={state.data} />
       </div>
     );
@@ -178,16 +197,45 @@ export function GuestTrustRow() {
 }
 
 
+
+export function GuestSaveCTA({ onSaveDraft }: { onSaveDraft?: () => void }) {
+  const href = "/signup?intent=save_draft";
+  return (
+    <div className="mb-5 rounded-2xl border border-horizon-primary/20 bg-horizon-primary/7 p-4 sm:p-5">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
+          <p className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.14em] text-horizon-primary">
+            <Sparkles aria-hidden className="size-3.5" />
+            Save your work
+          </p>
+          <p className="mt-1.5 text-sm font-semibold text-horizon-ink">
+            Create a free account to save this resume.
+          </p>
+          <p className="mt-1 text-xs leading-5 text-horizon-muted">
+            Store your master resume once and tailor it for any role -- no copy-pasting next time.
+          </p>
+        </div>
+        <Link
+          href={href}
+          onClick={onSaveDraft}
+          className="shrink-0 inline-flex items-center justify-center gap-2 rounded-full bg-horizon-primary px-5 py-2.5 text-xs font-bold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-[#8b1a00] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-primary focus-visible:ring-offset-2 active:scale-[0.98]"
+        >
+          Save to free account
+        </Link>
+      </div>
+    </div>
+  );
+}
 export function GuestWorkspaceFooter() {
   return (
     <footer className="mt-16 bg-horizon-ink px-6 pb-8 pt-12 text-white sm:px-8 lg:px-16">
       <div className="mx-auto max-w-[1120px]">
         <div className="flex flex-col gap-5 border-b border-white/15 pb-8 sm:flex-row sm:items-end sm:justify-between">
           <div><p className="text-[10px] font-bold uppercase tracking-[0.17em] text-horizon-inverse-primary">Guest mode</p><h2 className="mt-3 text-2xl font-bold tracking-[-0.03em] sm:text-3xl">Try the flow. Keep your privacy.</h2></div>
-          <Link href="/signup" className="horizon-button-primary h-11 shrink-0 bg-white px-5 text-xs !text-horizon-ink hover:bg-horizon-inverse-primary">Create your workspace <span aria-hidden>→</span></Link>
+          <Link href="/signup" className="horizon-button-primary h-11 shrink-0 bg-white px-5 text-xs !text-horizon-ink hover:bg-horizon-inverse-primary">Create your workspace <span aria-hidden>{"->"}</span></Link>
         </div>
         <div className="flex flex-col gap-5 py-8 sm:flex-row sm:items-center sm:justify-between"><div><BrandMark /><p className="mt-3 text-xs text-white/50">Guest inputs and generated results are not saved.</p></div><nav aria-label="Footer navigation" className="flex flex-wrap gap-x-5 gap-y-2 text-xs font-semibold text-white/65"><Link href="/" className="hover:text-white">Opti home</Link><Link href="/login" className="hover:text-white">Log in</Link><Link href="/signup" className="hover:text-white">Create account</Link></nav></div>
-        <div className="border-t border-white/15 pt-5 text-xs text-white/40">© {new Date().getFullYear()} Opti. Built for focused applications.</div>
+        <div className="border-t border-white/15 pt-5 text-xs text-white/40">(c) {new Date().getFullYear()} Opti. Built for focused applications.</div>
       </div>
     </footer>
   );

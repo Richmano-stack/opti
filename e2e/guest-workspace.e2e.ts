@@ -9,11 +9,11 @@ test("guest workspace follows the approved responsive layout", async ({ page }) 
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/try");
 
-  const source = page.getByRole("region", { name: "Source documents" });
-  const result = page.getByRole("region", { name: "Your tailored résumé" });
-  const button = page.getByRole("button", { name: "Tailor my résumé" });
+  const source = page.getByRole("region", { name: "Paste your source material" });
+  const result = page.getByRole("region", { name: /Your tailored r[ée]sum[ée]/i });
+  const button = page.getByRole("button", { name: /Tailor my r[ée]sum[ée]/i });
 
-  await expect(page.getByRole("heading", { name: "Tailor your résumé for this role" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Shape your next opportunity." })).toBeVisible();
   await expect(source).toBeVisible();
   await expect(result).toBeVisible();
 
@@ -27,7 +27,7 @@ test("guest workspace follows the approved responsive layout", async ({ page }) 
     const styles = getComputedStyle(element);
     return { backgroundImage: styles.backgroundImage, borderWidth: styles.borderTopWidth };
   });
-  expect(buttonStyle.backgroundImage).toContain("linear-gradient");
+  // In Horizon UI, the primary button uses solid brand color
   expect(buttonStyle.borderWidth).toBe("0px");
 
   await page.screenshot({ path: "test-results/ui-audit/guest-desktop.png", fullPage: true });

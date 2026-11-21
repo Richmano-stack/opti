@@ -26,4 +26,14 @@ test.describe("user lifecycle routing", () => {
     await page.getByRole("link", { name: "Opti home" }).last().click();
     await expect(page).toHaveURL(/\/$/);
   });
+
+  test("users on auth pages can return to the marketing home page", async ({ page }) => {
+    await page.goto("/login");
+    await page.getByRole("link", { name: "Back to home" }).click();
+    await expect(page).toHaveURL(/\/$/);
+
+    await page.goto("/signup");
+    await page.getByRole("link", { name: "Back to home" }).click();
+    await expect(page).toHaveURL(/\/$/);
+  });
 });

@@ -38,6 +38,7 @@ describe("guest tailoring components", () => {
     expect(html).toContain("Private by design");
     expect(html).toContain("Step 1 of 2");
     expect(html).toContain("Paste your source material");
+    expect(html).toContain("Use Sample Resume");
     expect(html).toContain('aria-label="Opti home"');
     expect(html).not.toContain("Designed for ATS readability");
     expect(html).not.toContain("never leaves your browser");

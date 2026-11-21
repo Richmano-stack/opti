@@ -7,6 +7,8 @@ const navLinkClass =
   "rounded-full px-3 py-2 text-xs font-semibold text-horizon-muted transition-colors hover:text-horizon-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-primary focus-visible:ring-offset-2";
 
 export async function LandingNavbar() {
+  const session = await getServerSession();
+
   return (
     <header className="fixed inset-x-0 top-0 z-50 px-4 pt-4 sm:px-6 sm:pt-6">
       <nav
@@ -28,12 +30,23 @@ export async function LandingNavbar() {
         </div>
 
         <div className="flex items-center gap-2">
-          <Link href="/login" className="horizon-button-ghost hidden h-10 px-5 text-xs sm:inline-flex">
-            Log in
-          </Link>
-          <Link href="/try" className="horizon-button-primary h-10 px-5 text-xs">
-            Try it free
-          </Link>
+          {session?.user ? (
+            <Link href="/dashboard" className="horizon-button-primary h-10 px-5 text-xs">
+              Go to Dashboard
+            </Link>
+          ) : (
+            <>
+              <Link href="/login" className="horizon-button-ghost hidden h-10 px-4 text-xs sm:inline-flex">
+                Log in
+              </Link>
+              <Link href="/signup" className="horizon-button-ghost hidden h-10 px-4 text-xs sm:inline-flex">
+                Sign up
+              </Link>
+              <Link href="/try" className="horizon-button-primary h-10 px-5 text-xs">
+                Try it free
+              </Link>
+            </>
+          )}
         </div>
       </nav>
     </header>

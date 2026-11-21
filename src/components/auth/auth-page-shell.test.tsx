@@ -12,8 +12,9 @@ describe("AuthPageShell", () => {
     );
 
     expect(html).toContain("Your master resume, ready when you are.");
+    expect(html).toContain('href="/"');
     expect(html).toContain('href="/try"');
-    expect(html).toContain("Guest work isn’t saved");
+    expect(html).toContain("Guest work");
     expect(html).not.toContain("PDFs are saved");
   });
 
@@ -25,7 +26,8 @@ describe("AuthPageShell", () => {
     );
 
     expect(html).toContain("Save one master resume.");
-    expect(html).toContain("Return to it whenever you’re ready to tailor again");
+    expect(html).toContain("Return to it whenever");
+    expect(html).toContain('href="/"');
     expect(html).toContain('href="/try"');
     expect(html).not.toContain("generated resumes are saved");
     expect(html).not.toContain("job descriptions are saved");

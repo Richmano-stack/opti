@@ -1,4 +1,4 @@
-import { Check, FileText, Sparkles } from "lucide-react";
+import { ArrowLeft, Check, FileText, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 type AuthPageShellProps = {
@@ -17,7 +17,7 @@ const content = {
     eyebrow: "A better starting point",
     title: "Save one master resume.",
     description:
-      "Keep your experience in one dependable place. Return to it whenever you’re ready to tailor again—without rebuilding your story from scratch.",
+      "Keep your experience in one dependable place. Return to it whenever you're ready to tailor again - without rebuilding your story from scratch.",
   },
 } as const;
 
@@ -25,7 +25,7 @@ export function AuthPageShell({ children, variant }: AuthPageShellProps) {
   const page = content[variant];
 
   return (
-    <main className="relative z-10 mx-auto grid w-full max-w-[112rem] flex-1 items-center gap-6 px-6 pb-8 pt-28 sm:px-8 lg:grid-cols-[minmax(0,1.08fr)_minmax(25rem,0.92fr)] lg:gap-8 lg:px-16 lg:py-32">
+    <main className="relative z-10 mx-auto grid w-full max-w-[112rem] flex-1 items-center gap-6 px-6 py-8 sm:px-8 sm:py-12 lg:grid-cols-[minmax(0,1.08fr)_minmax(25rem,0.92fr)] lg:gap-8 lg:px-16 lg:py-16">
       <section
         aria-labelledby="auth-context-title"
         className="horizon-glass relative overflow-hidden rounded-[2rem] px-6 py-8 sm:px-10 sm:py-10 lg:min-h-[37rem] lg:px-14 lg:py-14"
@@ -47,10 +47,21 @@ export function AuthPageShell({ children, variant }: AuthPageShellProps) {
           </div>
 
           <div className="flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-white/70 pt-6 text-sm">
-            <Link href="/try" className="font-semibold text-horizon-ink underline-offset-4 hover:underline focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-secondary">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-1.5 font-semibold text-horizon-ink underline-offset-4 hover:underline focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-secondary"
+            >
+              <ArrowLeft aria-hidden className="size-3.5" />
+              Opti home
+            </Link>
+            <span aria-hidden="true" className="text-horizon-muted/30">|</span>
+            <Link
+              href="/try"
+              className="font-semibold text-horizon-ink underline-offset-4 hover:underline focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-horizon-secondary"
+            >
               Continue as guest
             </Link>
-            <span className="text-xs text-horizon-muted">Guest work isn’t saved.</span>
+            <span className="text-xs text-horizon-muted">Guest work isn't saved.</span>
           </div>
         </div>
       </section>

@@ -16,5 +16,7 @@ describe("AuthenticatedAppShell", () => {
     expect(html).toContain('aria-expanded="false"');
     expect(html).toContain("lg:h-dvh");
     expect(html).toContain("lg:overflow-y-auto");
+    expect(html).toContain('href="/dashboard#privacy"');
+    expect(html).toContain('href="/dashboard#account"');
   });
 });
