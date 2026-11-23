@@ -2,15 +2,15 @@ import { expect, test } from "@playwright/test";
 
 test("guest generation stops for explicit missing-contact review", async ({ page }) => {
   await page.goto("/try");
+  await page.getByLabel("Job description").fill(
+    "Seeking a product designer with SaaS and accessibility experience.",
+  );
+  await page.getByRole("tab", { name: "Résumé" }).click();
   await page.getByLabel("Master résumé").fill(`Taylor Doe
 taylor@example.com
 
 EXPERIENCE
 Product Designer at Example Co, 2021 - Present`);
-  await page.getByLabel("Job description").fill(
-    "Seeking a product designer with SaaS and accessibility experience.",
-  );
-
   await page.getByRole("button", { name: "Tailor my résumé" }).click();
 
   await expect(

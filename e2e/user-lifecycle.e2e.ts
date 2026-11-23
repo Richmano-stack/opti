@@ -22,8 +22,8 @@ test.describe("user lifecycle routing", () => {
 
   test("guest users can return home and see the shared footer", async ({ page }) => {
     await page.goto("/try");
-    await expect(page.getByRole("contentinfo")).toContainText("One truthful source. Sharper applications.");
-    await page.getByRole("link", { name: "Opti home" }).last().click();
+    await page.getByRole("link", { name: "Opti home" }).click();
     await expect(page).toHaveURL(/\/$/);
+    await expect(page.getByRole("contentinfo")).toContainText("One truthful source. A sharper version for every role.");
   });
 });

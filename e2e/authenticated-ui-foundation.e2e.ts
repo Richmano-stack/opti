@@ -3,16 +3,18 @@ import { randomUUID } from "node:crypto";
 import { expect, test } from "@playwright/test";
 import postgres from "postgres";
 
+import { signUpAndSignIn } from "./support/auth";
+import { cleanupPreservingTestFailure } from "./support/cleanup";
 import { collectBrowserErrors, expectNoHorizontalOverflow } from "./support/ui-verification";
 
 const connectionString = process.env.DATABASE_URL;
 
 const viewports = [
-  { name: "mobile", viewport: { width: 375, height: 812 }, navigation: "Toggle Sidebar" },
-  { name: "desktop", viewport: { width: 1440, height: 960 }, navigation: "Workspace navigation" },
+  { name: "mobile", viewport: { width: 375, height: 812 } },
+  { name: "desktop", viewport: { width: 1440, height: 960 } },
 ] as const;
 
-for (const { name, viewport, navigation } of viewports) {
+for (const { name, viewport } of viewports) {
   test(`authenticated shell has no horizontal overflow at ${name} viewport`, async ({ page }) => {
     test.skip(!connectionString, "DATABASE_URL is required for authenticated UI checks");
     await page.setViewportSize(viewport);
@@ -23,20 +25,32 @@ for (const { name, viewport, navigation } of viewports) {
     const sql = postgres(connectionString!, { prepare: false });
     const browserErrors = collectBrowserErrors(page);
 
+    let testFailure: unknown;
     try {
-      await page.goto("/signup");
-      await page.getByLabel("Email", { exact: true }).fill(email);
-      await page.getByLabel("Password", { exact: true }).fill(password);
-      await page.getByLabel("Confirm Password").fill(password);
-      await page.getByRole("button", { name: "Create Account" }).click();
-
-      await expect(page).toHaveURL(/\/dashboard\/templates$/);
-      await expect(page.getByRole(name === "mobile" ? "button" : "navigation", { name: navigation })).toBeVisible();
+      await signUpAndSignIn(page, email, password, async (testEmail) => {
+        await sql`update users set email_verified = true where email = ${testEmail}`;
+      });
+      if (name === "mobile") {
+        await expect(page.locator('[data-slot="sidebar-trigger"]')).toBeVisible();
+      } else {
+        const sidebar = page.locator('[data-slot="sidebar"]');
+        await expect(sidebar).toBeVisible();
+        await expect(sidebar.getByRole("link", { name: "Master résumé" })).toBeVisible();
+      }
       await expectNoHorizontalOverflow(page);
       expect(browserErrors.errors).toEqual([]);
+    } catch (error: unknown) {
+      testFailure = error;
+      throw error;
     } finally {
-      await sql`delete from users where email = ${email}`;
-      await sql.end();
+      await cleanupPreservingTestFailure(
+        async () => {
+          await sql`delete from verification where identifier = ${email}`;
+          await sql`delete from users where email = ${email}`;
+        },
+        () => sql.end(),
+        testFailure,
+      );
     }
   });
 }

@@ -3,6 +3,9 @@ import { randomUUID } from "node:crypto";
 import { expect, test } from "@playwright/test";
 import postgres from "postgres";
 
+import { signUpAndSignIn } from "./support/auth";
+import { cleanupPreservingTestFailure } from "./support/cleanup";
+
 const connectionString = process.env.DATABASE_URL;
 
 test("an account user can create, reload, and edit a master resume", async ({ page }) => {
@@ -19,14 +22,22 @@ test("an account user can create, reload, and edit a master resume", async ({ pa
   });
   page.on("pageerror", (error) => browserErrors.push(error.message));
 
+  let testFailure: unknown;
   try {
-    await page.goto("/signup");
-    await page.getByLabel("Email", { exact: true }).fill(email);
-    await page.getByLabel("Password", { exact: true }).fill(password);
-    await page.getByLabel("Confirm Password").fill(password);
-    await page.getByRole("button", { name: "Create Account" }).click();
-
+    await signUpAndSignIn(page, email, password, async (testEmail) => {
+      await sql`update users set email_verified = true where email = ${testEmail}`;
+    });
+    await page.evaluate(() => {
+      sessionStorage.setItem("opti:guest-draft", JSON.stringify({
+        masterResume: "Guest résumé to import",
+        jobDescription: "Example role",
+      }));
+    });
     await page.goto("/dashboard");
+    await expect(page.getByRole("status").getByText("A résumé draft from your guest session is ready.")).toBeVisible();
+    await page.getByRole("button", { name: "Review guest résumé draft" }).click();
+    await expect(page.getByLabel("Full, unedited career experience")).toHaveValue("Guest résumé to import");
+    await page.getByRole("button", { name: "Cancel" }).click();
     await expect(page.getByRole("button", { name: "Add master résumé" })).toBeVisible();
     await expect(page.getByLabel("Full, unedited career experience")).toHaveCount(0);
 
@@ -41,7 +52,7 @@ test("an account user can create, reload, and edit a master resume", async ({ pa
     await expect(page.getByRole("link", { name: "Tailor for a role" })).toBeVisible();
 
     await page.reload();
-    await expect(page.getByText("E2E first resume version")).toHaveCount(0);
+    await expect(page.getByText("E2E first resume version")).toBeVisible();
     await expect(page.getByText("Last saved at")).toBeVisible();
 
     await page.getByRole("button", { name: "Edit master résumé" }).click();
@@ -65,8 +76,17 @@ test("an account user can create, reload, and edit a master resume", async ({ pa
     await expect(page.getByRole("dialog")).toHaveCount(0);
     await expect(page.getByRole("button", { name: "Edit master résumé" })).toBeFocused();
     expect(browserErrors).toEqual([]);
+  } catch (error: unknown) {
+    testFailure = error;
+    throw error;
   } finally {
-    await sql`delete from users where email = ${email}`;
-    await sql.end();
+    await cleanupPreservingTestFailure(
+      async () => {
+        await sql`delete from verification where identifier = ${email}`;
+        await sql`delete from users where email = ${email}`;
+      },
+      () => sql.end(),
+      testFailure,
+    );
   }
 });

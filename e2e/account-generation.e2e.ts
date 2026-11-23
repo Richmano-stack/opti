@@ -4,6 +4,9 @@ import { readFile } from "node:fs/promises";
 import { expect, test } from "@playwright/test";
 import postgres from "postgres";
 
+import { signUpAndSignIn } from "./support/auth";
+import { cleanupPreservingTestFailure } from "./support/cleanup";
+
 const connectionString = process.env.DATABASE_URL;
 const providerKeys: Record<string, string | undefined> = {
   gemini: process.env.GEMINI_API_KEY,
@@ -65,16 +68,14 @@ test("an account user tailors from only a saved master resume", async ({ page })
   });
   page.on("pageerror", (error) => browserErrors.push(error.message));
 
+  let testFailure: unknown;
   try {
-    await page.goto("/signup");
-    await page.getByLabel("Email", { exact: true }).fill(email);
-    await page.getByLabel("Password", { exact: true }).fill(password);
-    await page.getByLabel("Confirm Password").fill(password);
-    await page.getByRole("button", { name: "Create Account" }).click();
-    await expect(page).toHaveURL(/\/dashboard\/templates$/);
+    await signUpAndSignIn(page, email, password, async (testEmail) => {
+      await sql`update users set email_verified = true where email = ${testEmail}`;
+    });
 
     await page.goto("/dashboard/generator");
-    await expect(page.getByRole("heading", { name: "Save your master résumé first" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Your source comes first" })).toBeVisible();
     await page.getByRole("link", { name: "Go to master résumé" }).click();
 
     await page.getByRole("button", { name: "Add master résumé" }).click();
@@ -106,8 +107,17 @@ test("an account user tailors from only a saved master resume", async ({ page })
     expect(pdfBytes.subarray(0, 5).toString()).toBe("%PDF-");
     expect(pdfBytes.byteLength).toBeGreaterThan(2_000);
     expect(browserErrors).toEqual([]);
+  } catch (error: unknown) {
+    testFailure = error;
+    throw error;
   } finally {
-    await sql`delete from users where email = ${email}`;
-    await sql.end();
+    await cleanupPreservingTestFailure(
+      async () => {
+        await sql`delete from verification where identifier = ${email}`;
+        await sql`delete from users where email = ${email}`;
+      },
+      () => sql.end(),
+      testFailure,
+    );
   }
 });
