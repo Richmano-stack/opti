@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { FileTextIcon, LayoutTemplateIcon, PenLineIcon } from "lucide-react"
+import { FileTextIcon, LayoutTemplateIcon, PenLineIcon, ShieldCheck, UserRound } from "lucide-react"
 
 import * as React from "react"
 
@@ -68,6 +68,20 @@ export function AppSidebar({
         <NavMain items={navMain} />
       </SidebarContent>
       <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton tooltip="Privacy boundary" render={<Link href="/dashboard#privacy" />}>
+              <ShieldCheck aria-hidden />
+              <span>Privacy boundary</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton tooltip="Account" render={<Link href="/dashboard#account" />}>
+              <UserRound aria-hidden />
+              <span>Account</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
         <NavUser user={user} />
       </SidebarFooter>
       <SidebarRail />

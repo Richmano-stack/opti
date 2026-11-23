@@ -2,7 +2,7 @@
 
 import { useState, type RefObject } from "react";
 import Link from "next/link";
-import { AlertCircle, Download } from "lucide-react";
+import { AlertCircle, Check, Clipboard, Download } from "lucide-react";
 
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,7 @@ import { readJobTarget } from "@/features/tailoring/lib/read-job-target";
 import { downloadOptimizedResumePdf } from "@/features/tailoring/pdf/download-resume-pdf";
 import type { OptimizedResume } from "@/features/tailoring/lib/types";
 import type { TemplateId } from "@/templates/registry";
+import { formatResumeText } from "@/features/tailoring/pdf/format-resume-text";
 
 export function studioRoleLabel(jobDescription: string): string {
   if (!jobDescription.trim()) return "New tailored résumé";
@@ -72,15 +73,35 @@ export function StudioActions({
   isPending,
   isDownloading,
   onDownload,
+  onCopy,
   size = "default",
 }: {
   resume?: OptimizedResume;
   isPending: boolean;
   isDownloading: boolean;
   onDownload: () => void;
+  onCopy?: () => Promise<void>;
   size?: "default" | "sm";
 }) {
+  const [copyState, setCopyState] = useState<"idle" | "copied" | "error">("idle");
+  const copy = async () => {
+    if (!resume) return;
+    try {
+      await (onCopy ?? (() => navigator.clipboard.writeText(formatResumeText(resume))))();
+      setCopyState("copied");
+      window.setTimeout(() => setCopyState("idle"), 1800);
+    } catch {
+      setCopyState("error");
+      window.setTimeout(() => setCopyState("idle"), 2500);
+    }
+  };
+
   return (
+    <div className="flex items-center gap-2">
+      <Button type="button" size={size} variant="outline" onClick={copy} disabled={!resume || isPending} aria-label="Copy résumé text">
+        {copyState === "copied" ? <Check aria-hidden data-icon="inline-start" /> : <Clipboard aria-hidden data-icon="inline-start" />}
+        <span className="hidden sm:inline">{copyState === "copied" ? "Copied" : copyState === "error" ? "Copy failed" : "Copy text"}</span>
+      </Button>
     <Button
       type="button"
       size={size}
@@ -95,6 +116,7 @@ export function StudioActions({
       )}
       <span className="hidden sm:inline">Download PDF</span>
     </Button>
+    </div>
   );
 }
 

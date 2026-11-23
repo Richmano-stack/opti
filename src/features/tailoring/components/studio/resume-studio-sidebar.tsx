@@ -174,6 +174,8 @@ export function ResumeStudioSidebar({
   missingFields,
   errorMessage,
   onFillSample,
+  onUseSample,
+  onClearDraft,
   resume,
 }: {
   mode: "guest" | "account";
@@ -187,6 +189,8 @@ export function ResumeStudioSidebar({
   missingFields?: ContactField[];
   errorMessage?: string;
   onFillSample: (sample: DevSampleInput) => void;
+  onUseSample?: () => void;
+  onClearDraft?: () => void;
   resume?: OptimizedResume;
 }) {
   const [tab, setTab] = useState<StudioTab>("job");
@@ -215,6 +219,13 @@ export function ResumeStudioSidebar({
         }}
         className="min-h-0 flex-1 gap-0"
       >
+        {mode === "guest" && onUseSample ? (
+          <div className="px-4 pt-3">
+            <Button type="button" variant="outline" size="sm" className="w-full" onClick={onUseSample} disabled={isPending}>
+              <Sparkles aria-hidden data-icon="inline-start" /> Use Sample Resume &amp; Job
+            </Button>
+          </div>
+        ) : null}
         <div className="px-4 pt-4">
           <TabsList aria-label="Studio panels" className="w-full">
             <TabsTrigger value="job">Job</TabsTrigger>
@@ -327,9 +338,14 @@ export function ResumeStudioSidebar({
         <p className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
           <Lock aria-hidden className="size-3" />
           {mode === "guest"
-            ? "Nothing is saved after this session."
+            ? "Your draft stays in this browser session only."
             : "Job descriptions and generated résumés are not saved."}
         </p>
+        {mode === "guest" && onClearDraft ? (
+          <Button type="button" variant="ghost" size="sm" onClick={onClearDraft}>
+            Clear guest draft
+          </Button>
+        ) : null}
       </div>
     </aside>
   );

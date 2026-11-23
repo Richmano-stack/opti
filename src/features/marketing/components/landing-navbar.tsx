@@ -2,16 +2,18 @@ import Link from "next/link";
 
 import { BrandMark } from "@/components/brand-mark";
 import { buttonVariants } from "@/components/ui/button";
+import { getServerSession } from "@/server/auth/session";
 
 export type LandingNavbarProps = {
   guest?: boolean;
   floating?: boolean;
 };
 
-export function LandingNavbar({
+export async function LandingNavbar({
   guest = false,
   floating = true,
 }: LandingNavbarProps = {}) {
+  const session = await getServerSession();
   return (
     <header className={floating ? "fixed inset-x-0 top-0 z-50 px-4 pt-4 sm:px-6 sm:pt-6" : "shrink-0 px-4 pt-4 sm:px-6 sm:pt-6"}>
       <nav
@@ -33,20 +35,28 @@ export function LandingNavbar({
         </div>
 
         <div className="flex items-center gap-2">
-          <Link
-            href="/login"
-            className={buttonVariants({ variant: "outline", size: "lg", className: "hidden sm:inline-flex" })}
-          >
-            Log in
-          </Link>
-          {guest ? (
-            <Link href="/signup" className={buttonVariants({ size: "lg" })}>
-              Create account
+          {session?.user ? (
+            <Link href="/dashboard" className={buttonVariants({ size: "lg" })}>
+              Go to Dashboard
             </Link>
           ) : (
-            <Link href="/try" className={buttonVariants({ size: "lg" })}>
-              Try it free
-            </Link>
+            <>
+              <Link href="/login" className={buttonVariants({ variant: "outline", size: "sm", className: "h-8 px-2 text-[10px] sm:h-10 sm:px-4 sm:text-xs" })}>
+                Log in
+              </Link>
+              <Link href={guest ? "/signup?intent=save_draft" : "/signup"} className={buttonVariants({ variant: "outline", size: "sm", className: "h-8 px-2 text-[10px] sm:h-10 sm:px-4 sm:text-xs" })}>
+                Sign up
+              </Link>
+              {guest ? (
+                <Link href="/signup?intent=save_draft" className={buttonVariants({ size: "lg" })}>
+                  Create account
+                </Link>
+              ) : (
+                <Link href="/try" className={buttonVariants({ size: "lg" })}>
+                  Try it free
+                </Link>
+              )}
+            </>
           )}
         </div>
       </nav>
