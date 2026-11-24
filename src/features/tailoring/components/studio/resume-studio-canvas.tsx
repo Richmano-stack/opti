@@ -167,11 +167,13 @@ export function ResumeStudioCanvas({
   isPending,
   templateId,
   actions,
+  callout,
 }: {
   resume?: OptimizedResume;
   isPending: boolean;
   templateId: TemplateId;
   actions?: ReactNode;
+  callout?: ReactNode;
 }) {
   const [zoomMode, setZoomMode] = useState<ZoomMode>("fit");
   const { viewportRef, availableWidth } = useAvailableWidth();
@@ -184,6 +186,7 @@ export function ResumeStudioCanvas({
 
   return (
     <div className="flex h-full min-h-0 min-w-0 flex-1 flex-col p-2">
+      {callout}
       <section
         aria-label="Résumé canvas"
         className="relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-xl border bg-muted"

@@ -20,6 +20,7 @@ import {
 import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
 import { Textarea } from "@/components/ui/textarea";
 import type { AuthUser } from "@/server/auth/types";
+import { loadGuestDraft } from "@/features/tailoring/lib/guest-session-storage";
 
 const MAX_CHARACTERS = 50_000;
 
@@ -36,6 +37,7 @@ export function MasterResumeWorkspace({ user, initialContent = "", initialUpdate
   const [error, setError] = useState<string | null>(null);
   const [isSavedRecently, setIsSavedRecently] = useState(false);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
+  const [guestResumeDraft, setGuestResumeDraft] = useState("");
   const [isPending, startTransition] = useTransition();
   const editButtonRef = useRef<HTMLButtonElement>(null);
   const isPendingRef = useRef(false);
@@ -44,8 +46,16 @@ export function MasterResumeWorkspace({ user, initialContent = "", initialUpdate
   const isDirty = draft !== savedContent;
   const canSave = draft.trim().length > 0 && (isDirty || !isSetup);
 
+  useEffect(() => {
+    if (isSetup) return;
+    const restoreTimer = window.setTimeout(() => {
+      setGuestResumeDraft(loadGuestDraft()?.masterResume ?? "");
+    }, 0);
+    return () => window.clearTimeout(restoreTimer);
+  }, [isSetup]);
+
   const openEditor = () => {
-    setDraft(savedContent);
+    setDraft(!isSetup && guestResumeDraft ? guestResumeDraft : savedContent);
     setError(null);
     setIsEditorOpen(true);
   };
@@ -103,6 +113,21 @@ export function MasterResumeWorkspace({ user, initialContent = "", initialUpdate
     >
       <div className="min-h-full">
         <div className="mx-auto flex w-full max-w-[816px] flex-col px-4 py-8 sm:px-0">
+          <section id="account" tabIndex={-1} className="mb-5 scroll-mt-6 rounded-xl border bg-white/70 p-4 text-sm">
+            <h2 className="font-semibold">Account</h2>
+            <p className="mt-1 text-muted-foreground">Signed in as {user.email}</p>
+          </section>
+          <section id="privacy" tabIndex={-1} className="mb-5 scroll-mt-6 rounded-xl border bg-white/70 p-4 text-sm">
+            <h2 className="font-semibold">Privacy boundary</h2>
+            <p className="mt-1 text-muted-foreground">Your master résumé is stored privately. Job descriptions and generated résumés are temporary.</p>
+          </section>
+          {guestResumeDraft ? (
+            <div role="status" className="mb-5 rounded-xl border border-horizon-secondary/20 bg-horizon-secondary/5 p-4 text-sm">
+              <p className="font-semibold">A résumé draft from your guest session is ready.</p>
+              <p className="mt-1 text-muted-foreground">Open the editor to review and save it to your account.</p>
+              <Button type="button" variant="link" className="mt-2 h-auto p-0" onClick={openEditor}>Review guest résumé draft</Button>
+            </div>
+          ) : null}
           <div aria-live="polite" aria-atomic="true">
             {isSavedRecently ? (
               <Alert role="status" className="mb-4">
@@ -167,6 +192,11 @@ export function MasterResumeWorkspace({ user, initialContent = "", initialUpdate
               <div className="flex flex-col gap-1 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
                 <span>Keep the original detail. Tailoring happens later.</span>
                 <span className="flex items-center gap-3">
+                  {guestResumeDraft ? (
+                    <Button type="button" variant="link" size="sm" className="h-auto p-0" onClick={() => setDraft(guestResumeDraft)}>
+                      Use guest résumé draft
+                    </Button>
+                  ) : null}
                   <DevSampleFill disabled={isPending} onFill={(sample) => setDraft(sample.resume)} />
                   <span id="resume-counter">{draft.length.toLocaleString()} / {MAX_CHARACTERS.toLocaleString()} characters</span>
                 </span>

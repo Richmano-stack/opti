@@ -3,6 +3,9 @@ import { randomUUID } from "node:crypto";
 import { expect, test, type Page } from "@playwright/test";
 import postgres from "postgres";
 
+import { signUpAndSignIn } from "./support/auth";
+import { cleanupPreservingTestFailure } from "./support/cleanup";
+
 const breakpoints = [320, 375, 768, 1024, 1440] as const;
 
 async function expectNoHorizontalOverflow(page: Page) {
@@ -22,21 +25,19 @@ test("authenticated shell follows the documented responsive navigation rules", a
   const password = `Responsive-${id}!`;
   const sql = postgres(connectionString!, { prepare: false });
 
+  let testFailure: unknown;
   try {
     await page.setViewportSize({ width: 320, height: 720 });
-    await page.goto("/signup");
-    await page.getByLabel("Email", { exact: true }).fill(email);
-    await page.getByLabel("Password", { exact: true }).fill(password);
-    await page.getByLabel("Confirm Password").fill(password);
-    await page.getByRole("button", { name: "Create Account" }).click();
-    await expect(page).toHaveURL(/\/dashboard\/templates$/);
+    await signUpAndSignIn(page, email, password, async (testEmail) => {
+      await sql`update users set email_verified = true where email = ${testEmail}`;
+    });
 
     for (const path of ["/dashboard", "/dashboard/generator"]) {
       await page.goto(path);
       for (const width of breakpoints) {
         await page.setViewportSize({ width, height: 800 });
-        const sidebarToggle = page.getByRole("button", { name: "Toggle Sidebar" });
-        const desktopSidebar = page.getByRole("complementary", { name: "Desktop workspace sidebar" });
+        const sidebarToggle = page.locator('[data-slot="sidebar-trigger"]');
+        const desktopSidebar = page.locator('[data-slot="sidebar"]');
         if (width < 768) {
           await expect(sidebarToggle).toBeVisible();
           await expect(desktopSidebar).toBeHidden();
@@ -49,18 +50,27 @@ test("authenticated shell follows the documented responsive navigation rules", a
 
     await page.goto("/dashboard");
     await page.setViewportSize({ width: 320, height: 720 });
-    const menuTrigger = page.getByRole("button", { name: "Toggle Sidebar" });
+    const menuTrigger = page.locator('[data-slot="sidebar-trigger"]');
     await expect(menuTrigger).toBeVisible();
 
     await page.setViewportSize({ width: 375, height: 800 });
-    await page.getByRole("button", { name: "Toggle Sidebar" }).click();
+    await page.locator('[data-slot="sidebar-trigger"]').click();
     const drawer = page.getByRole("dialog", { name: "Sidebar" });
     await expect(drawer).toBeVisible();
     await expect(drawer.getByRole("link", { name: "Master résumé" })).toBeVisible();
     await page.keyboard.press("Escape");
     await expect(drawer).toBeHidden();
+  } catch (error: unknown) {
+    testFailure = error;
+    throw error;
   } finally {
-    await sql`delete from users where email = ${email}`;
-    await sql.end();
+    await cleanupPreservingTestFailure(
+      async () => {
+        await sql`delete from verification where identifier = ${email}`;
+        await sql`delete from users where email = ${email}`;
+      },
+      () => sql.end(),
+      testFailure,
+    );
   }
 });
